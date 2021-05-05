@@ -1,11 +1,14 @@
 ﻿// Copyright (c) Martin Costello, 2021. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
+using System;
+using System.Globalization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Primitives;
 
 namespace MartinCostello.AppleFitnessWorkerMapper
 {
@@ -28,6 +31,24 @@ namespace MartinCostello.AppleFitnessWorkerMapper
             app.UseEndpoints((endpoints) =>
             {
                 endpoints.MapGet("/", async (context) => await context.Response.WriteAsync("Hello World!"));
+                endpoints.MapGet("/api/tracks", async (context) =>
+                {
+                    DateTimeOffset? since = null;
+
+                    StringValues noteBefore = context.Request.Query["notBefore"];
+
+                    if (!StringValues.IsNullOrEmpty(noteBefore) &&
+                        DateTimeOffset.TryParse(noteBefore, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out var value))
+                    {
+                        since = value;
+                    }
+
+                    var loader = context.RequestServices.GetRequiredService<RouteLoader>();
+
+                    var tracks = await loader.GetTracksAsync(since, context.RequestAborted);
+
+                    await context.Response.WriteAsJsonAsync(tracks, context.RequestAborted);
+                });
             });
         }
     }

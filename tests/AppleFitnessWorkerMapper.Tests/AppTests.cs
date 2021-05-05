@@ -14,13 +14,29 @@ using Xunit.Abstractions;
 
 namespace MartinCostello.AppleFitnessWorkerMapper
 {
-    public class ApiTests
+    public class AppTests
     {
         private readonly ITestOutputHelper _outputHelper;
 
-        public ApiTests(ITestOutputHelper outputHelper)
+        public AppTests(ITestOutputHelper outputHelper)
         {
             _outputHelper = outputHelper;
+        }
+
+        [Fact]
+        public async Task Can_Load_Homepage()
+        {
+            // Arrange
+            using var fixture = new WebApplicationFactory();
+            using var client = fixture.CreateClient();
+
+            // Act
+            string actual = await client.GetStringAsync("/");
+
+            // Assert
+            actual.ShouldNotBeNull();
+            actual.ShouldNotBeEmpty();
+            actual.ShouldContain("<html");
         }
 
         [Fact]

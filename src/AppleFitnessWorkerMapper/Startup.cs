@@ -17,6 +17,7 @@ namespace MartinCostello.AppleFitnessWorkerMapper
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<RouteLoader>();
+            services.AddRazorPages();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
@@ -30,7 +31,7 @@ namespace MartinCostello.AppleFitnessWorkerMapper
 
             app.UseEndpoints((endpoints) =>
             {
-                endpoints.MapGet("/", async (context) => await context.Response.WriteAsync("Hello World!"));
+                endpoints.MapRazorPages();
                 endpoints.MapGet("/api/tracks", async (context) =>
                 {
                     DateTimeOffset? since = null;

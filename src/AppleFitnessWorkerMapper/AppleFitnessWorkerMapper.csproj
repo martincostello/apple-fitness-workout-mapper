@@ -2,6 +2,7 @@
   <PropertyGroup>
     <RootNamespace>MartinCostello.AppleFitnessWorkerMapper</RootNamespace>
     <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>AppleFitnessWorkerMapper</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

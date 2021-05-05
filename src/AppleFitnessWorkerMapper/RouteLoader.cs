@@ -3,12 +3,166 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using MartinCostello.AppleFitnessWorkerMapper.Models;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace MartinCostello.AppleFitnessWorkerMapper
 {
-    public class RouteLoader
+    public sealed class RouteLoader
     {
+        private static readonly XNamespace XS = "http://www.topografix.com/GPX/1/1";
+
+        private readonly IWebHostEnvironment _environment;
+        private readonly ILogger _logger;
+
+        public RouteLoader(
+            IWebHostEnvironment environment,
+            ILogger<RouteLoader> logger)
+        {
+            _environment = environment;
+            _logger = logger;
+        }
+
+        public async Task<IList<Track>> GetTracksAsync(
+            DateTimeOffset? since = null,
+            CancellationToken cancellationToken = default)
+        {
+            DateTimeOffset notBefore = since ?? DateTimeOffset.MinValue;
+
+            string path = Path.Combine(_environment.ContentRootPath, "App_Data");
+
+            var result = new List<Track>();
+
+            foreach (string fileName in Directory.EnumerateFiles(path, "*.gpx"))
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                Track? track = await TryLoadTrackAsync(fileName, notBefore, cancellationToken);
+
+                if (track is not null)
+                {
+                    result.Add(track);
+                }
+            }
+
+            return result;
+        }
+
+        private static bool TryParseTimestamp(XElement? element, [NotNullWhen(true)] out DateTimeOffset? value)
+        {
+            value = null;
+
+            if (element is null)
+            {
+                return false;
+            }
+
+            if (!DateTimeOffset.TryParse(element.Value, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out var timestamp))
+            {
+                return false;
+            }
+
+            value = timestamp;
+            return true;
+        }
+
+        private async Task<Track?> TryLoadTrackAsync(
+            string fileName,
+            DateTimeOffset notBefore,
+            CancellationToken cancellationToken)
+        {
+            using Stream stream = File.OpenRead(fileName);
+
+            XElement root;
+
+            try
+            {
+                root = await XElement.LoadAsync(stream, LoadOptions.None, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to load track XML from {FileName}.", fileName);
+                return null;
+            }
+
+            var result = new Track();
+
+            foreach (XElement segmentNodes in root.Descendants(XS + "trk").Descendants(XS + "trkseg"))
+            {
+                var segment = new List<TrackPoint>();
+
+                foreach (XElement pointNode in segmentNodes.Descendants(XS + "trkpt"))
+                {
+                    string? longitudeString = pointNode.Attribute("lon")?.Value;
+                    string? latitudeString = pointNode.Attribute("lat")?.Value;
+
+                    if (!double.TryParse(longitudeString, NumberStyles.Number, CultureInfo.InvariantCulture, out var longitude))
+                    {
+                        _logger.LogWarning("Ignoring longitude value {Longitude} from segment point in {FileName}.", longitudeString, fileName);
+                        continue;
+                    }
+
+                    if (!double.TryParse(latitudeString, NumberStyles.Number, CultureInfo.InvariantCulture, out var latitude))
+                    {
+                        _logger.LogWarning("Ignoring latitude value {Latitude} from segment point in {FileName}.", latitudeString, fileName);
+                        continue;
+                    }
+
+                    if (!TryParseTimestamp(pointNode.Descendants(XS + "time").FirstOrDefault(), out DateTimeOffset? timestamp))
+                    {
+                        _logger.LogWarning("Ignoring invalid timestamp value from segment point in {FileName}.", fileName);
+                        continue;
+                    }
+
+                    if (timestamp.Value < notBefore)
+                    {
+                        return null;
+                    }
+
+                    var point = new TrackPoint()
+                    {
+                        Latitude = latitude,
+                        Longitude = longitude,
+                        Timestamp = timestamp.Value,
+                    };
+
+                    segment.Add(point);
+                }
+
+                if (segment.Count > 0)
+                {
+                    result.Segments.Add(segment);
+
+                    _logger.LogDebug(
+                        "Added {PointCount} point(s) to segment {SegmentIndex} in {FileName}.",
+                        result.Segments[^1].Count,
+                        result.Segments.Count - 1,
+                        fileName);
+                }
+            }
+
+            if (result.Segments.Count < 1)
+            {
+                return null;
+            }
+
+            result.Timestamp = result.Segments.First().First().Timestamp;
+
+            _logger.LogDebug(
+                "Added {SegmentCount} segment(s) for track with timestamp {Timestamp:u} from {FileName}.",
+                result.Segments.Count,
+                result.Timestamp,
+                fileName);
+
+            return result;
+        }
     }
 }

@@ -25,6 +25,7 @@ PublishProfiles
 *.coverage
 *.DotSettings
 *.GhostDoc.xml
+*.gpx
 *.log
 *.nupkg
 *.opensdf

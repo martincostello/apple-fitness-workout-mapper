@@ -17,6 +17,7 @@ node_modules
 obj
 packages
 project.lock.json
+src/AppleFitnessWorkerMapper/wwwroot/static/js/*
 TestResults
 UpgradeLog*.htm
 UpgradeLog*.XML

@@ -14,7 +14,7 @@
     <None Remove="scripts\ts\**\*.ts" />
     <TypeScriptCompile Include="scripts\ts\**\*.ts" />
   </ItemGroup>
-  <Target Name="BundleAssets" BeforeTargets="PrepareForPublish">
+  <Target Name="BundleAssets" BeforeTargets="BeforeBuild">
     <Exec Command="npm install" Condition=" '$(InstallWebPackages)' == 'true' " />
     <Exec Command="npm run build" />
   </Target>

@@ -53,6 +53,8 @@ namespace MartinCostello.AppleFitnessWorkerMapper
                 }
             }
 
+            result.Sort((x, y) => Comparer<DateTimeOffset>.Default.Compare(x.Timestamp, y.Timestamp));
+
             return result;
         }
 

@@ -3,9 +3,11 @@
 
 using System;
 using System.Globalization;
+using System.IO.Compression;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Primitives;
@@ -19,6 +21,16 @@ namespace MartinCostello.AppleFitnessWorkerMapper
             services.AddSingleton<RouteLoader>();
             services.AddMemoryCache();
             services.AddRazorPages();
+
+            services.Configure<GzipCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
+            services.Configure<BrotliCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
+
+            services.AddResponseCompression((p) =>
+            {
+                p.EnableForHttps = true;
+                p.Providers.Add<BrotliCompressionProvider>();
+                p.Providers.Add<GzipCompressionProvider>();
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
@@ -28,6 +40,7 @@ namespace MartinCostello.AppleFitnessWorkerMapper
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseResponseCompression();
             app.UseStaticFiles();
             app.UseRouting();
 

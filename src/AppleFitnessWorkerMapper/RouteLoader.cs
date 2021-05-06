@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using MartinCostello.AppleFitnessWorkerMapper.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace MartinCostello.AppleFitnessWorkerMapper
@@ -20,18 +21,53 @@ namespace MartinCostello.AppleFitnessWorkerMapper
     {
         private static readonly XNamespace XS = "http://www.topografix.com/GPX/1/1";
 
+        private readonly IMemoryCache _cache;
         private readonly IWebHostEnvironment _environment;
         private readonly ILogger _logger;
 
         public RouteLoader(
+            IMemoryCache cache,
             IWebHostEnvironment environment,
             ILogger<RouteLoader> logger)
         {
+            _cache = cache;
             _environment = environment;
             _logger = logger;
         }
 
         public async Task<IList<Track>> GetTracksAsync(
+            DateTimeOffset? since = null,
+            CancellationToken cancellationToken = default)
+        {
+            DateTimeOffset notBefore = since ?? DateTimeOffset.MinValue;
+
+            if (!_cache.TryGetValue<IList<Track>>(notBefore, out var tracks))
+            {
+                tracks = _cache.Set(notBefore, await GetTracksCachedAsync(since, cancellationToken));
+            }
+
+            return tracks;
+        }
+
+        private static bool TryParseTimestamp(XElement? element, [NotNullWhen(true)] out DateTimeOffset? value)
+        {
+            value = null;
+
+            if (element is null)
+            {
+                return false;
+            }
+
+            if (!DateTimeOffset.TryParse(element.Value, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out var timestamp))
+            {
+                return false;
+            }
+
+            value = timestamp;
+            return true;
+        }
+
+        private async Task<IList<Track>> GetTracksCachedAsync(
             DateTimeOffset? since = null,
             CancellationToken cancellationToken = default)
         {
@@ -56,24 +92,6 @@ namespace MartinCostello.AppleFitnessWorkerMapper
             result.Sort((x, y) => Comparer<DateTimeOffset>.Default.Compare(x.Timestamp, y.Timestamp));
 
             return result;
-        }
-
-        private static bool TryParseTimestamp(XElement? element, [NotNullWhen(true)] out DateTimeOffset? value)
-        {
-            value = null;
-
-            if (element is null)
-            {
-                return false;
-            }
-
-            if (!DateTimeOffset.TryParse(element.Value, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out var timestamp))
-            {
-                return false;
-            }
-
-            value = timestamp;
-            return true;
         }
 
         private async Task<Track?> TryLoadTrackAsync(

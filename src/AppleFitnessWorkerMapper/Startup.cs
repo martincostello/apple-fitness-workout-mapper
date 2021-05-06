@@ -17,6 +17,7 @@ namespace MartinCostello.AppleFitnessWorkerMapper
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<RouteLoader>();
+            services.AddMemoryCache();
             services.AddRazorPages();
         }
 

@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading.Tasks;
 using MartinCostello.AppleFitnessWorkerMapper.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Shouldly;
 using Xunit;
@@ -27,7 +28,9 @@ namespace MartinCostello.AppleFitnessWorkerMapper
         public async Task Can_Load_All_Track_Points()
         {
             // Arrange
-            RouteLoader target = CreateTarget();
+            using var cache = new MemoryCache(new MemoryCacheOptions());
+
+            RouteLoader target = CreateTarget(cache);
 
             // Act
             IList<Track>? actual = await target.GetTracksAsync();
@@ -93,7 +96,9 @@ namespace MartinCostello.AppleFitnessWorkerMapper
         public async Task Can_Load_Some_Track_Points()
         {
             // Arrange
-            RouteLoader target = CreateTarget();
+            using var cache = new MemoryCache(new MemoryCacheOptions());
+
+            RouteLoader target = CreateTarget(cache);
 
             // Act
             IList<Track>? actual = await target.GetTracksAsync(since: new DateTimeOffset(2021, 05, 05, 00, 00, 00, TimeSpan.Zero));
@@ -126,7 +131,7 @@ namespace MartinCostello.AppleFitnessWorkerMapper
             point.Timestamp.ShouldBe(new DateTimeOffset(2021, 05, 05, 11, 25, 35, TimeSpan.Zero));
         }
 
-        private RouteLoader CreateTarget()
+        private RouteLoader CreateTarget(IMemoryCache cache)
         {
             string? thisDirectory = Path.GetDirectoryName(GetType().Assembly.Location);
 
@@ -138,7 +143,7 @@ namespace MartinCostello.AppleFitnessWorkerMapper
             var environment = mock.Object;
             var logger = _outputHelper.ToLogger<RouteLoader>();
 
-            return new RouteLoader(environment, logger);
+            return new RouteLoader(cache, environment, logger);
         }
     }
 }

@@ -1,9 +1,12 @@
 // Copyright (c) Martin Costello, 2021. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
+import { TrackPath } from './TrackPath';
+
 export class TrackMap {
 
     private readonly map: google.maps.Map;
+    private readonly paths: TrackPath[];
 
     constructor(element: HTMLElement) {
 
@@ -35,11 +38,24 @@ export class TrackMap {
         };
 
         this.map = new google.maps.Map(element, options);
+        this.paths = [];
+    }
 
-        /*
-        google.maps.event.addDomListener(this.map, 'tilesloaded', () => {
+    addPath(path: TrackPath) {
+        this.paths.push(path);
+    }
+
+    fitBounds() {
+
+        const bounds = new google.maps.LatLngBounds();
+
+        this.paths.forEach((path) => {
+            path.getPoints().forEach((point) => {
+                bounds.extend(point);
+            });
         });
-        */
+
+        this.map.fitBounds(bounds, 25);
     }
 
     getMap(): google.maps.Map {

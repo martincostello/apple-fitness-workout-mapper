@@ -26,6 +26,19 @@ export class TrackPath {
         });
     }
 
+    getPoints(): google.maps.LatLng[] {
+
+        const result: google.maps.LatLng[] = [];
+
+        this.track.segments.forEach((segment) => {
+            segment.forEach((point) => {
+                result.push(new google.maps.LatLng(point.latitude, point.longitude));
+            });
+        });
+
+        return result;
+    }
+
     private createRoute(): google.maps.Polyline {
 
         const route = new google.maps.Polyline({

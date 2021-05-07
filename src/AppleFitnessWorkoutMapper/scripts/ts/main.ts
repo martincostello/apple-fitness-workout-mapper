@@ -14,11 +14,11 @@ const initializer = async () => {
         draggable: true,
         fullscreenControl: true,
         gestureHandling: 'greedy',
-        mapTypeControl: false,
+        mapTypeControl: true,
         maxZoom: 18,
         rotateControl: false,
         scaleControl: true,
-        streetViewControl: false,
+        streetViewControl: true,
         styles: [
             {
                 featureType: 'poi',
@@ -42,10 +42,13 @@ const initializer = async () => {
     google.maps.event.addDomListener(map, 'tilesloaded', () => {
     });
 
+    // TODO Allow user to select a date range for the tracks
     const response = await fetch('api/tracks');
 
     const tracks: Track[] = await response.json();
 
+    // TODO Allow the user to highlight a specific track (and label it)
+    // TODO More styling and timestamp to the routes (more metadata, like duration and total distance in miles/km)?
     tracks.forEach((track) => {
 
         const route = new google.maps.Polyline({

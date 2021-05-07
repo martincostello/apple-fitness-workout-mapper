@@ -71,10 +71,23 @@ export class Tracker {
         const trackElement = this.tracksElement.lastElementChild;
         trackElement.setAttribute('id', '');
 
+        const collapseId = `details-${track.name}`;
+
         // Set the name onto the templated node
         const trackLink = trackElement.firstElementChild;
+        trackLink.setAttribute('aria-controls', collapseId);
         trackLink.setAttribute('data-track-name', track.name);
         trackLink.textContent = track.name;
+
+        // Set up the collapse for the element containing the track details
+        const details = trackLink.nextElementSibling;
+
+        details.setAttribute('id', collapseId);
+        details.firstElementChild.textContent = track.name;
+
+        trackLink.addEventListener('click', () => {
+            ($(details) as any).collapse('toggle');
+        });
 
         // Unhide once populated
         trackElement.classList.remove('d-none');

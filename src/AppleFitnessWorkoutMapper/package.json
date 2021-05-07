@@ -15,6 +15,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@types/googlemaps": "3.43.3",
+    "@types/jquery": "^3.5.5",
     "@types/moment": "2.13.0",
     "@typescript-eslint/eslint-plugin": "^4.22.1",
     "@typescript-eslint/eslint-plugin-tslint": "^4.22.1",
@@ -28,8 +29,8 @@
     "eslint": "^7.25.0",
     "eslint-config-prettier": "^8.3.0",
     "gulp": "4.0.2",
-    "gulp-sourcemaps": "3.0.0",
     "gulp-eslint": "6.0.0",
+    "gulp-sourcemaps": "3.0.0",
     "gulp-typescript": "5.0.1",
     "gulp-uglify": "3.0.2",
     "hosted-git-info": "4.0.2",

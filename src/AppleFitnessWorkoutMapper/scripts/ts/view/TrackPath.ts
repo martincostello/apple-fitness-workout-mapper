@@ -13,8 +13,8 @@ export class TrackPath {
 
     private visible: boolean;
 
-    constructor(element: Element, track: Track, map: TrackMap) {
-        this.element = element;
+    constructor(container: Element, track: Track, map: TrackMap) {
+        this.element = container;
         this.map = map;
         this.track = track;
         this.route = this.createRoute();

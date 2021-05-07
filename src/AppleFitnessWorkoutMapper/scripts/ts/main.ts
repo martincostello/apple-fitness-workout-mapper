@@ -15,7 +15,7 @@ const initializer = async () => {
         fullscreenControl: true,
         gestureHandling: 'greedy',
         mapTypeControl: false,
-        maxZoom: 16,
+        maxZoom: 18,
         rotateControl: false,
         scaleControl: true,
         streetViewControl: false,

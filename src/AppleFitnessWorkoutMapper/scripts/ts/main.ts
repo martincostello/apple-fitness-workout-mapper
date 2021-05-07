@@ -73,17 +73,21 @@ const initializer = async () => {
 
         route.setMap(map);
 
-        const trackElement = document.createElement('li');
-        trackElement.classList.add('nav-item');
+        // Clone the template
+        const newNode = trackTemplate.cloneNode(true);
+        tracksElement.appendChild(newNode);
 
-        const trackLink = document.createElement('a');
-        trackLink.classList.add('nav-link');
-        trackLink.setAttribute('href', '#');
+        // Clear the duplicated Id from the new node
+        const trackElement = tracksElement.lastElementChild;
+        trackElement.setAttribute('id', '');
+
+        // Set the name onto the templated node
+        const trackLink = trackElement.firstElementChild;
         trackLink.setAttribute('data-track-name', track.name);
-        trackLink.innerText = track.name;
-        trackElement.appendChild(trackLink);
+        trackLink.textContent = track.name;
 
-        tracksElement.appendChild(trackElement);
+        // Unhide once populated
+        trackElement.classList.remove('d-none');
     });
 
     tracksCountElement.innerText = `(${tracks.length})`;

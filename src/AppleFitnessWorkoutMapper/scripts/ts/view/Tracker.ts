@@ -1,7 +1,9 @@
 // Copyright (c) Martin Costello, 2021. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
+import * as moment from '../../../node_modules/moment/moment';
 import { ApiClient } from '../client/ApiClient';
+import { Map } from './Map';
 import { TrackModel } from '../models/TrackModel';
 
 export class Tracker {
@@ -22,39 +24,12 @@ export class Tracker {
 
     async initialize() {
 
-        const london = { lat: 51.50809, lng: -0.1285907 };
-
-        const options: google.maps.MapOptions = {
-            center: london,
-            clickableIcons: false,
-            disableDoubleClickZoom: false,
-            draggable: true,
-            fullscreenControl: true,
-            gestureHandling: 'greedy',
-            mapTypeControl: true,
-            maxZoom: 18,
-            rotateControl: false,
-            scaleControl: true,
-            streetViewControl: true,
-            styles: [
-                {
-                    featureType: 'poi',
-                    elementType: 'labels',
-                    stylers: [
-                        { visibility: 'off' }
-                    ]
-                }
-            ],
-            zoom: 16,
-            zoomControl: true
-        };
-
-        const map = new google.maps.Map(this.mapElement, options);
-
-        google.maps.event.addDomListener(map, 'tilesloaded', () => {
-        });
+        const map = new Map(this.mapElement);
 
         // TODO Allow user to select a date range for the tracks
+        // const notBefore = moment('2021-04-01T00:00:00Z');
+        // const notAfter = moment('2021-05-01T00:00:00Z');
+
         const client = new ApiClient();
         const tracks = await client.getTracks();
 
@@ -87,7 +62,7 @@ export class Tracker {
                 });
             });
 
-            route.setMap(map);
+            route.setMap(map.getMap());
 
             // Clone the template
             const newNode = this.trackTemplate.cloneNode(true);
@@ -114,7 +89,7 @@ export class Tracker {
             let visible = true;
 
             model.element.addEventListener('click', () => {
-                model.route.setMap(visible ? null : map);
+                model.route.setMap(visible ? null : map.getMap());
                 visible = !visible;
             });
 
@@ -135,6 +110,6 @@ export class Tracker {
             });
         });
 
-        map.fitBounds(bounds, 25);
+        map.getMap().fitBounds(bounds, 25);
     }
 }

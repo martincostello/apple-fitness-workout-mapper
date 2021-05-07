@@ -147,9 +147,8 @@ export class Tracker {
 
         const tracks = await this.client.getTracks(notBefore, notAfter);
 
-        // TODO Allow the user to highlight a specific track (and label it)
-        // TODO Show/hide all tracks
-        // TODO More styling and timestamp to the routes (more metadata, like duration and total distance in miles/km)?
+        // TODO Apply labels to the tracks on the map
+        // TODO More styling to tracks and more metadata, like duration and total distance in miles/km?
         tracks.forEach((track) => {
             const trackLink = this.createTrackElement(track);
             this.map.addPath(new TrackPath(trackLink, track, this.map));

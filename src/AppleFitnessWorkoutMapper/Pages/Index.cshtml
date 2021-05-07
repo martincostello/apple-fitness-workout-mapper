@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous">
     <link rel="stylesheet" href="~/static/css/styles.css">
     <meta name="description" content="Visualise multiple journeys from Apple Fitness on a map">
     <meta name="author" content="Martin Costello">
@@ -23,6 +24,34 @@
                         <span>Your Workouts <span id="track-list-count"></span></span>
                         <span class="center-block loader" aria-label="Loading..." id="loader"></span>
                     </h6>
+                    <hr />
+                    <div class="sidebar-controls ml-2 mr-2">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend" aria-hidden="true">
+                                <span class="input-group-text"><img src="~/static/images/calendar.svg" /></span>
+                            </div>
+                            <input type="text" class="form-control calendar" placeholder="Start date" aria-label="Start date" id="not-before" disabled>
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend" aria-hidden="true">
+                                <span class="input-group-text"><img src="~/static/images/calendar.svg" /></span>
+                            </div>
+                            <input type="text" class="form-control calendar" placeholder="End date" aria-label="End date" id="not-after" disabled>
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="btn-toolbar" role="toolbar">
+                                <div class="btn-group mr-2" role="group">
+                                    <button type="button" class="btn btn-primary" id="filter" disabled>Filter</button>
+                                </div>
+                                <div class="btn-group mr-2" role="group">
+                                    <button type="button" class="btn btn-secondary" id="show-all" disabled>Show all</button>
+                                </div>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-secondary" id="hide-all" disabled>Hide all</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <ul class="list-group list-group-flush flex-column mb-2" id="track-list">
                         <li class="list-group-item d-none" id="track-item-template">
                             <a class="nav-link" href="#" data-track-name=""></a>
@@ -40,7 +69,17 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=@(Model.GoogleMapsApiKey)"></script>
     <script src="~/static/js/main.js"></script>
+    <script>
+        $('.calendar').datepicker({
+            autoclose: true,
+            clearBtn: true,
+            format: 'yyyy-mm-dd',
+            todayBtn: 'linked',
+            weekStart: 1
+        });
+    </script>
 </body>
 </html>

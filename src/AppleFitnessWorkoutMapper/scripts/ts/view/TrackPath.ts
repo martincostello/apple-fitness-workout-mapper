@@ -39,6 +39,10 @@ export class TrackPath {
         return result;
     }
 
+    removeFromMap() {
+        this.route.setMap(null);
+    }
+
     private createRoute(): google.maps.Polyline {
 
         const route = new google.maps.Polyline({

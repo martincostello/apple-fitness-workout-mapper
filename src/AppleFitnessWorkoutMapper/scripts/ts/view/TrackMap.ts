@@ -6,7 +6,7 @@ import { TrackPath } from './TrackPath';
 export class TrackMap {
 
     private readonly map: google.maps.Map;
-    private readonly paths: TrackPath[];
+    private paths: TrackPath[];
 
     constructor(element: HTMLElement) {
 
@@ -43,6 +43,13 @@ export class TrackMap {
 
     addPath(path: TrackPath) {
         this.paths.push(path);
+    }
+
+    clearPaths() {
+        this.paths.forEach((path) => {
+            path.removeFromMap();
+        });
+        this.paths = [];
     }
 
     fitBounds() {

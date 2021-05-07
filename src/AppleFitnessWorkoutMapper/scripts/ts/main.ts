@@ -18,7 +18,6 @@ const initializer = async () => {
         maxZoom: 16,
         rotateControl: false,
         scaleControl: true,
-        scrollwheel: false,
         streetViewControl: false,
         styles: [
             {

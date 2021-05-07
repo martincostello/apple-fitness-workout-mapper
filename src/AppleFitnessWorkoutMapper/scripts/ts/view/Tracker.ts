@@ -130,7 +130,7 @@ export class Tracker {
         }
 
         if (this.notAfterElement.value) {
-            notAfter = moment(this.notAfterElement.value).add('days', 1);
+            notAfter = moment(this.notAfterElement.value).add(1, 'days');
         }
 
         const tracks = await this.client.getTracks(notBefore, notAfter);

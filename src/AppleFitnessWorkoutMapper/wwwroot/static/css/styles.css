@@ -43,6 +43,10 @@ body {
   color: #007bff;
 }
 
+.list-group-item + .list-group-item:nth-of-type(2) {
+  border-top-width: 1px;
+}
+
 [role="main"] {
   padding-top: 48px;
 }

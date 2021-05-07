@@ -40,14 +40,23 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             DateTimeOffset? until = null,
             CancellationToken cancellationToken = default)
         {
-            string key = string.Format(CultureInfo.InvariantCulture, "{0:u}|{1:u}", since, until);
+            string key = "Tracks:*";
 
             if (!_cache.TryGetValue<IList<Track>>(key, out var tracks))
             {
-                tracks = _cache.Set(key, await GetTracksCachedAsync(since, until, cancellationToken));
+                _logger.LogInformation("Adding tracks to cache.");
+
+                tracks = _cache.Set(key, await GetTracksUncachedAsync(cancellationToken));
+
+                _logger.LogInformation("Added {Count} track(s) to cache.", tracks.Count);
             }
 
-            return tracks;
+            DateTimeOffset notBefore = since ?? DateTimeOffset.MinValue;
+            DateTimeOffset notAfter = until ?? DateTimeOffset.MaxValue;
+
+            return tracks
+                .Where((p) => p.Timestamp > notBefore && p.Timestamp < notAfter)
+                .ToList();
         }
 
         private static bool TryParseTimestamp(XElement? element, [NotNullWhen(true)] out DateTimeOffset? value)
@@ -68,14 +77,9 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             return true;
         }
 
-        private async Task<IList<Track>> GetTracksCachedAsync(
-            DateTimeOffset? since = null,
-            DateTimeOffset? until = null,
+        private async Task<IList<Track>> GetTracksUncachedAsync(
             CancellationToken cancellationToken = default)
         {
-            DateTimeOffset notBefore = since ?? DateTimeOffset.MinValue;
-            DateTimeOffset notAfter = until ?? DateTimeOffset.MaxValue;
-
             string path = Path.Combine(_environment.ContentRootPath, "App_Data");
 
             var result = new List<Track>();
@@ -84,7 +88,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                Track? track = await TryLoadTrackAsync(fileName, notBefore, notAfter, cancellationToken);
+                Track? track = await TryLoadTrackAsync(fileName, cancellationToken);
 
                 if (track is not null)
                 {
@@ -99,8 +103,6 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
 
         private async Task<Track?> TryLoadTrackAsync(
             string fileName,
-            DateTimeOffset notBefore,
-            DateTimeOffset notAfter,
             CancellationToken cancellationToken)
         {
             using Stream stream = File.OpenRead(fileName);
@@ -148,11 +150,6 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                         {
                             _logger.LogWarning("Ignoring invalid timestamp value from segment point in {FileName}.", fileName);
                             continue;
-                        }
-
-                        if (timestamp.Value < notBefore || timestamp.Value > notAfter)
-                        {
-                            return null;
                         }
 
                         var point = new TrackPoint()

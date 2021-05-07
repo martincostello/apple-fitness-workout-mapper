@@ -83,7 +83,6 @@ export class Tracker {
         const details = trackLink.nextElementSibling;
 
         details.setAttribute('id', collapseId);
-        details.firstElementChild.textContent = track.name;
 
         trackLink.addEventListener('click', () => {
             ($(details) as any).collapse('toggle');

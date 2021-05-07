@@ -1,32 +1,52 @@
 // Copyright (c) Martin Costello, 2021. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
+import * as moment from '../../../node_modules/moment/moment';
 import { Track } from '../models/Track';
 import { TrackMap } from './TrackMap';
 
 export class TrackPath {
 
-    private readonly element: Element;
+    private static blue: string = '#0000FF';
+    private static red: string = '#FF0000';
+
+    private readonly container: Element;
     private readonly map: TrackMap;
     private readonly route: google.maps.Polyline;
     private readonly track: Track;
 
+    private highlighted: boolean;
     private visible: boolean;
 
     constructor(container: Element, track: Track, map: TrackMap) {
-        this.element = container;
+        this.container = container;
         this.map = map;
         this.track = track;
         this.route = this.createRoute();
-        this.visible = this.route.getMap() !== null;
+        this.visible = true;
 
-        this.element.addEventListener('click', () => {
-            if (this.visible) {
-                this.hidePath();
-            } else {
-                this.showPath();
-            }
-            this.visible = !this.visible;
+        this.container.nextElementSibling.querySelectorAll('[data-js-visible]').forEach((button) => {
+            button.addEventListener('click', () => {
+                if (this.visible) {
+                    this.hidePath();
+                    button.textContent = 'Show';
+                } else {
+                    this.showPath();
+                    button.textContent = 'Hide';
+                }
+            });
+        });
+
+        this.container.nextElementSibling.querySelectorAll('[data-js-name]').forEach((name) => {
+            name.textContent = track.name;
+        });
+
+        this.container.nextElementSibling.querySelectorAll('[data-js-timestamp]').forEach((timestamp) => {
+            timestamp.textContent = moment(track.timestamp).toLocaleString();
+        });
+
+        this.container.addEventListener('click', () => {
+            this.toggleHighlighting();
         });
     }
 
@@ -44,6 +64,7 @@ export class TrackPath {
     }
 
     hidePath() {
+        this.visible = false;
         this.route.setMap(null);
     }
 
@@ -52,7 +73,15 @@ export class TrackPath {
     }
 
     showPath() {
+        this.visible = true;
         this.route.setMap(this.map.getMap());
+    }
+
+    toggleHighlighting() {
+        this.highlighted = !this.highlighted;
+        this.route.setOptions({
+            strokeColor: this.highlighted ? TrackPath.blue : TrackPath.red
+        });
     }
 
     private createRoute(): google.maps.Polyline {
@@ -66,7 +95,7 @@ export class TrackPath {
                 }
             )),
             path: [],
-            strokeColor: '#FF0000',
+            strokeColor: TrackPath.red,
             strokeOpacity: 1.0,
             strokeWeight: 1
         });

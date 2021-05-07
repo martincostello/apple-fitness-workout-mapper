@@ -65,7 +65,19 @@ export class TrackMap {
         this.map.fitBounds(bounds, 25);
     }
 
+    hidePaths() {
+        this.paths.forEach((path) => {
+            path.hidePath();
+        });
+    }
+
     getMap(): google.maps.Map {
         return this.map;
+    }
+
+    showPaths() {
+        this.paths.forEach((path) => {
+            path.showPath();
+        });
     }
 }

@@ -46,6 +46,18 @@ export class Tracker {
             this.reloadTracks();
         });
 
+        this.hideAllElement.addEventListener('click', () => {
+            Tracker.disableElement(this.hideAllElement);
+            this.map.hidePaths();
+            Tracker.enableElement(this.hideAllElement);
+        });
+
+        this.showAllElement.addEventListener('click', () => {
+            Tracker.disableElement(this.showAllElement);
+            this.map.showPaths();
+            Tracker.enableElement(this.showAllElement);
+        });
+
         await this.reloadTracks();
     }
 

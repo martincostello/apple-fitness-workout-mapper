@@ -21,7 +21,11 @@ export class TrackPath {
         this.visible = this.route.getMap() !== null;
 
         this.element.addEventListener('click', () => {
-            this.route.setMap(this.visible ? null : this.map.getMap());
+            if (this.visible) {
+                this.hidePath();
+            } else {
+                this.showPath();
+            }
             this.visible = !this.visible;
         });
     }
@@ -39,8 +43,16 @@ export class TrackPath {
         return result;
     }
 
+    hidePath() {
+        this.route.setMap(null);
+    }
+
     removeFromMap() {
         this.route.setMap(null);
+    }
+
+    showPath() {
+        this.route.setMap(this.map.getMap());
     }
 
     private createRoute(): google.maps.Polyline {

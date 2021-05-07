@@ -34,17 +34,13 @@ body {
 }
 
 .sidebar .nav-link {
-  font-weight: 500;
   color: #333;
+  font-weight: 500;
+  padding: 0.5rem 2rem;
 }
 
 .sidebar .nav-link.active {
   color: #007bff;
-}
-
-.sidebar-heading {
-  font-size: .75rem;
-  text-transform: uppercase;
 }
 
 [role="main"] {
@@ -63,4 +59,23 @@ body {
   height: 80vh;
   max-height: none;
   min-height: 80%;
+}
+
+.loader {
+  animation: spin 2s linear infinite;
+  border: 6px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 6px solid #2c3e50;
+  height: 40px;
+  width: 40px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }

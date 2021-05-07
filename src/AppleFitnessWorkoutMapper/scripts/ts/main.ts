@@ -32,6 +32,7 @@ const initializer = async () => {
         zoomControl: true
     };
 
+    const loader = document.getElementById('loader');
     const mapElement = document.getElementById('map');
     const tracksElement = document.getElementById('track-list');
     const trackTemplate = document.getElementById('track-item-template');
@@ -93,6 +94,8 @@ const initializer = async () => {
     });
 
     tracksCountElement.innerText = `(${tracks.length})`;
+
+    loader.classList.add('d-none');
 
     const bounds = new google.maps.LatLngBounds();
 

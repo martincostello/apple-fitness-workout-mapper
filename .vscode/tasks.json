@@ -7,7 +7,7 @@
           "type": "process",
           "args": [
               "build",
-              "${workspaceFolder}/src/AppleFitnessWorkerMapper/AppleFitnessWorkerMapper.csproj",
+              "${workspaceFolder}/src/AppleFitnessWorkoutMapper/AppleFitnessWorkoutMapper.csproj",
               "/property:GenerateFullPaths=true",
               "/consoleloggerparameters:NoSummary"
           ],
@@ -19,7 +19,7 @@
           "type": "process",
           "args": [
               "publish",
-              "${workspaceFolder}/src/AppleFitnessWorkerMapper/AppleFitnessWorkerMapper.csproj",
+              "${workspaceFolder}/src/AppleFitnessWorkoutMapper/AppleFitnessWorkoutMapper.csproj",
               "/property:GenerateFullPaths=true",
               "/consoleloggerparameters:NoSummary"
           ],
@@ -32,7 +32,7 @@
           "args": [
               "watch",
               "run",
-              "${workspaceFolder}/tests/AppleFitnessWorkerMapper.Tests/AppleFitnessWorkerMapper.Tests.csproj",
+              "${workspaceFolder}/tests/AppleFitnessWorkoutMapper.Tests/AppleFitnessWorkoutMapper.Tests.csproj",
               "/property:GenerateFullPaths=true",
               "/consoleloggerparameters:NoSummary"
           ],
@@ -45,7 +45,7 @@
         "args": [
             "watch",
             "run",
-            "${workspaceFolder}/src/AppleFitnessWorkerMapper/AppleFitnessWorkerMapper.csproj",
+            "${workspaceFolder}/src/AppleFitnessWorkoutMapper/AppleFitnessWorkoutMapper.csproj",
             "/property:GenerateFullPaths=true",
             "/consoleloggerparameters:NoSummary"
         ],

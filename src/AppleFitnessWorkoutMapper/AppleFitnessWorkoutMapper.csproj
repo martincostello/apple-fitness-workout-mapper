@@ -1,8 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <RootNamespace>MartinCostello.AppleFitnessWorkerMapper</RootNamespace>
+    <RootNamespace>MartinCostello.AppleFitnessWorkoutMapper</RootNamespace>
     <TargetFramework>net5.0</TargetFramework>
-    <UserSecretsId>AppleFitnessWorkerMapper</UserSecretsId>
+    <UserSecretsId>AppleFitnessWorkoutMapper</UserSecretsId>
+    <TypeScriptToolsVersion>4.2</TypeScriptToolsVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.TypeScript.MSBuild" PrivateAssets="all" />

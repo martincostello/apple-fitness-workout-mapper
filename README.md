@@ -1,4 +1,4 @@
-# Apple Fitness Worker Mapper
+# Apple Fitness Workout Mapper
 
 [![Build status](https://github.com/martincostello/apple-fitness-workout-mapper/workflows/build/badge.svg?branch=main&event=push)](https://github.com/martincostello/apple-fitness-workout-mapper/actions?query=workflow%3Abuild+branch%3Amain+event%3Apush)
 

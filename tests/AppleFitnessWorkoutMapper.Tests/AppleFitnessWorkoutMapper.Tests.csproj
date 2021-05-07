@@ -2,7 +2,7 @@
   <PropertyGroup>
     <IsPackable>false</IsPackable>
     <NoWarn>$(NoWarn);CA1707;CA2234</NoWarn>
-    <RootNamespace>MartinCostello.AppleFitnessWorkerMapper</RootNamespace>
+    <RootNamespace>MartinCostello.AppleFitnessWorkoutMapper</RootNamespace>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
@@ -17,7 +17,7 @@
     <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\AppleFitnessWorkerMapper\AppleFitnessWorkerMapper.csproj" />
+    <ProjectReference Include="..\..\src\AppleFitnessWorkoutMapper\AppleFitnessWorkoutMapper.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="App_Data\*.gpx" CopyToOutputDirectory="PreserveNewest" />

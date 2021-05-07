@@ -4,7 +4,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 
-namespace MartinCostello.AppleFitnessWorkerMapper.Pages
+namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
 {
     public class IndexModel : PageModel
     {

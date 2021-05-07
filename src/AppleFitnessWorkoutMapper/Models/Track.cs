@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MartinCostello.AppleFitnessWorkerMapper.Models
+namespace MartinCostello.AppleFitnessWorkoutMapper.Models
 {
     public sealed class Track
     {

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using MartinCostello.AppleFitnessWorkerMapper.Models;
+using MartinCostello.AppleFitnessWorkoutMapper.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
@@ -13,7 +13,7 @@ using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace MartinCostello.AppleFitnessWorkerMapper
+namespace MartinCostello.AppleFitnessWorkoutMapper
 {
     public class RouteLoaderTests
     {

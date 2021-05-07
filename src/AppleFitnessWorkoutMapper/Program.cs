@@ -4,7 +4,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace MartinCostello.AppleFitnessWorkerMapper
+namespace MartinCostello.AppleFitnessWorkoutMapper
 {
     public static class Program
     {

@@ -6,7 +6,7 @@
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <Authors>Martin Costello</Authors>
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)AppleFitnessWorkerMapper.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)AppleFitnessWorkoutMapper.ruleset</CodeAnalysisRuleSet>
     <Company>https://github.com/martincostello/apple-fitness-workout-mapper</Company>
     <ContinuousIntegrationBuild Condition=" '$(CI)' != '' ">true</ContinuousIntegrationBuild>
     <Copyright>Martin Costello (c) $([System.DateTime]::Now.ToString(yyyy))</Copyright>
@@ -34,7 +34,7 @@
     <VersionPrefix>1.0.0</VersionPrefix>
     <VersionSuffix></VersionSuffix>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(CI)' != '' or !Exists('$(MSBuildThisFileDirectory)\src\AppleFitnessWorkerMapper\node_modules') ">
+  <PropertyGroup Condition=" '$(CI)' != '' or !Exists('$(MSBuildThisFileDirectory)\src\AppleFitnessWorkoutMapper\node_modules') ">
     <InstallWebPackages>true</InstallWebPackages>
   </PropertyGroup>
 </Project>

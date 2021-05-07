@@ -109,11 +109,11 @@ function DotNetPublish {
 }
 
 $testProjects = @(
-    (Join-Path $solutionPath "tests\AppleFitnessWorkerMapper.Tests\AppleFitnessWorkerMapper.Tests.csproj")
+    (Join-Path $solutionPath "tests\AppleFitnessWorkoutMapper.Tests\AppleFitnessWorkoutMapper.Tests.csproj")
 )
 
 $publishProjects = @(
-    (Join-Path $solutionPath "src\AppleFitnessWorkerMapper\AppleFitnessWorkerMapper.csproj")
+    (Join-Path $solutionPath "src\AppleFitnessWorkoutMapper\AppleFitnessWorkoutMapper.csproj")
 )
 
 Write-Host "Publishing solution..." -ForegroundColor Green

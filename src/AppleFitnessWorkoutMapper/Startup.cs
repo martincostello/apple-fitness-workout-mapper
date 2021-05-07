@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Primitives;
 
-namespace MartinCostello.AppleFitnessWorkerMapper
+namespace MartinCostello.AppleFitnessWorkoutMapper
 {
     public class Startup
     {

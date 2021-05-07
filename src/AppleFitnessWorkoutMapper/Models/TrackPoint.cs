@@ -3,7 +3,7 @@
 
 using System;
 
-namespace MartinCostello.AppleFitnessWorkerMapper.Models
+namespace MartinCostello.AppleFitnessWorkoutMapper.Models
 {
     public sealed class TrackPoint
     {

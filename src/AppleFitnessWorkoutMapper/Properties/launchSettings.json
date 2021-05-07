@@ -1,6 +1,6 @@
 ﻿{
   "profiles": {
-    "AppleFitnessWorkerMapper": {
+    "AppleFitnessWorkoutMapper": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,

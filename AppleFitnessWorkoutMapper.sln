@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6A606EB3-5450-403A-A6E2-694D2854EF29}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppleFitnessWorkerMapper", "src\AppleFitnessWorkerMapper\AppleFitnessWorkerMapper.csproj", "{43E4F047-61B2-4C4E-8636-AD1CDEFE1080}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppleFitnessWorkoutMapper", "src\AppleFitnessWorkoutMapper\AppleFitnessWorkoutMapper.csproj", "{43E4F047-61B2-4C4E-8636-AD1CDEFE1080}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3DF81AF5-7F93-43F5-A5A5-40DB88349085}"
 	ProjectSection(SolutionItems) = preProject
@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		.vsconfig = .vsconfig
-		AppleFitnessWorkerMapper.ruleset = AppleFitnessWorkerMapper.ruleset
+		AppleFitnessWorkoutMapper.ruleset = AppleFitnessWorkoutMapper.ruleset
 		build.ps1 = build.ps1
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
@@ -27,7 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A971E5AF-6E03-4987-82A7-C0CC89D3CAE2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppleFitnessWorkerMapper.Tests", "tests\AppleFitnessWorkerMapper.Tests\AppleFitnessWorkerMapper.Tests.csproj", "{7F122431-1921-402B-84D6-F1DCDE9D159B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppleFitnessWorkoutMapper.Tests", "tests\AppleFitnessWorkoutMapper.Tests\AppleFitnessWorkoutMapper.Tests.csproj", "{7F122431-1921-402B-84D6-F1DCDE9D159B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{BA896693-21BA-47AD-A03D-1CFB83CDCA4A}"
 	ProjectSection(SolutionItems) = preProject

@@ -5,14 +5,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using MartinCostello.AppleFitnessWorkerMapper.Models;
+using MartinCostello.AppleFitnessWorkoutMapper.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace MartinCostello.AppleFitnessWorkerMapper
+namespace MartinCostello.AppleFitnessWorkoutMapper
 {
     public class AppTests
     {

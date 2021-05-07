@@ -10,12 +10,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using MartinCostello.AppleFitnessWorkerMapper.Models;
+using MartinCostello.AppleFitnessWorkoutMapper.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
-namespace MartinCostello.AppleFitnessWorkerMapper
+namespace MartinCostello.AppleFitnessWorkoutMapper
 {
     public sealed class RouteLoader
     {

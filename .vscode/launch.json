@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+      {
+          "name": "Launch AppleFitnessWorkerMapper",
+          "type": "coreclr",
+          "request": "launch",
+          "preLaunchTask": "build",
+          "program": "${workspaceFolder}/src/AppleFitnessWorkerMapper/bin/Debug/net5.0/AppleFitnessWorkerMapper.dll",
+          "args": [],
+          "cwd": "${workspaceFolder}/src/AppleFitnessWorkerMapper",
+          "stopAtEntry": false,
+          "serverReadyAction": {
+              "action": "openExternally",
+              "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+          },
+          "env": {
+              "ASPNETCORE_ENVIRONMENT": "Development"
+          },
+          "sourceFileMap": {
+              "/Views": "${workspaceFolder}/Views"
+          }
+      }
+  ]
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="Apple Health Export" xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <trk>
+    <name>Route 1</name>
+    <trkseg>
+      <trkpt lon="-0.1285907" lat="51.5080900"><ele>1.234567</ele><time>2021-05-04T11:25:35Z</time><extensions><speed>1.234567</speed><course>123.456789</course><hAcc>1.234567</hAcc><vAcc>1.234567</vAcc></extensions></trkpt>
+      <trkpt lon="-0.1440787" lat="51.5013640"><ele>2.345678</ele><time>2021-05-04T11:45:12Z</time><extensions><speed>1.234567</speed><course>123.456789</course><hAcc>1.234567</hAcc><vAcc>1.234567</vAcc></extensions></trkpt>
+    </trkseg>
+  </trk>
+</gpx>

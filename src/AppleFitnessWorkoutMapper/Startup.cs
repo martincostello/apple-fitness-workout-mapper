@@ -50,6 +50,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                 endpoints.MapGet("/api/tracks", async (context) =>
                 {
                     DateTimeOffset? since = null;
+                    DateTimeOffset? until = null;
 
                     StringValues noteBefore = context.Request.Query["notBefore"];
 
@@ -59,9 +60,17 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                         since = value;
                     }
 
+                    StringValues notAfter = context.Request.Query["notAfter"];
+
+                    if (!StringValues.IsNullOrEmpty(notAfter) &&
+                        DateTimeOffset.TryParse(notAfter, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out value))
+                    {
+                        until = value;
+                    }
+
                     var loader = context.RequestServices.GetRequiredService<TrackLoader>();
 
-                    var tracks = await loader.GetTracksAsync(since, context.RequestAborted);
+                    var tracks = await loader.GetTracksAsync(since, until, context.RequestAborted);
 
                     await context.Response.WriteAsJsonAsync(tracks, context.RequestAborted);
                 });

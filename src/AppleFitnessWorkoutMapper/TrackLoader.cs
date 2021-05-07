@@ -37,13 +37,14 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
 
         public async Task<IList<Track>> GetTracksAsync(
             DateTimeOffset? since = null,
+            DateTimeOffset? until = null,
             CancellationToken cancellationToken = default)
         {
-            DateTimeOffset notBefore = since ?? DateTimeOffset.MinValue;
+            string key = string.Format(CultureInfo.InvariantCulture, "{0:u}|{1:u}", since, until);
 
-            if (!_cache.TryGetValue<IList<Track>>(notBefore, out var tracks))
+            if (!_cache.TryGetValue<IList<Track>>(key, out var tracks))
             {
-                tracks = _cache.Set(notBefore, await GetTracksCachedAsync(since, cancellationToken));
+                tracks = _cache.Set(key, await GetTracksCachedAsync(since, until, cancellationToken));
             }
 
             return tracks;
@@ -69,9 +70,11 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
 
         private async Task<IList<Track>> GetTracksCachedAsync(
             DateTimeOffset? since = null,
+            DateTimeOffset? until = null,
             CancellationToken cancellationToken = default)
         {
             DateTimeOffset notBefore = since ?? DateTimeOffset.MinValue;
+            DateTimeOffset notAfter = until ?? DateTimeOffset.MaxValue;
 
             string path = Path.Combine(_environment.ContentRootPath, "App_Data");
 
@@ -81,7 +84,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                Track? track = await TryLoadTrackAsync(fileName, notBefore, cancellationToken);
+                Track? track = await TryLoadTrackAsync(fileName, notBefore, notAfter, cancellationToken);
 
                 if (track is not null)
                 {
@@ -97,6 +100,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
         private async Task<Track?> TryLoadTrackAsync(
             string fileName,
             DateTimeOffset notBefore,
+            DateTimeOffset notAfter,
             CancellationToken cancellationToken)
         {
             using Stream stream = File.OpenRead(fileName);
@@ -146,7 +150,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                             continue;
                         }
 
-                        if (timestamp.Value < notBefore)
+                        if (timestamp.Value < notBefore || timestamp.Value > notAfter)
                         {
                             return null;
                         }

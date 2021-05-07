@@ -16,25 +16,30 @@
   "devDependencies": {
     "@types/googlemaps": "3.43.3",
     "@types/moment": "2.13.0",
+    "@typescript-eslint/eslint-plugin": "^4.22.1",
+    "@typescript-eslint/eslint-plugin-tslint": "^4.22.1",
+    "@typescript-eslint/parser": "^4.22.1",
     "babel-core": "6.26.3",
     "babel-plugin-transform-runtime": "6.23.0",
     "babel-preset-es2015": "6.24.1",
     "babel-runtime": "6.26.0",
     "babelify": "8.0.0",
     "browserify": "17.0.0",
+    "eslint": "^7.25.0",
+    "eslint-config-prettier": "^8.3.0",
     "gulp": "4.0.2",
     "gulp-sourcemaps": "3.0.0",
-    "gulp-tslint": "8.1.4",
+    "gulp-eslint": "6.0.0",
     "gulp-typescript": "5.0.1",
     "gulp-uglify": "3.0.2",
     "hosted-git-info": "4.0.2",
     "moment": "2.29.1",
     "tsify": "5.0.2",
-    "tslint": "6.1.3",
     "typescript": "4.2.4",
     "vinyl-buffer": "1.0.1",
     "vinyl-source-stream": "2.0.0",
     "yargs": "17.0.1",
     "yargs-parser": "20.2.7"
-  }
+  },
+  "dependencies": {}
 }

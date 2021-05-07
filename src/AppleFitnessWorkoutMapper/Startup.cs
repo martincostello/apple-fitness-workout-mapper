@@ -18,7 +18,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<RouteLoader>();
+            services.AddSingleton<TrackLoader>();
             services.AddMemoryCache();
             services.AddRazorPages();
 
@@ -59,7 +59,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                         since = value;
                     }
 
-                    var loader = context.RequestServices.GetRequiredService<RouteLoader>();
+                    var loader = context.RequestServices.GetRequiredService<TrackLoader>();
 
                     var tracks = await loader.GetTracksAsync(since, context.RequestAborted);
 

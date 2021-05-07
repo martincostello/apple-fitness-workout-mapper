@@ -34,6 +34,9 @@ const initializer = async () => {
     };
 
     const mapElement = document.getElementById('map');
+    const tracksElement = document.getElementById('track-list');
+    const trackTemplate = document.getElementById('track-item-template');
+    const tracksCountElement = document.getElementById('track-list-count');
 
     const map = new google.maps.Map(mapElement, options);
 
@@ -69,7 +72,21 @@ const initializer = async () => {
         });
 
         route.setMap(map);
+
+        const trackElement = document.createElement('li');
+        trackElement.classList.add('nav-item');
+
+        const trackLink = document.createElement('a');
+        trackLink.classList.add('nav-link');
+        trackLink.setAttribute('href', '#');
+        trackLink.setAttribute('data-track-name', track.name);
+        trackLink.innerText = track.name;
+        trackElement.appendChild(trackLink);
+
+        tracksElement.appendChild(trackElement);
     });
+
+    tracksCountElement.innerText = `(${tracks.length})`;
 
     const bounds = new google.maps.LatLngBounds();
 

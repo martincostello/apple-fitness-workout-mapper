@@ -17,7 +17,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper
 {
-    public sealed class RouteLoader
+    public sealed class TrackLoader
     {
         private static readonly XNamespace XS = "http://www.topografix.com/GPX/1/1";
 
@@ -25,10 +25,10 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
         private readonly IWebHostEnvironment _environment;
         private readonly ILogger _logger;
 
-        public RouteLoader(
+        public TrackLoader(
             IMemoryCache cache,
             IWebHostEnvironment environment,
-            ILogger<RouteLoader> logger)
+            ILogger<TrackLoader> logger)
         {
             _cache = cache;
             _environment = environment;
@@ -115,57 +115,62 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
 
             var result = new Track();
 
-            foreach (XElement segmentNodes in root.Descendants(XS + "trk").Descendants(XS + "trkseg"))
+            foreach (XElement track in root.Descendants(XS + "trk"))
             {
-                var segment = new List<TrackPoint>();
+                result.Name = track.Descendants(XS + "name").FirstOrDefault()?.Value ?? string.Empty;
 
-                foreach (XElement pointNode in segmentNodes.Descendants(XS + "trkpt"))
+                foreach (XElement segmentNodes in track.Descendants(XS + "trkseg"))
                 {
-                    string? longitudeString = pointNode.Attribute("lon")?.Value;
-                    string? latitudeString = pointNode.Attribute("lat")?.Value;
+                    var segment = new List<TrackPoint>();
 
-                    if (!double.TryParse(longitudeString, NumberStyles.Number, CultureInfo.InvariantCulture, out var longitude))
+                    foreach (XElement pointNode in segmentNodes.Descendants(XS + "trkpt"))
                     {
-                        _logger.LogWarning("Ignoring longitude value {Longitude} from segment point in {FileName}.", longitudeString, fileName);
-                        continue;
+                        string? longitudeString = pointNode.Attribute("lon")?.Value;
+                        string? latitudeString = pointNode.Attribute("lat")?.Value;
+
+                        if (!double.TryParse(longitudeString, NumberStyles.Number, CultureInfo.InvariantCulture, out var longitude))
+                        {
+                            _logger.LogWarning("Ignoring longitude value {Longitude} from segment point in {FileName}.", longitudeString, fileName);
+                            continue;
+                        }
+
+                        if (!double.TryParse(latitudeString, NumberStyles.Number, CultureInfo.InvariantCulture, out var latitude))
+                        {
+                            _logger.LogWarning("Ignoring latitude value {Latitude} from segment point in {FileName}.", latitudeString, fileName);
+                            continue;
+                        }
+
+                        if (!TryParseTimestamp(pointNode.Descendants(XS + "time").FirstOrDefault(), out DateTimeOffset? timestamp))
+                        {
+                            _logger.LogWarning("Ignoring invalid timestamp value from segment point in {FileName}.", fileName);
+                            continue;
+                        }
+
+                        if (timestamp.Value < notBefore)
+                        {
+                            return null;
+                        }
+
+                        var point = new TrackPoint()
+                        {
+                            Latitude = latitude,
+                            Longitude = longitude,
+                            Timestamp = timestamp.Value,
+                        };
+
+                        segment.Add(point);
                     }
 
-                    if (!double.TryParse(latitudeString, NumberStyles.Number, CultureInfo.InvariantCulture, out var latitude))
+                    if (segment.Count > 0)
                     {
-                        _logger.LogWarning("Ignoring latitude value {Latitude} from segment point in {FileName}.", latitudeString, fileName);
-                        continue;
+                        result.Segments.Add(segment);
+
+                        _logger.LogDebug(
+                            "Added {PointCount} point(s) to segment {SegmentIndex} in {FileName}.",
+                            result.Segments[^1].Count,
+                            result.Segments.Count - 1,
+                            fileName);
                     }
-
-                    if (!TryParseTimestamp(pointNode.Descendants(XS + "time").FirstOrDefault(), out DateTimeOffset? timestamp))
-                    {
-                        _logger.LogWarning("Ignoring invalid timestamp value from segment point in {FileName}.", fileName);
-                        continue;
-                    }
-
-                    if (timestamp.Value < notBefore)
-                    {
-                        return null;
-                    }
-
-                    var point = new TrackPoint()
-                    {
-                        Latitude = latitude,
-                        Longitude = longitude,
-                        Timestamp = timestamp.Value,
-                    };
-
-                    segment.Add(point);
-                }
-
-                if (segment.Count > 0)
-                {
-                    result.Segments.Add(segment);
-
-                    _logger.LogDebug(
-                        "Added {PointCount} point(s) to segment {SegmentIndex} in {FileName}.",
-                        result.Segments[^1].Count,
-                        result.Segments.Count - 1,
-                        fileName);
                 }
             }
 

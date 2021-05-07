@@ -4,6 +4,7 @@
 import { TrackPoint } from './TrackPoint';
 
 export interface Track {
+    name: string;
     timestamp: string;
     segments: TrackPoint[][];
 }

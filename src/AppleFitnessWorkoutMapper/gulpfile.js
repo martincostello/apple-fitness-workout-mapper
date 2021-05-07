@@ -1,3 +1,4 @@
+/// <binding BeforeBuild='default' />
 var browserify = require('browserify');
 var buffer = require('vinyl-buffer');
 var eslint = require('gulp-eslint');

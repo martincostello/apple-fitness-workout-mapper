@@ -10,10 +10,7 @@ export class TrackMap {
 
     constructor(element: HTMLElement) {
 
-        const london = { lat: 51.50809, lng: -0.1285907 };
-
         const options: google.maps.MapOptions = {
-            center: london,
             clickableIcons: false,
             disableDoubleClickZoom: false,
             draggable: true,
@@ -33,7 +30,6 @@ export class TrackMap {
                     ]
                 }
             ],
-            zoom: 16,
             zoomControl: true
         };
 

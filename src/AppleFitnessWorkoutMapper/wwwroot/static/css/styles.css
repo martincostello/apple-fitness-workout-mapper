@@ -72,9 +72,9 @@ ul.track-item-metadata {
 }
 
 #map {
-  height: 80vh;
+  height: 75vh;
   max-height: none;
-  min-height: 80%;
+  min-height: 75%;
 }
 
 .loader {

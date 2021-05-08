@@ -203,6 +203,7 @@ export class Tracker {
         // TODO Reset individual show/hide buttons when using the show/hide all buttons
         // TODO Apply labels to the tracks on the map
         // TODO More styling to tracks and more metadata, like duration and total distance in miles/km?
+        // TODO Draw a bounding box with the NEWS extents and the area/total path length etc?
         tracks.forEach((track) => {
             const trackLink = this.createTrackElement(track);
             this.map.addPath(new TrackPath(trackLink, track, this.map));

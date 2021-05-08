@@ -18,6 +18,6 @@
   </ItemGroup>
   <Target Name="BundleAssets" BeforeTargets="BeforeBuild">
     <Exec Command="npm install" Condition=" '$(InstallWebPackages)' == 'true' " />
-    <Exec Command="npm run build" />
+    <Exec Command="npm run build" Condition=" '$(BuildingInsideVisualStudio)' != 'true' or !Exists('$(MSBuildThisFileDirectory)\src\AppleFitnessWorkoutMapper\wwwroot\static\js\main.js') " />
   </Target>
 </Project>

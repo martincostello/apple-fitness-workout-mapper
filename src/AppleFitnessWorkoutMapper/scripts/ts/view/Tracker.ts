@@ -1,12 +1,10 @@
 // Copyright (c) Martin Costello, 2021. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
-import * as moment from '../../../node_modules/moment/moment';
-import { Moment } from '../../../node_modules/moment/moment';
 import { ApiClient } from '../client/ApiClient';
+import { TrackerUI } from './TrackerUI';
 import { TrackMap } from './TrackMap';
 import { TrackPath } from './TrackPath';
-import { TrackerUI } from './TrackerUI';
 
 export class Tracker {
 
@@ -53,7 +51,7 @@ export class Tracker {
             });
 
             this.ui.enable(this.ui.importButton);
-            this.hideLoader();
+            this.ui.hide(this.ui.tracksLoader);
         } else {
             await this.loadTracks();
         }
@@ -61,19 +59,14 @@ export class Tracker {
 
     private async importTracks() {
 
-        this.ui.disable(this.ui.importButton);
-        this.ui.hide(this.ui.importButton.parentElement);
-        this.ui.show(this.ui.importLoader);
+        this.ui.showImportInProgress();
 
         const count = await this.client.importTracks();
 
-        this.ui.hide(this.ui.importLoader);
-
         if (count < 1) {
-            this.ui.enable(this.ui.importButton);
-            this.ui.show(this.ui.importButton.parentElement);
+            this.ui.resetImport();
         } else {
-            this.ui.hide(this.ui.importContainer);
+            this.ui.hideImport();
             await this.loadTracks();
         }
     }
@@ -81,31 +74,15 @@ export class Tracker {
     private async loadTracks(): Promise<number> {
 
         this.ui.disableFilters();
-        this.showLoader();
 
         // Clear any existing map paths and the tracks in the sidebar
         this.map.clearPaths();
+        this.ui.clearSidebar();
 
-        let sibling = this.ui.trackItemTemplate.nextElementSibling;
+        let notBefore = this.ui.getNotBefore();
+        let notAfter = this.ui.getNotAfter();
 
-        while (sibling !== null) {
-            let previous = sibling;
-            sibling = previous.nextElementSibling;
-            previous.remove();
-        }
-
-        let notBefore: Moment = null;
-        let notAfter: Moment = null;
-
-        if (this.ui.notBeforeDate.value) {
-            notBefore = moment(this.ui.notBeforeDate.value);
-        }
-
-        if (this.ui.notAfterDate.value) {
-            notAfter = moment(this.ui.notAfterDate.value).add(1, 'days');
-        }
-
-        this.updateWorkoutCount(0);
+        this.ui.updateSidebarCount(0);
 
         const tracks = await this.client.getTracks(notBefore, notAfter);
 
@@ -120,27 +97,14 @@ export class Tracker {
             this.map.addPath(new TrackPath(trackLink, track, this.map));
         });
 
-        this.updateWorkoutCount(tracks.length);
+        this.ui.updateSidebarCount(tracks.length);
 
         if (tracks.length > 0) {
             this.map.fitBounds();
         }
 
         this.ui.enableFilters();
-        this.hideLoader();
 
         return tracks.length;
-    }
-
-    private showLoader() {
-        this.ui.show(this.ui.tracksLoader);
-    }
-
-    private hideLoader() {
-        this.ui.hide(this.ui.tracksLoader);
-    }
-
-    private updateWorkoutCount(count: number) {
-        this.ui.tracksCount.innerText = `(${count})`;
     }
 }

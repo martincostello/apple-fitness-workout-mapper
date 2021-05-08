@@ -1,6 +1,8 @@
 // Copyright (c) Martin Costello, 2021. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
+import * as moment from '../../../node_modules/moment/moment';
+import { Moment } from '../../../node_modules/moment/moment';
 import { Track } from '../models/Track';
 
 export class TrackerUI {
@@ -9,15 +11,16 @@ export class TrackerUI {
     readonly hideAllButton: Element;
     readonly importButton: Element;
     readonly importContainer: Element;
-    readonly importLoader: Element;
     readonly map: Element;
-    readonly notAfterDate: HTMLInputElement;
-    readonly notBeforeDate: HTMLInputElement;
     readonly showAllButton: Element;
-    readonly trackItemTemplate: Element;
-    readonly tracksCount: HTMLElement;
-    readonly tracksList: Element;
     readonly tracksLoader: Element;
+
+    private readonly importLoader: Element;
+    private readonly notAfterDate: HTMLInputElement;
+    private readonly notBeforeDate: HTMLInputElement;
+    private readonly trackItemTemplate: Element;
+    private readonly tracksCount: HTMLElement;
+    private readonly tracksList: Element;
 
     constructor() {
         this.filterButton = document.getElementById('filter');
@@ -57,6 +60,7 @@ export class TrackerUI {
         this.disable(this.notAfterDate);
         this.disable(this.notBeforeDate);
         this.disable(this.showAllButton);
+        this.show(this.tracksLoader);
     }
 
     enableFilters() {
@@ -65,6 +69,18 @@ export class TrackerUI {
         this.enable(this.notAfterDate);
         this.enable(this.notBeforeDate);
         this.enable(this.showAllButton);
+        this.hide(this.tracksLoader);
+    }
+
+    clearSidebar() {
+
+        let sibling = this.trackItemTemplate.nextElementSibling;
+
+        while (sibling !== null) {
+            let previous = sibling;
+            sibling = previous.nextElementSibling;
+            previous.remove();
+        }
     }
 
     createTrackElement(track: Track): Element {
@@ -98,5 +114,44 @@ export class TrackerUI {
         this.show(trackElement);
 
         return trackLink;
+    }
+
+    hideImport() {
+        this.hide(this.importContainer);
+    }
+
+    resetImport() {
+        this.hide(this.importLoader);
+        this.enable(this.importButton);
+        this.show(this.importButton.parentElement);
+    }
+
+    showImportInProgress() {
+        this.disable(this.importButton);
+        this.hide(this.importButton.parentElement);
+        this.show(this.importLoader);
+    }
+
+    updateSidebarCount(count: number) {
+        this.tracksCount.innerText = `(${count})`;
+    }
+
+    getNotAfter(): Moment {
+        return this.getMoment(this.notAfterDate);
+    }
+
+    getNotBefore(): Moment {
+        return this.getMoment(this.notBeforeDate);
+    }
+
+    private getMoment(element: HTMLInputElement): Moment {
+
+        let result: Moment = null;
+
+        if (element.value) {
+            result = moment(element.value);
+        }
+
+        return result;
     }
 }

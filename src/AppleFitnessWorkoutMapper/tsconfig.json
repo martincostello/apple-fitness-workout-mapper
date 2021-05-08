@@ -8,7 +8,7 @@
     "outDir": "./wwwroot/static/js",
     "removeComments": false,
     "sourceMap": false,
-    "target": "ES2019"
+    "target": "ES2015"
   },
   "exclude": [
     "node_modules",

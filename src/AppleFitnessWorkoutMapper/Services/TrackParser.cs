@@ -12,51 +12,50 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using MartinCostello.AppleFitnessWorkoutMapper.Models;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
-namespace MartinCostello.AppleFitnessWorkoutMapper
+namespace MartinCostello.AppleFitnessWorkoutMapper.Services
 {
-    public sealed class TrackLoader
+    public sealed class TrackParser
     {
         private static readonly XNamespace XS = "http://www.topografix.com/GPX/1/1";
 
-        private readonly IMemoryCache _cache;
         private readonly IWebHostEnvironment _environment;
         private readonly ILogger _logger;
 
-        public TrackLoader(
-            IMemoryCache cache,
+        public TrackParser(
             IWebHostEnvironment environment,
-            ILogger<TrackLoader> logger)
+            ILogger<TrackParser> logger)
         {
-            _cache = cache;
             _environment = environment;
             _logger = logger;
         }
 
-        public async Task<IList<Track>> GetTracksAsync(
-            DateTimeOffset? since = null,
-            DateTimeOffset? until = null,
-            CancellationToken cancellationToken = default)
+        public async Task<IList<Track>> GetTracksAsync(CancellationToken cancellationToken = default)
         {
-            string key = "Tracks:*";
+            string path = Path.Combine(_environment.ContentRootPath, "App_Data");
 
-            if (!_cache.TryGetValue<IList<Track>>(key, out var tracks))
+            _logger.LogInformation("Parsing track data from {Path}.", path);
+
+            var result = new List<Track>();
+
+            foreach (string fileName in Directory.EnumerateFiles(path, "*.gpx"))
             {
-                _logger.LogInformation("Adding tracks to cache.");
+                cancellationToken.ThrowIfCancellationRequested();
 
-                tracks = _cache.Set(key, await GetTracksUncachedAsync(cancellationToken));
+                Track? track = await TryLoadTrackAsync(fileName, cancellationToken);
 
-                _logger.LogInformation("Added {Count} track(s) to cache.", tracks.Count);
+                if (track is not null)
+                {
+                    result.Add(track);
+                }
             }
 
-            DateTimeOffset notBefore = since ?? DateTimeOffset.MinValue;
-            DateTimeOffset notAfter = until ?? DateTimeOffset.MaxValue;
+            result.Sort((x, y) => Comparer<DateTimeOffset>.Default.Compare(x.Timestamp, y.Timestamp));
 
-            return tracks
-                .Where((p) => p.Timestamp > notBefore && p.Timestamp < notAfter)
-                .ToList();
+            _logger.LogInformation("Parsed {Count} tracks from {Path}.", result.Count, path);
+
+            return result;
         }
 
         private static bool TryParseTimestamp(XElement? element, [NotNullWhen(true)] out DateTimeOffset? value)
@@ -75,30 +74,6 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
 
             value = timestamp;
             return true;
-        }
-
-        private async Task<IList<Track>> GetTracksUncachedAsync(
-            CancellationToken cancellationToken = default)
-        {
-            string path = Path.Combine(_environment.ContentRootPath, "App_Data");
-
-            var result = new List<Track>();
-
-            foreach (string fileName in Directory.EnumerateFiles(path, "*.gpx"))
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                Track? track = await TryLoadTrackAsync(fileName, cancellationToken);
-
-                if (track is not null)
-                {
-                    result.Add(track);
-                }
-            }
-
-            result.Sort((x, y) => Comparer<DateTimeOffset>.Default.Compare(x.Timestamp, y.Timestamp));
-
-            return result;
         }
 
         private async Task<Track?> TryLoadTrackAsync(

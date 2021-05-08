@@ -3,11 +3,15 @@
 
 using System;
 using System.Globalization;
+using System.IO;
 using System.IO.Compression;
+using MartinCostello.AppleFitnessWorkoutMapper.Data;
+using MartinCostello.AppleFitnessWorkoutMapper.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Primitives;
@@ -16,10 +20,21 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
 {
     public class Startup
     {
+        public Startup(IWebHostEnvironment environment)
+        {
+            Environment = environment;
+        }
+
+        private IWebHostEnvironment Environment { get; }
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<TrackLoader>();
-            services.AddMemoryCache();
+            string databaseFileName = Path.Combine(Environment.ContentRootPath, "App_Data", "tracks.db");
+
+            services.AddDbContext<TracksContext>((p) => p.UseLazyLoadingProxies().UseSqlite("Data Source=" + databaseFileName));
+            services.AddScoped<TrackImporter>();
+            services.AddScoped<TrackService>();
+            services.AddSingleton<TrackParser>();
             services.AddRazorPages();
 
             services.Configure<GzipCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
@@ -33,9 +48,9 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
+        public void Configure(IApplicationBuilder app)
         {
-            if (environment.IsDevelopment())
+            if (Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -47,6 +62,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             app.UseEndpoints((endpoints) =>
             {
                 endpoints.MapRazorPages();
+
                 endpoints.MapGet("/api/tracks", async (context) =>
                 {
                     DateTimeOffset? since = null;
@@ -68,11 +84,26 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                         until = value;
                     }
 
-                    var loader = context.RequestServices.GetRequiredService<TrackLoader>();
+                    var service = context.RequestServices.GetRequiredService<TrackService>();
 
-                    var tracks = await loader.GetTracksAsync(since, until, context.RequestAborted);
+                    var tracks = await service.GetTracksAsync(since, until, context.RequestAborted);
 
                     await context.Response.WriteAsJsonAsync(tracks, context.RequestAborted);
+                });
+
+                endpoints.MapPost("/api/tracks/import", async (context) =>
+                {
+                    var importer = context.RequestServices.GetRequiredService<TrackImporter>();
+                    int count = await importer.ImportTracksAsync(context.RequestAborted);
+
+                    var result = new
+                    {
+                        count,
+                    };
+
+                    context.Response.StatusCode = StatusCodes.Status201Created;
+
+                    await context.Response.WriteAsJsonAsync(result, context.RequestAborted);
                 });
             });
         }

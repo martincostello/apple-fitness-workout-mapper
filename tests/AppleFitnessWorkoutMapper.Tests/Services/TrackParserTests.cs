@@ -7,30 +7,27 @@ using System.IO;
 using System.Threading.Tasks;
 using MartinCostello.AppleFitnessWorkoutMapper.Models;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace MartinCostello.AppleFitnessWorkoutMapper
+namespace MartinCostello.AppleFitnessWorkoutMapper.Services
 {
-    public class TrackLoaderTests
+    public class TrackParserTests
     {
         private readonly ITestOutputHelper _outputHelper;
 
-        public TrackLoaderTests(ITestOutputHelper outputHelper)
+        public TrackParserTests(ITestOutputHelper outputHelper)
         {
             _outputHelper = outputHelper;
         }
 
         [Fact]
-        public async Task Can_Load_All_Track_Points()
+        public async Task Can_Parse_Track_Points_From_Disk()
         {
             // Arrange
-            using var cache = new MemoryCache(new MemoryCacheOptions());
-
-            TrackLoader target = CreateTarget(cache);
+            TrackParser target = CreateTarget();
 
             // Act
             IList<Track>? actual = await target.GetTracksAsync();
@@ -94,47 +91,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             point.Timestamp.ShouldBe(new DateTimeOffset(2021, 05, 05, 11, 25, 35, TimeSpan.Zero));
         }
 
-        [Fact]
-        public async Task Can_Load_Some_Track_Points()
-        {
-            // Arrange
-            using var cache = new MemoryCache(new MemoryCacheOptions());
-
-            TrackLoader target = CreateTarget(cache);
-
-            // Act
-            IList<Track>? actual = await target.GetTracksAsync(since: new DateTimeOffset(2021, 05, 05, 00, 00, 00, TimeSpan.Zero));
-
-            // Assert
-            actual.ShouldNotBeNull();
-            actual.ShouldNotBeEmpty();
-            actual.Count.ShouldBe(1);
-
-            Track track = actual[0];
-
-            track.ShouldNotBeNull();
-            track.Name.ShouldBe("Route 2");
-            track.Timestamp.ShouldBe(new DateTimeOffset(2021, 05, 05, 11, 25, 35, TimeSpan.Zero));
-
-            track.Segments.ShouldNotBeNull();
-            track.Segments.ShouldNotBeEmpty();
-            track.Segments.Count.ShouldBe(1);
-
-            IList<TrackPoint> segment = track.Segments[0];
-
-            segment.ShouldNotBeNull();
-            segment.ShouldNotBeEmpty();
-            segment.Count.ShouldBe(1);
-
-            TrackPoint point = segment[0];
-
-            point.ShouldNotBeNull();
-            point.Latitude.ShouldBe(51.5080900);
-            point.Longitude.ShouldBe(-0.1285907);
-            point.Timestamp.ShouldBe(new DateTimeOffset(2021, 05, 05, 11, 25, 35, TimeSpan.Zero));
-        }
-
-        private TrackLoader CreateTarget(IMemoryCache cache)
+        private TrackParser CreateTarget()
         {
             string? thisDirectory = Path.GetDirectoryName(GetType().Assembly.Location);
 
@@ -144,9 +101,9 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                 .Returns(thisDirectory!);
 
             var environment = mock.Object;
-            var logger = _outputHelper.ToLogger<TrackLoader>();
+            var logger = _outputHelper.ToLogger<TrackParser>();
 
-            return new TrackLoader(cache, environment, logger);
+            return new TrackParser(environment, logger);
         }
     }
 }

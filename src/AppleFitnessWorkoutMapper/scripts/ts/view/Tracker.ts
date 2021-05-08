@@ -2,8 +2,8 @@
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
 import * as moment from '../../../node_modules/moment/moment';
-import { ApiClient } from '../client/ApiClient';
 import { Moment } from '../../../node_modules/moment/moment';
+import { ApiClient } from '../client/ApiClient';
 import { Track } from '../models/Track';
 import { TrackMap } from './TrackMap';
 import { TrackPath } from './TrackPath';
@@ -12,7 +12,9 @@ export class Tracker {
 
     private readonly filterElement: HTMLElement;
     private readonly hideAllElement: HTMLElement;
-    private readonly loader: HTMLElement;
+    private readonly importContainer: HTMLElement;
+    private readonly importElement: HTMLElement;
+    private readonly importLoader: HTMLElement;
     private readonly mapElement: HTMLElement;
     private readonly notAfterElement: HTMLInputElement;
     private readonly notBeforeElement: HTMLInputElement;
@@ -20,6 +22,7 @@ export class Tracker {
     private readonly trackTemplate: HTMLElement;
     private readonly tracksCountElement: HTMLElement;
     private readonly tracksElement: HTMLElement;
+    private readonly tracksLoader: HTMLElement;
 
     private client: ApiClient;
     private map: TrackMap;
@@ -27,7 +30,9 @@ export class Tracker {
     constructor() {
         this.filterElement = document.getElementById('filter');
         this.hideAllElement = document.getElementById('hide-all');
-        this.loader = document.getElementById('loader');
+        this.importContainer = document.getElementById('import-container');
+        this.importElement = document.getElementById('import');
+        this.importLoader = document.getElementById('import-loader');
         this.mapElement = document.getElementById('map');
         this.notAfterElement = <HTMLInputElement>document.getElementById('not-after');
         this.notBeforeElement = <HTMLInputElement>document.getElementById('not-before');
@@ -35,6 +40,7 @@ export class Tracker {
         this.trackTemplate = document.getElementById('track-item-template');
         this.tracksCountElement = document.getElementById('track-list-count');
         this.tracksElement = document.getElementById('track-list');
+        this.tracksLoader = document.getElementById('tracks-loader');
     }
 
     async initialize() {
@@ -43,7 +49,7 @@ export class Tracker {
         this.client = new ApiClient();
 
         this.filterElement.addEventListener('click', () => {
-            this.reloadTracks();
+            this.loadTracks();
         });
 
         this.hideAllElement.addEventListener('click', () => {
@@ -58,7 +64,20 @@ export class Tracker {
             Tracker.enableElement(this.showAllElement);
         });
 
-        await this.reloadTracks();
+        const count = await this.loadTracks();
+
+        if (count < 1) {
+
+            this.disableFilters();
+
+            Tracker.showElement(this.importContainer);
+
+            this.importElement.addEventListener('click', () => {
+                this.importTracks();
+            });
+
+            Tracker.enableElement(this.importElement);
+        }
     }
 
     private createTrackElement(track: Track): Element {
@@ -89,17 +108,25 @@ export class Tracker {
         });
 
         // Unhide once populated
-        trackElement.classList.remove('d-none');
+        Tracker.showElement(trackElement);
 
         return trackLink;
     }
 
-    private static disableElement(element: HTMLElement) {
+    private static disableElement(element: Element) {
         element.setAttribute('disabled', '');
     }
 
-    private static enableElement(element: HTMLElement) {
+    private static enableElement(element: Element) {
         element.removeAttribute('disabled');
+    }
+
+    private static hideElement(element: Element) {
+        element.classList.add('d-none');
+    }
+
+    private static showElement(element: Element) {
+        element.classList.remove('d-none');
     }
 
     private disableFilters() {
@@ -118,7 +145,26 @@ export class Tracker {
         Tracker.enableElement(this.showAllElement);
     }
 
-    private async reloadTracks() {
+    private async importTracks() {
+
+        Tracker.disableElement(this.importElement);
+        Tracker.hideElement(this.importElement.parentElement);
+        Tracker.showElement(this.importLoader);
+
+        const count = await this.client.importTracks();
+
+        Tracker.hideElement(this.importLoader);
+
+        if (count < 1) {
+            Tracker.enableElement(this.importElement);
+            Tracker.showElement(this.importElement.parentElement);
+        } else {
+            Tracker.hideElement(this.importContainer);
+            await this.loadTracks();
+        }
+    }
+
+    private async loadTracks(): Promise<number> {
 
         this.disableFilters();
         this.showLoader();
@@ -162,14 +208,16 @@ export class Tracker {
 
         this.enableFilters();
         this.hideLoader();
+
+        return tracks.length;
     }
 
     private showLoader() {
-        this.loader.classList.remove('d-none');
+        Tracker.showElement(this.tracksLoader);
     }
 
     private hideLoader() {
-        this.loader.classList.add('d-none');
+        Tracker.hideElement(this.tracksLoader);
     }
 
     private updateWorkoutCount(count: number) {

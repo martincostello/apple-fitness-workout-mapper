@@ -42,4 +42,19 @@ export class ApiClient {
 
         return tracks;
     }
+
+    async importTracks(): Promise<number> {
+
+        let requestUri = '/api/tracks/import';
+
+        const init = {
+            method: 'POST',
+            body: '{}'
+        };
+
+        const response = await fetch(requestUri, init);
+        const content = await response.json();
+
+        return content.count as number;
+    }
 }

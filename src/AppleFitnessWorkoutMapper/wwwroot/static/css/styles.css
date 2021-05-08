@@ -83,3 +83,39 @@ body {
     transform: rotate(360deg);
   }
 }
+
+.progress {
+  height: 2rem;
+}
+
+.progress .progress-bar.active {
+  animation: progress-bar-stripes .5s linear infinite;
+  width: 100%;
+}
+
+.ellipsis:after {
+  animation: ellipsis 1.5s linear infinite;
+  content: '...';
+  display: inline-block;
+  font-weight: 300;
+  text-align: left;
+  width: 20px;
+}
+
+@keyframes ellipsis {
+  0% {
+    content: '...';
+  }
+
+  25% {
+    content: '\a0'; /* Non-breaking space */
+  }
+
+  50% {
+    content: '.';
+  }
+
+  75% {
+    content: '..';
+  }
+}

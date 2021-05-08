@@ -64,7 +64,7 @@ export class Tracker {
             Tracker.enableElement(this.showAllElement);
         });
 
-        const count = await this.loadTracks();
+        const count = await this.client.getCount();
 
         if (count < 1) {
 
@@ -77,6 +77,9 @@ export class Tracker {
             });
 
             Tracker.enableElement(this.importElement);
+            this.hideLoader();
+        } else {
+            await this.loadTracks();
         }
     }
 

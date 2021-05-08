@@ -6,11 +6,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http.Json;
-using System.Text.Json;
 using System.Threading.Tasks;
 using MartinCostello.AppleFitnessWorkoutMapper.Models;
+using MartinCostello.Logging.XUnit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Logging;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
@@ -19,18 +20,18 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
 {
     public class AppTests
     {
-        private readonly ITestOutputHelper _outputHelper;
-
         public AppTests(ITestOutputHelper outputHelper)
         {
-            _outputHelper = outputHelper;
+            OutputHelper = outputHelper;
         }
+
+        public ITestOutputHelper OutputHelper { get; set; }
 
         [Fact]
         public async Task Can_Load_Homepage()
         {
             // Arrange
-            using var fixture = new WebApplicationFactory();
+            using var fixture = new WebApplicationFactory(OutputHelper);
             using var client = fixture.CreateClient();
 
             // Act
@@ -46,8 +47,24 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
         public async Task Can_Import_Tracks_And_Query()
         {
             // Arrange
-            using var fixture = new WebApplicationFactory();
+            using var fixture = new WebApplicationFactory(OutputHelper);
             using var client = fixture.CreateClient();
+
+            try
+            {
+                File.Delete(Path.Combine(fixture.AppDataDirectory, "App_Data", "tracks.db"));
+            }
+            catch (Exception ex) when (ex is OutOfMemoryException)
+            {
+                // Ignore
+            }
+
+            // Act
+            var result = await client.GetFromJsonAsync<CountResponse>("/api/tracks/count");
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.Count.ShouldBe(0);
 
             // Act
             using var response = await client.PostAsJsonAsync("/api/tracks/import", new { });
@@ -55,12 +72,10 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.Created);
 
-            using var importResponse = await response.Content.ReadFromJsonAsync<JsonDocument>();
+            result = await response.Content.ReadFromJsonAsync<CountResponse>();
 
-            importResponse.ShouldNotBeNull();
-            importResponse.RootElement.TryGetProperty("count", out var element).ShouldBeTrue();
-            element.TryGetInt64(out long count).ShouldBeTrue();
-            count.ShouldBe(2);
+            result.ShouldNotBeNull();
+            result.Count.ShouldBe(2);
 
             // Act
             IList<Track>? actual = await client.GetFromJsonAsync<IList<Track>>("api/tracks");
@@ -82,13 +97,29 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             item.Timestamp.ShouldBe(new DateTimeOffset(2021, 05, 05, 11, 25, 35, TimeSpan.Zero));
         }
 
-        private sealed class WebApplicationFactory : WebApplicationFactory<Startup>
+        private sealed class WebApplicationFactory : WebApplicationFactory<Startup>, ITestOutputHelperAccessor
         {
+            public WebApplicationFactory(ITestOutputHelper outputHelper)
+            {
+                OutputHelper = outputHelper;
+            }
+
+            public string AppDataDirectory { get; private set; } = string.Empty;
+
+            public ITestOutputHelper? OutputHelper { get; set; }
+
             protected override void ConfigureWebHost(IWebHostBuilder builder)
             {
-                string? thisDirectory = Path.GetDirectoryName(GetType().Assembly.Location);
-                builder.UseContentRoot(thisDirectory!);
+                AppDataDirectory = Path.GetDirectoryName(GetType().Assembly.Location) !;
+                builder.UseContentRoot(AppDataDirectory);
+
+                builder.ConfigureLogging((p) => p.AddXUnit(this));
             }
+        }
+
+        private sealed class CountResponse
+        {
+            public int Count { get; set; }
         }
     }
 }

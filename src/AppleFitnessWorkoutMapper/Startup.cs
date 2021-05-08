@@ -91,6 +91,20 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                     await context.Response.WriteAsJsonAsync(tracks, context.RequestAborted);
                 });
 
+                endpoints.MapGet("/api/tracks/count", async (context) =>
+                {
+                    var service = context.RequestServices.GetRequiredService<TrackService>();
+
+                    int count = await service.GetTrackCountAsync(context.RequestAborted);
+
+                    var result = new
+                    {
+                        count,
+                    };
+
+                    await context.Response.WriteAsJsonAsync(result, context.RequestAborted);
+                });
+
                 endpoints.MapPost("/api/tracks/import", async (context) =>
                 {
                     var importer = context.RequestServices.GetRequiredService<TrackImporter>();

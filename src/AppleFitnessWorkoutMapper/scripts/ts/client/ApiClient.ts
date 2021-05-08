@@ -6,6 +6,14 @@ import { Track } from '../models/Track';
 
 export class ApiClient {
 
+    async getCount(): Promise<number> {
+
+        const response = await fetch('/api/tracks/count');
+        const content = await response.json();
+
+        return content.count as number;
+    }
+
     async getTracks(notBefore: Moment = null, notAfter: Moment = null): Promise<Track[]> {
 
         let requestUri = '/api/tracks';

@@ -20,12 +20,19 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Services
             _context = context;
         }
 
+        public async Task<int> GetTrackCountAsync(CancellationToken cancellationToken = default)
+        {
+            await EnsureDatabaseAsync(cancellationToken);
+
+            return await _context.Tracks.CountAsync(cancellationToken);
+        }
+
         public async Task<IList<Models.Track>> GetTracksAsync(
             DateTimeOffset? since = null,
             DateTimeOffset? until = null,
             CancellationToken cancellationToken = default)
         {
-            await _context.Database.EnsureCreatedAsync(cancellationToken);
+            await EnsureDatabaseAsync(cancellationToken);
 
             DateTime notBefore = (since ?? DateTimeOffset.MinValue).UtcDateTime;
             DateTime notAfter = (until ?? DateTimeOffset.MaxValue).UtcDateTime;
@@ -72,6 +79,11 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Services
             }
 
             return result;
+        }
+
+        private async Task EnsureDatabaseAsync(CancellationToken cancellationToken)
+        {
+            await _context.Database.EnsureCreatedAsync(cancellationToken);
         }
     }
 }

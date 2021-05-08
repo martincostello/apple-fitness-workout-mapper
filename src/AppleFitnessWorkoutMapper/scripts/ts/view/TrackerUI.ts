@@ -153,7 +153,11 @@ export class TrackerUI {
         let result: Moment = null;
 
         if (element.value) {
-            result = moment(element.value);
+            const parsed = moment(element.value);
+
+            if (parsed.isValid()) {
+                result = parsed;
+            }
         }
 
         return result;

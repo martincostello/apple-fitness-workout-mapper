@@ -101,10 +101,13 @@
                             </a>
                             <div class="collapse" id="">
                                 <div class="card card-body">
-                                    <span data-js-name></span>
-                                    <span data-js-timestamp></span>
-                                    <div class="btn-group mr-2" role="group">
-                                        <button type="button" class="btn btn-secondary" data-js-visible>Hide</button>
+                                    <ul class="track-item-metadata">
+                                        <li>Started: <span data-js-start></span></li>
+                                        <li>Ended: <span data-js-end></span></li>
+                                        <li>Duration: <span data-js-duration></span></li>
+                                    </ul>
+                                    <div class="mt-2">
+                                        <button type="button" class="btn btn-secondary btn-sm float-right track-item-visibility" data-js-visible>Hide</button>
                                     </div>
                                 </div>
                             </div>

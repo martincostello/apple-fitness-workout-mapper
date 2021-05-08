@@ -87,7 +87,7 @@ export class Tracker {
         const tracks = await this.client.getTracks(notBefore, notAfter);
 
         // TODO Apply labels to the tracks on the map
-        // TODO More styling to tracks and more metadata, like duration and total distance in miles/km?
+        // TODO Duration and total distance in miles/km for tracks
         // TODO Draw a bounding box with the NEWS extents and the area/total path length etc?
         tracks.forEach((track) => {
             const trackLink = this.ui.createTrackElement(track);

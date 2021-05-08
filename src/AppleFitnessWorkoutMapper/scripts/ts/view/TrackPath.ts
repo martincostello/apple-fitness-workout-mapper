@@ -31,7 +31,7 @@ export class TrackPath {
         this.container = container;
         this.panel = this.container.nextElementSibling;
 
-        this.button = Array.from(this.panel.querySelectorAll('[data-js-visible]'))[0];
+        this.button = this.panel.querySelector('[data-js-visible]');
         this.button.addEventListener('click', () => {
             if (this.visible) {
                 this.hidePath();
@@ -40,13 +40,23 @@ export class TrackPath {
             }
         });
 
-        this.panel.querySelectorAll('[data-js-name]').forEach((name) => {
-            name.textContent = track.name;
-        });
+        const startMoment = moment(track.timestamp);
 
-        this.panel.querySelectorAll('[data-js-timestamp]').forEach((timestamp) => {
-            timestamp.textContent = moment(track.timestamp).toLocaleString();
-        });
+        const startElement = this.panel.querySelector('[data-js-start]');
+        startElement.textContent = startMoment.format('lll');
+        startElement.setAttribute('title', startMoment.toISOString());
+
+        const endMoment = moment(track.points[track.points.length - 1].timestamp);
+
+        const endElement = this.panel.querySelector('[data-js-end]');
+        endElement.textContent = endMoment.format('lll');
+        endElement.setAttribute('title', endMoment.toISOString());
+
+        const duration = moment.duration(endMoment.diff(startMoment));
+
+        const durationElement = this.panel.querySelector('[data-js-duration]');
+        durationElement.textContent = duration.humanize();
+        durationElement.setAttribute('title', duration.toISOString());
 
         this.container.addEventListener('click', () => {
             this.expanded = !this.expanded;

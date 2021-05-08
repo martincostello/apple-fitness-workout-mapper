@@ -36,15 +36,27 @@ body {
 .sidebar .nav-link {
   color: #333;
   font-weight: 500;
-  padding: 0.5rem 2rem;
+  padding: 0.5rem 0.5rem;
 }
 
 .sidebar .nav-link.active {
   color: #007bff;
 }
 
-.list-group-item + .list-group-item:nth-of-type(2) {
+.list-group-item {
+  padding: .75rem .75rem;
+}
+
+.list-group-item+.list-group-item:nth-of-type(2) {
   border-top-width: 1px;
+}
+
+ul.track-item-metadata {
+  padding-left: 0.5rem;
+}
+
+.track-item-visibility {
+  width: 25%;
 }
 
 [role="main"] {

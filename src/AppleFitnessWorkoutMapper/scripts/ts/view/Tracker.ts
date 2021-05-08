@@ -87,7 +87,6 @@ export class Tracker {
         const tracks = await this.client.getTracks(notBefore, notAfter);
 
         // TODO Add help icon that links to repo
-        // TODO Include empty App_Data folder in dotnet publish
         // TODO Apply labels to the tracks on the map
         // TODO More styling to tracks and more metadata, like duration and total distance in miles/km?
         // TODO Draw a bounding box with the NEWS extents and the area/total path length etc?

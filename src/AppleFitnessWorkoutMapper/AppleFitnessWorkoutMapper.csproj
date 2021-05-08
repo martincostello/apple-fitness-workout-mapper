@@ -21,4 +21,7 @@
     <Exec Command="npm install" Condition=" '$(InstallWebPackages)' == 'true' " />
     <Exec Command="npm run build" Condition=" '$(BuildingInsideVisualStudio)' != 'true' or !Exists('$(MSBuildThisFileDirectory)\src\AppleFitnessWorkoutMapper\wwwroot\static\js\main.js') " />
   </Target>
+  <Target Name="CreateAppDataFolder" AfterTargets="AfterPublish">
+    <MakeDir Directories="$(PublishDir)App_Data" Condition="!Exists('$(PublishDir)App_Data')" />
+  </Target>
 </Project>

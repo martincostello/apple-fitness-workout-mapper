@@ -48,7 +48,13 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Services
 
                 var segment = new List<Models.TrackPoint>();
 
-                foreach (var point in track.TrackPoints.OrderBy((p) => p.Timestamp))
+                var points = _context.TrackPoints
+                    .Where((p) => p.TrackId == track.Id)
+                    .OrderBy((p) => p.Timestamp)
+                    .AsAsyncEnumerable()
+                    .WithCancellation(cancellationToken);
+
+                await foreach (var point in points)
                 {
                     var pointModel = new Models.TrackPoint()
                     {

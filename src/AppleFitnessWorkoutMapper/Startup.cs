@@ -31,7 +31,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
         {
             string databaseFileName = Path.Combine(Environment.ContentRootPath, "App_Data", "tracks.db");
 
-            services.AddDbContext<TracksContext>((p) => p.UseLazyLoadingProxies().UseSqlite("Data Source=" + databaseFileName));
+            services.AddDbContext<TracksContext>((p) => p.UseSqlite("Data Source=" + databaseFileName));
             services.AddScoped<TrackImporter>();
             services.AddScoped<TrackService>();
             services.AddSingleton<TrackParser>();

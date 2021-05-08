@@ -21,7 +21,5 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Data
         public DateTime Timestamp { get; set; }
 
         public Guid TrackId { get; set; }
-
-        public virtual Track Track { get; set; } = null!;
     }
 }

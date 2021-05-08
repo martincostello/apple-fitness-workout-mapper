@@ -144,16 +144,19 @@
                         <i class="bi-map" aria-hidden="true"></i>
                     </h1>
                 </div>
+                <div class="alert alert-primary d-none" role="alert" id="total-distance-container">
+                    You have travelled a total distance of <span js-data-total-distance></span>. <i class="bi bi-stars" aria-hidden="true"></i>
+                </div>
                 @if (string.IsNullOrEmpty(Model.GoogleMapsApiKey))
                 {
                     <div class="alert alert-warning" role="alert">
                         <p class="lead">
-                            No Google Maps API key is configured <i class="bi bi-exclamation-triangle"></i>
+                            No Google Maps API key is configured <i class="bi bi-exclamation-triangle" aria-hidden="true"></i>
                         </p>
                         <p>
                             To generate an API key follow the instructions
                             <a href="https://developers.google.com/maps/gmp-get-started#quickstart" rel="nofollow" target="_blank">here</a>.
-                            <i class="bi bi-box-arrow-up-right"></i>
+                            <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
                         </p>
                         <p>
                             Once you have generated an API key, add it to the <code>@(nameof(Model.GoogleMapsApiKey))</code>
@@ -164,7 +167,7 @@
                 }
                 <div id="map"></div>
                 <footer class="mt-2 text-muted">
-                    Designed by <a href="https://martincostello.com/home/about/" rel="nofollow" target="_blank">Martin Costello</a> |
+                    Designed with <i class="bi bi-heart-fill" aria-label="love"></i> by <a href="https://martincostello.com/home/about/" rel="nofollow" target="_blank">Martin Costello</a> |
                     <i class="bi bi-github" aria-hidden="true"></i> <a href="https://github.com/martincostello" rel="nofollow" target="_blank">GitHub</a> |
                     <i class="bi bi-twitter" aria-hidden="true"></i> <a href="https://twitter.com/martin_costello" rel="nofollow" target="_blank">Twitter</a> |
                     &copy; @DateTimeOffset.UtcNow.Year

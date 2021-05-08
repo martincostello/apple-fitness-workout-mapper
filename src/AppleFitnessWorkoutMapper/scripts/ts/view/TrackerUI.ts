@@ -20,8 +20,9 @@ export class TrackerUI {
     private readonly importLoader: Element;
     private readonly notAfterDate: HTMLInputElement;
     private readonly notBeforeDate: HTMLInputElement;
+    private readonly totalDistance: Element;
     private readonly trackItemTemplate: Element;
-    private readonly tracksCount: HTMLElement;
+    private readonly tracksCount: Element;
     private readonly tracksList: Element;
 
     constructor() {
@@ -36,6 +37,7 @@ export class TrackerUI {
         this.notBeforeDate = <HTMLInputElement>document.getElementById('not-before');
         this.showAllButton = document.getElementById('show-all');
         this.showPolygon = <HTMLInputElement>document.getElementById('show-polygon');
+        this.totalDistance = document.getElementById('total-distance-container');
         this.trackItemTemplate = document.getElementById('track-item-template');
         this.tracksCount = document.getElementById('track-list-count');
         this.tracksList = document.getElementById('track-list');
@@ -141,7 +143,20 @@ export class TrackerUI {
     }
 
     updateSidebarCount(count: number) {
-        this.tracksCount.innerText = `(${count})`;
+        this.tracksCount.textContent = `(${count})`;
+    }
+
+    updateTotalDistance(distance: string) {
+        if (distance) {
+            this.totalDistance.querySelector('[js-data-total-distance]').textContent = distance;
+            this.show(this.totalDistance);
+        } else {
+            this.hide(this.totalDistance);
+        }
+    }
+
+    useMiles(): boolean {
+        return (<HTMLInputElement>document.getElementById('unit-of-distance')).checked;
     }
 
     getNotAfter(): Moment {

@@ -21,7 +21,7 @@ export class TrackPath {
     private highlighted: boolean;
     private visible: boolean;
 
-    constructor(container: Element, track: Track, map: TrackMap) {
+    constructor(container: Element, track: Track, map: TrackMap, useMiles: boolean) {
 
         this.map = map;
         this.track = track;
@@ -58,20 +58,9 @@ export class TrackPath {
         durationElement.textContent = duration.humanize();
         durationElement.setAttribute('title', duration.toISOString());
 
-        const distanceInMeters = google.maps.geometry.spherical.computeLength(this.route.getPath());
-
-        const useMiles = (<HTMLInputElement>document.getElementById('unit-of-distance')).checked;
-
-        let distance: number;
-        let units: string;
-
-        if (useMiles) {
-            distance = distanceInMeters * 0.000621371;
-            units = 'miles';
-        } else {
-            distance = distanceInMeters / 1000.0;
-            units = 'km';
-        }
+        const distanceInMeters = this.getDistanceInMeters();
+        const distance = this.getDistanceInPreferredUnits(useMiles);
+        const units = useMiles ? 'miles' : 'km';
 
         const numberToText = (value: number, units: string) => {
             const options = { maximumFractionDigits: 2, minimumFractionDigits: 2 };
@@ -100,6 +89,19 @@ export class TrackPath {
         this.container.addEventListener('mouseout', () => {
             this.highlightIfNotAlready();
         });
+    }
+
+    getDistanceInMeters(): number {
+        return google.maps.geometry.spherical.computeLength(this.route.getPath());
+    }
+
+    getDistanceInPreferredUnits(useMiles: boolean): number {
+        const distanceInMeters = this.getDistanceInMeters();
+        if (useMiles) {
+            return distanceInMeters * 0.000621371;
+        } else {
+            return distanceInMeters / 1000.0;
+        }
     }
 
     getPoints(): google.maps.LatLng[] {

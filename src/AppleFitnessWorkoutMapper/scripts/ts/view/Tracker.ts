@@ -108,16 +108,25 @@ export class Tracker {
         let notAfter = this.ui.getNotAfter();
 
         this.ui.updateSidebarCount(0);
+        this.ui.updateTotalDistance(null);
 
         const tracks = await this.client.getTracks(notBefore, notAfter);
 
-        // TODO Show total distance
+        const useMiles = this.ui.useMiles();
+
+        let totalDistance = 0;
+
         tracks.forEach((track) => {
             const trackLink = this.ui.createTrackElement(track);
-            this.map.addPath(new TrackPath(trackLink, track, this.map));
+
+            const path = new TrackPath(trackLink, track, this.map, useMiles);
+            totalDistance += path.getDistanceInPreferredUnits(useMiles);
+
+            this.map.addPath(path);
         });
 
         this.ui.updateSidebarCount(tracks.length);
+        this.ui.updateTotalDistance(`${totalDistance.toFixed(0)} ${useMiles ? 'miles' : 'km'}`);
 
         if (tracks.length > 0) {
             this.map.fitBounds(this.ui.showPolygon.checked);

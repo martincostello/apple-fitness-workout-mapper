@@ -11,6 +11,7 @@ export class TrackMap {
     constructor(element: HTMLElement) {
 
         const options: google.maps.MapOptions = {
+            center: { lat: 0.0, lng: 0.0 },
             clickableIcons: false,
             disableDoubleClickZoom: false,
             draggable: true,
@@ -30,6 +31,7 @@ export class TrackMap {
                     ]
                 }
             ],
+            zoom: 2,
             zoomControl: true
         };
 

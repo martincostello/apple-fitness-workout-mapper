@@ -14,6 +14,7 @@ export class TrackerUI {
     readonly importContainer: Element;
     readonly map: Element;
     readonly showAllButton: Element;
+    readonly showPolygon: HTMLInputElement;
     readonly tracksLoader: Element;
 
     private readonly importLoader: Element;
@@ -34,6 +35,7 @@ export class TrackerUI {
         this.notAfterDate = <HTMLInputElement>document.getElementById('not-after');
         this.notBeforeDate = <HTMLInputElement>document.getElementById('not-before');
         this.showAllButton = document.getElementById('show-all');
+        this.showPolygon = <HTMLInputElement>document.getElementById('show-polygon');
         this.trackItemTemplate = document.getElementById('track-item-template');
         this.tracksCount = document.getElementById('track-list-count');
         this.tracksList = document.getElementById('track-list');

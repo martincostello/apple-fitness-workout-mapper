@@ -7,6 +7,7 @@ export class TrackMap {
 
     private readonly map: google.maps.Map;
     private paths: TrackPath[];
+    private polygon: google.maps.Polygon;
 
     constructor(element: Element) {
 
@@ -37,6 +38,7 @@ export class TrackMap {
 
         this.map = new google.maps.Map(element, options);
         this.paths = [];
+        this.polygon = null;
     }
 
     addPath(path: TrackPath) {
@@ -44,29 +46,63 @@ export class TrackMap {
     }
 
     clearPaths() {
+
         this.paths.forEach((path) => {
             path.removeFromMap();
         });
         this.paths = [];
+
+        if (this.polygon !== null) {
+            this.polygon.setMap(null);
+            this.polygon = null;
+        }
     }
 
-    fitBounds() {
+    fitBounds(showPolygon: boolean = false) {
+
+        if (this.polygon !== null) {
+            this.hidePolygon();
+            this.polygon = null;
+        }
 
         const bounds = new google.maps.LatLngBounds();
+
+        const polyPaths: google.maps.LatLng[] = [];
 
         this.paths.forEach((path) => {
             path.getPoints().forEach((point) => {
                 bounds.extend(point);
+                polyPaths.push(point);
             });
         });
 
         this.map.fitBounds(bounds, 25);
+
+        if (showPolygon) {
+            const red: string = '#FF0000';
+            this.polygon = new google.maps.Polygon({
+                fillColor: red,
+                fillOpacity: 0.35,
+                paths: polyPaths,
+                strokeColor: red,
+                strokeOpacity: 0.8,
+                strokeWeight: 3
+            });
+            this.polygon.setMap(this.map);
+        }
     }
 
     hidePaths() {
         this.paths.forEach((path) => {
             path.hidePath();
         });
+        this.hidePolygon();
+    }
+
+    hidePolygon() {
+        if (this.polygon !== null) {
+            this.polygon.setMap(null);
+        }
     }
 
     getMap(): google.maps.Map {
@@ -77,5 +113,12 @@ export class TrackMap {
         this.paths.forEach((path) => {
             path.showPath();
         });
+        this.showPolygon();
+    }
+
+    showPolygon() {
+        if (this.polygon !== null) {
+            this.polygon.setMap(this.map);
+        }
     }
 }

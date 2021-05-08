@@ -39,9 +39,11 @@ export class Tracker {
         });
 
         const milesKey = 'use-miles';
+        const polygonKey = 'show-polygon';
 
         try {
             this.ui.distanceUnits.checked = localStorage.getItem(milesKey) === 'true';
+            this.ui.showPolygon.checked = localStorage.getItem(polygonKey) === 'true';
         } catch {}
 
         // HACK addEventListener() doesn't fire the event, so go via jQuery
@@ -50,6 +52,15 @@ export class Tracker {
                 localStorage.setItem(milesKey, this.ui.distanceUnits.checked.toString());
             } catch {}
             this.loadTracks();
+        });
+
+        // HACK addEventListener() doesn't fire the event, so go via jQuery
+        $(this.ui.showPolygon).on('change', () => {
+            const showPolygon = this.ui.showPolygon.checked;
+            try {
+                localStorage.setItem(polygonKey, showPolygon.toString());
+            } catch { }
+            this.map.fitBounds(showPolygon);
         });
 
         const count = await this.client.getCount();
@@ -101,8 +112,7 @@ export class Tracker {
         const tracks = await this.client.getTracks(notBefore, notAfter);
 
         // TODO Apply labels to the tracks on the map
-        // TODO Duration and total distance in miles/km for tracks
-        // TODO Draw a bounding box with the NEWS extents and the area/total path length etc?
+        // TODO Show total distance
         tracks.forEach((track) => {
             const trackLink = this.ui.createTrackElement(track);
             this.map.addPath(new TrackPath(trackLink, track, this.map));
@@ -111,7 +121,7 @@ export class Tracker {
         this.ui.updateSidebarCount(tracks.length);
 
         if (tracks.length > 0) {
-            this.map.fitBounds();
+            this.map.fitBounds(this.ui.showPolygon.checked);
         }
 
         this.ui.enableFilters();

@@ -97,9 +97,13 @@ export class TrackerUI {
 
         // Set the name onto the templated node
         const trackLink = trackElement.firstElementChild;
+
         trackLink.setAttribute('aria-controls', collapseId);
         trackLink.setAttribute('data-track-name', track.name);
-        trackLink.textContent = track.name;
+
+        const trackName = document.createElement('span');
+        trackName.textContent = track.name;
+        trackLink.appendChild(trackName);
 
         // Set up the collapse for the element containing the track details
         const details = trackLink.nextElementSibling;

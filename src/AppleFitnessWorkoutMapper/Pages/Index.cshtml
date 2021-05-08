@@ -119,6 +119,24 @@
                         <i class="bi-map" aria-hidden="true"></i>
                     </h1>
                 </div>
+                @if (string.IsNullOrEmpty(Model.GoogleMapsApiKey))
+                {
+                    <div class="alert alert-warning" role="alert">
+                        <p class="lead">
+                            No Google Maps API key is configured <i class="bi bi-exclamation-triangle"></i>
+                        </p>
+                        <p>
+                            To generate an API key follow the instructions
+                            <a href="https://developers.google.com/maps/gmp-get-started#quickstart" rel="nofollow" target="_blank">here</a>.
+                            <i class="bi bi-box-arrow-up-right"></i>
+                        </p>
+                        <p>
+                            Once you have generated an API key, add it to the <code>@(nameof(Model.GoogleMapsApiKey))</code>
+                            setting in the <code>appsettings.json</code> file in the directory containing this application's
+                            files, restart the application and then reload this page.
+                        </p>
+                    </div>
+                }
                 <div id="map"></div>
             </main>
         </div>

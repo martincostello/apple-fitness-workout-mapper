@@ -7,76 +7,53 @@ import { ApiClient } from '../client/ApiClient';
 import { Track } from '../models/Track';
 import { TrackMap } from './TrackMap';
 import { TrackPath } from './TrackPath';
+import { TrackerUI } from './TrackerUI';
 
 export class Tracker {
 
-    private readonly filterElement: HTMLElement;
-    private readonly hideAllElement: HTMLElement;
-    private readonly importContainer: HTMLElement;
-    private readonly importElement: HTMLElement;
-    private readonly importLoader: HTMLElement;
-    private readonly mapElement: HTMLElement;
-    private readonly notAfterElement: HTMLInputElement;
-    private readonly notBeforeElement: HTMLInputElement;
-    private readonly showAllElement: HTMLElement;
-    private readonly trackTemplate: HTMLElement;
-    private readonly tracksCountElement: HTMLElement;
-    private readonly tracksElement: HTMLElement;
-    private readonly tracksLoader: HTMLElement;
+    private readonly ui: TrackerUI;
 
     private client: ApiClient;
     private map: TrackMap;
 
     constructor() {
-        this.filterElement = document.getElementById('filter');
-        this.hideAllElement = document.getElementById('hide-all');
-        this.importContainer = document.getElementById('import-container');
-        this.importElement = document.getElementById('import');
-        this.importLoader = document.getElementById('import-loader');
-        this.mapElement = document.getElementById('map');
-        this.notAfterElement = <HTMLInputElement>document.getElementById('not-after');
-        this.notBeforeElement = <HTMLInputElement>document.getElementById('not-before');
-        this.showAllElement = document.getElementById('show-all');
-        this.trackTemplate = document.getElementById('track-item-template');
-        this.tracksCountElement = document.getElementById('track-list-count');
-        this.tracksElement = document.getElementById('track-list');
-        this.tracksLoader = document.getElementById('tracks-loader');
+        this.ui = new TrackerUI();
     }
 
     async initialize() {
 
-        this.map = new TrackMap(this.mapElement);
+        this.map = new TrackMap(this.ui.map);
         this.client = new ApiClient();
 
-        this.filterElement.addEventListener('click', () => {
+        this.ui.filterButton.addEventListener('click', () => {
             this.loadTracks();
         });
 
-        this.hideAllElement.addEventListener('click', () => {
-            Tracker.disableElement(this.hideAllElement);
+        this.ui.hideAllButton.addEventListener('click', () => {
+            this.ui.disable(this.ui.hideAllButton);
             this.map.hidePaths();
-            Tracker.enableElement(this.hideAllElement);
+            this.ui.enable(this.ui.hideAllButton);
         });
 
-        this.showAllElement.addEventListener('click', () => {
-            Tracker.disableElement(this.showAllElement);
+        this.ui.showAllButton.addEventListener('click', () => {
+            this.ui.disable(this.ui.showAllButton);
             this.map.showPaths();
-            Tracker.enableElement(this.showAllElement);
+            this.ui.enable(this.ui.showAllButton);
         });
 
         const count = await this.client.getCount();
 
         if (count < 1) {
 
-            this.disableFilters();
+            this.ui.disableFilters();
 
-            Tracker.showElement(this.importContainer);
+            this.ui.show(this.ui.importContainer);
 
-            this.importElement.addEventListener('click', () => {
+            this.ui.importButton.addEventListener('click', () => {
                 this.importTracks();
             });
 
-            Tracker.enableElement(this.importElement);
+            this.ui.enable(this.ui.importButton);
             this.hideLoader();
         } else {
             await this.loadTracks();
@@ -86,11 +63,11 @@ export class Tracker {
     private createTrackElement(track: Track): Element {
 
         // Clone the template
-        const newNode = this.trackTemplate.cloneNode(true);
-        this.tracksElement.appendChild(newNode);
+        const newNode = this.ui.trackItemTemplate.cloneNode(true);
+        this.ui.tracksList.appendChild(newNode);
 
         // Clear the duplicated Id from the new node
-        const trackElement = this.tracksElement.lastElementChild;
+        const trackElement = this.ui.tracksList.lastElementChild;
         trackElement.setAttribute('id', '');
 
         const collapseId = `details-${track.name}`;
@@ -111,71 +88,39 @@ export class Tracker {
         });
 
         // Unhide once populated
-        Tracker.showElement(trackElement);
+        this.ui.show(trackElement);
 
         return trackLink;
     }
 
-    private static disableElement(element: Element) {
-        element.setAttribute('disabled', '');
-    }
-
-    private static enableElement(element: Element) {
-        element.removeAttribute('disabled');
-    }
-
-    private static hideElement(element: Element) {
-        element.classList.add('d-none');
-    }
-
-    private static showElement(element: Element) {
-        element.classList.remove('d-none');
-    }
-
-    private disableFilters() {
-        Tracker.disableElement(this.filterElement);
-        Tracker.disableElement(this.hideAllElement);
-        Tracker.disableElement(this.notAfterElement);
-        Tracker.disableElement(this.notBeforeElement);
-        Tracker.disableElement(this.showAllElement);
-    }
-
-    private enableFilters() {
-        Tracker.enableElement(this.filterElement);
-        Tracker.enableElement(this.hideAllElement);
-        Tracker.enableElement(this.notAfterElement);
-        Tracker.enableElement(this.notBeforeElement);
-        Tracker.enableElement(this.showAllElement);
-    }
-
     private async importTracks() {
 
-        Tracker.disableElement(this.importElement);
-        Tracker.hideElement(this.importElement.parentElement);
-        Tracker.showElement(this.importLoader);
+        this.ui.disable(this.ui.importButton);
+        this.ui.hide(this.ui.importButton.parentElement);
+        this.ui.show(this.ui.importLoader);
 
         const count = await this.client.importTracks();
 
-        Tracker.hideElement(this.importLoader);
+        this.ui.hide(this.ui.importLoader);
 
         if (count < 1) {
-            Tracker.enableElement(this.importElement);
-            Tracker.showElement(this.importElement.parentElement);
+            this.ui.enable(this.ui.importButton);
+            this.ui.show(this.ui.importButton.parentElement);
         } else {
-            Tracker.hideElement(this.importContainer);
+            this.ui.hide(this.ui.importContainer);
             await this.loadTracks();
         }
     }
 
     private async loadTracks(): Promise<number> {
 
-        this.disableFilters();
+        this.ui.disableFilters();
         this.showLoader();
 
         // Clear any existing map paths and the tracks in the sidebar
         this.map.clearPaths();
 
-        let sibling = this.trackTemplate.nextElementSibling;
+        let sibling = this.ui.trackItemTemplate.nextElementSibling;
 
         while (sibling !== null) {
             let previous = sibling;
@@ -186,12 +131,12 @@ export class Tracker {
         let notBefore: Moment = null;
         let notAfter: Moment = null;
 
-        if (this.notBeforeElement.value) {
-            notBefore = moment(this.notBeforeElement.value);
+        if (this.ui.notBeforeDate.value) {
+            notBefore = moment(this.ui.notBeforeDate.value);
         }
 
-        if (this.notAfterElement.value) {
-            notAfter = moment(this.notAfterElement.value).add(1, 'days');
+        if (this.ui.notAfterDate.value) {
+            notAfter = moment(this.ui.notAfterDate.value).add(1, 'days');
         }
 
         this.updateWorkoutCount(0);
@@ -199,9 +144,7 @@ export class Tracker {
         const tracks = await this.client.getTracks(notBefore, notAfter);
 
         // TODO Add help icon that links to repo
-        // TODO Convert timestamps to local browser time zone
         // TODO Include empty App_Data folder in dotnet publish
-        // TODO Refactor elements in this class to their own class
         // TODO Reset individual show/hide buttons when using the show/hide all buttons
         // TODO Apply labels to the tracks on the map
         // TODO More styling to tracks and more metadata, like duration and total distance in miles/km?
@@ -217,21 +160,21 @@ export class Tracker {
             this.map.fitBounds();
         }
 
-        this.enableFilters();
+        this.ui.enableFilters();
         this.hideLoader();
 
         return tracks.length;
     }
 
     private showLoader() {
-        Tracker.showElement(this.tracksLoader);
+        this.ui.show(this.ui.tracksLoader);
     }
 
     private hideLoader() {
-        Tracker.hideElement(this.tracksLoader);
+        this.ui.hide(this.ui.tracksLoader);
     }
 
     private updateWorkoutCount(count: number) {
-        this.tracksCountElement.innerText = `(${count})`;
+        this.ui.tracksCount.innerText = `(${count})`;
     }
 }

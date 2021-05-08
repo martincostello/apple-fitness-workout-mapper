@@ -8,7 +8,7 @@ export class TrackMap {
     private readonly map: google.maps.Map;
     private paths: TrackPath[];
 
-    constructor(element: HTMLElement) {
+    constructor(element: Element) {
 
         const options: google.maps.MapOptions = {
             center: { lat: 0.0, lng: 0.0 },

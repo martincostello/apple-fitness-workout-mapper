@@ -4,7 +4,6 @@
 import * as moment from '../../../node_modules/moment/moment';
 import { Moment } from '../../../node_modules/moment/moment';
 import { ApiClient } from '../client/ApiClient';
-import { Track } from '../models/Track';
 import { TrackMap } from './TrackMap';
 import { TrackPath } from './TrackPath';
 import { TrackerUI } from './TrackerUI';
@@ -58,39 +57,6 @@ export class Tracker {
         } else {
             await this.loadTracks();
         }
-    }
-
-    private createTrackElement(track: Track): Element {
-
-        // Clone the template
-        const newNode = this.ui.trackItemTemplate.cloneNode(true);
-        this.ui.tracksList.appendChild(newNode);
-
-        // Clear the duplicated Id from the new node
-        const trackElement = this.ui.tracksList.lastElementChild;
-        trackElement.setAttribute('id', '');
-
-        const collapseId = `details-${track.name}`;
-
-        // Set the name onto the templated node
-        const trackLink = trackElement.firstElementChild;
-        trackLink.setAttribute('aria-controls', collapseId);
-        trackLink.setAttribute('data-track-name', track.name);
-        trackLink.textContent = track.name;
-
-        // Set up the collapse for the element containing the track details
-        const details = trackLink.nextElementSibling;
-
-        details.setAttribute('id', collapseId);
-
-        trackLink.addEventListener('click', () => {
-            ($(details) as any).collapse('toggle');
-        });
-
-        // Unhide once populated
-        this.ui.show(trackElement);
-
-        return trackLink;
     }
 
     private async importTracks() {
@@ -150,7 +116,7 @@ export class Tracker {
         // TODO More styling to tracks and more metadata, like duration and total distance in miles/km?
         // TODO Draw a bounding box with the NEWS extents and the area/total path length etc?
         tracks.forEach((track) => {
-            const trackLink = this.createTrackElement(track);
+            const trackLink = this.ui.createTrackElement(track);
             this.map.addPath(new TrackPath(trackLink, track, this.map));
         });
 

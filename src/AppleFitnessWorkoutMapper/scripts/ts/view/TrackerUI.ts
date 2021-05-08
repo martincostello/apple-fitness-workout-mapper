@@ -1,6 +1,8 @@
 // Copyright (c) Martin Costello, 2021. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
+import { Track } from '../models/Track';
+
 export class TrackerUI {
 
     readonly filterButton: Element;
@@ -63,5 +65,38 @@ export class TrackerUI {
         this.enable(this.notAfterDate);
         this.enable(this.notBeforeDate);
         this.enable(this.showAllButton);
+    }
+
+    createTrackElement(track: Track): Element {
+
+        // Clone the template
+        const newNode = this.trackItemTemplate.cloneNode(true);
+        this.tracksList.appendChild(newNode);
+
+        // Clear the duplicated Id from the new node
+        const trackElement = this.tracksList.lastElementChild;
+        trackElement.setAttribute('id', '');
+
+        const collapseId = `details-${track.name}`;
+
+        // Set the name onto the templated node
+        const trackLink = trackElement.firstElementChild;
+        trackLink.setAttribute('aria-controls', collapseId);
+        trackLink.setAttribute('data-track-name', track.name);
+        trackLink.textContent = track.name;
+
+        // Set up the collapse for the element containing the track details
+        const details = trackLink.nextElementSibling;
+
+        details.setAttribute('id', collapseId);
+
+        trackLink.addEventListener('click', () => {
+            ($(details) as any).collapse('toggle');
+        });
+
+        // Unhide once populated
+        this.show(trackElement);
+
+        return trackLink;
     }
 }

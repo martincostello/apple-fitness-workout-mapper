@@ -43,24 +43,18 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Services
             track.Name.ShouldBe("Route 1");
             track.Timestamp.ShouldBe(new DateTimeOffset(2021, 05, 04, 11, 25, 35, TimeSpan.Zero));
 
-            track.Segments.ShouldNotBeNull();
-            track.Segments.ShouldNotBeEmpty();
-            track.Segments.Count.ShouldBe(1);
+            track.Points.ShouldNotBeNull();
+            track.Points.ShouldNotBeEmpty();
+            track.Points.Count.ShouldBe(2);
 
-            IList<TrackPoint> segment = track.Segments[0];
-
-            segment.ShouldNotBeNull();
-            segment.ShouldNotBeEmpty();
-            segment.Count.ShouldBe(2);
-
-            TrackPoint point = segment[0];
+            TrackPoint point = track.Points[0];
 
             point.ShouldNotBeNull();
             point.Latitude.ShouldBe(51.5080900);
             point.Longitude.ShouldBe(-0.1285907);
             point.Timestamp.ShouldBe(new DateTimeOffset(2021, 05, 04, 11, 25, 35, TimeSpan.Zero));
 
-            point = segment[1];
+            point = track.Points[1];
 
             point.ShouldNotBeNull();
             point.Latitude.ShouldBe(51.5013640);
@@ -73,17 +67,11 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Services
             track.Name.ShouldBe("Route 2");
             track.Timestamp.ShouldBe(new DateTimeOffset(2021, 05, 05, 11, 25, 35, TimeSpan.Zero));
 
-            track.Segments.ShouldNotBeNull();
-            track.Segments.ShouldNotBeEmpty();
-            track.Segments.Count.ShouldBe(1);
+            track.Points.ShouldNotBeNull();
+            track.Points.ShouldNotBeEmpty();
+            track.Points.Count.ShouldBe(1);
 
-            segment = track.Segments[0];
-
-            segment.ShouldNotBeNull();
-            segment.ShouldNotBeEmpty();
-            segment.Count.ShouldBe(1);
-
-            point = segment[0];
+            point = track.Points[0];
 
             point.ShouldNotBeNull();
             point.Latitude.ShouldBe(51.5080900);

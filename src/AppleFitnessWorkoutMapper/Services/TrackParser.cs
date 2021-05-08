@@ -102,8 +102,6 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Services
 
                 foreach (XElement segmentNodes in track.Descendants(XS + "trkseg"))
                 {
-                    var segment = new List<TrackPoint>();
-
                     foreach (XElement pointNode in segmentNodes.Descendants(XS + "trkpt"))
                     {
                         string? longitudeString = pointNode.Attribute("lon")?.Value;
@@ -134,32 +132,22 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Services
                             Timestamp = timestamp.Value,
                         };
 
-                        segment.Add(point);
-                    }
-
-                    if (segment.Count > 0)
-                    {
-                        result.Segments.Add(segment);
-
-                        _logger.LogDebug(
-                            "Added {PointCount} point(s) to segment {SegmentIndex} in {FileName}.",
-                            result.Segments[^1].Count,
-                            result.Segments.Count - 1,
-                            fileName);
+                        result.Points.Add(point);
                     }
                 }
             }
 
-            if (result.Segments.Count < 1)
+            if (result.Points.Count < 1)
             {
                 return null;
             }
 
-            result.Timestamp = result.Segments.First().First().Timestamp;
+            result.Timestamp = result.Points.First().Timestamp;
 
             _logger.LogDebug(
-                "Added {SegmentCount} segment(s) for track with timestamp {Timestamp:u} from {FileName}.",
-                result.Segments.Count,
+                "Added {Count} point(s) for track {Name} with timestamp {Timestamp:u} from {FileName}.",
+                result.Points.Count,
+                result.Name,
                 result.Timestamp,
                 fileName);
 

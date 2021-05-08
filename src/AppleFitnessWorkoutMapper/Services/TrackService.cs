@@ -53,8 +53,6 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Services
                     Timestamp = new DateTimeOffset(track.Timestamp, TimeSpan.Zero),
                 };
 
-                var segment = new List<Models.TrackPoint>();
-
                 var points = _context.TrackPoints
                     .Where((p) => p.TrackId == track.Id)
                     .OrderBy((p) => p.Timestamp)
@@ -70,10 +68,8 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Services
                         Timestamp = new DateTimeOffset(point.Timestamp, TimeSpan.Zero),
                     };
 
-                    segment.Add(pointModel);
+                    trackModel.Points.Add(pointModel);
                 }
-
-                trackModel.Segments.Add(segment);
 
                 result.Add(trackModel);
             }

@@ -12,6 +12,6 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Models
 
         public DateTimeOffset Timestamp { get; set; }
 
-        public IList<IList<TrackPoint>> Segments { get; set; } = new List<IList<TrackPoint>>();
+        public IList<TrackPoint> Points { get; set; } = new List<TrackPoint>();
     }
 }

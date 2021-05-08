@@ -63,10 +63,8 @@ export class TrackPath {
 
         const result: google.maps.LatLng[] = [];
 
-        this.track.segments.forEach((segment) => {
-            segment.forEach((point) => {
-                result.push(new google.maps.LatLng(point.latitude, point.longitude));
-            });
+        this.track.points.forEach((point) => {
+            result.push(new google.maps.LatLng(point.latitude, point.longitude));
         });
 
         return result;
@@ -115,10 +113,8 @@ export class TrackPath {
 
         const path = route.getPath();
 
-        this.track.segments.forEach((segment) => {
-            segment.forEach((point) => {
-                path.push(new google.maps.LatLng(point.latitude, point.longitude));
-            });
+        this.track.points.forEach((point) => {
+            path.push(new google.maps.LatLng(point.latitude, point.longitude));
         });
 
         google.maps.event.addListener(route, 'mouseout', () => {

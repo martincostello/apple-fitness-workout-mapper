@@ -56,25 +56,22 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Services
 
                 trackDB = (await _context.Tracks.AddAsync(trackDB, cancellationToken)).Entity;
 
-                foreach (var segment in track.Segments)
+                var points = new List<Data.TrackPoint>(track.Points.Count);
+
+                foreach (var point in track.Points)
                 {
-                    var points = new List<Data.TrackPoint>();
-
-                    foreach (var point in segment)
+                    var pointDB = new Data.TrackPoint()
                     {
-                        var pointDB = new Data.TrackPoint()
-                        {
-                            Latitude = point.Latitude,
-                            Longitude = point.Longitude,
-                            Timestamp = point.Timestamp.UtcDateTime,
-                            TrackId = trackDB.Id,
-                        };
+                        Latitude = point.Latitude,
+                        Longitude = point.Longitude,
+                        Timestamp = point.Timestamp.UtcDateTime,
+                        TrackId = trackDB.Id,
+                    };
 
-                        points.Add(pointDB);
-                    }
-
-                    await _context.TrackPoints.AddRangeAsync(points, cancellationToken);
+                    points.Add(pointDB);
                 }
+
+                await _context.TrackPoints.AddRangeAsync(points, cancellationToken);
             }
 
             await _context.SaveChangesAsync(cancellationToken);

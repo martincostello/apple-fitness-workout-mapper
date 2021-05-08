@@ -199,7 +199,6 @@ export class Tracker {
         const tracks = await this.client.getTracks(notBefore, notAfter);
 
         // TODO Add help icon that links to repo
-        // TODO Add Apple icon to brand header
         // TODO Convert timestamps to local browser time zone
         // TODO Include empty App_Data folder in dotnet publish
         // TODO Refactor elements in this class to their own class

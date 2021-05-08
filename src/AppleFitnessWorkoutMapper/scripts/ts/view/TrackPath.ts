@@ -160,14 +160,23 @@ export class TrackPath {
             path.push(new google.maps.LatLng(point.latitude, point.longitude));
         });
 
+        const googleMap = this.map.getMap();
+        const infoWindow = new google.maps.InfoWindow();
+
         google.maps.event.addListener(route, 'mouseout', () => {
             this.highlightIfNotAlready();
+            infoWindow.close();
         });
-        google.maps.event.addListener(route, 'mouseover', () => {
+        google.maps.event.addListener(route, 'mouseover', (e) => {
+
             this.highlightIfNotAlready();
+
+            infoWindow.setContent(this.track.name);
+            infoWindow.setPosition(e.latLng);
+            infoWindow.open(googleMap);
         });
 
-        route.setMap(this.map.getMap());
+        route.setMap(googleMap);
 
         return route;
     }

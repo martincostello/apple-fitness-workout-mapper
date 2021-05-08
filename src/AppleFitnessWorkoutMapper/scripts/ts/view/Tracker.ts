@@ -111,7 +111,6 @@ export class Tracker {
 
         const tracks = await this.client.getTracks(notBefore, notAfter);
 
-        // TODO Apply labels to the tracks on the map
         // TODO Show total distance
         tracks.forEach((track) => {
             const trackLink = this.ui.createTrackElement(track);

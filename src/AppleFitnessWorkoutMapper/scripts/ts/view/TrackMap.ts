@@ -86,7 +86,8 @@ export class TrackMap {
                 paths: polyPaths,
                 strokeColor: red,
                 strokeOpacity: 0.8,
-                strokeWeight: 3
+                strokeWeight: 3,
+                zIndex: -1
             });
             this.polygon.setMap(this.map);
         }

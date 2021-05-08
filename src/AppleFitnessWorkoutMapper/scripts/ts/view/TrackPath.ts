@@ -10,8 +10,10 @@ export class TrackPath {
     private static blue: string = '#0000FF';
     private static red: string = '#FF0000';
 
+    private readonly button: Element;
     private readonly container: Element;
     private readonly map: TrackMap;
+    private readonly panel: Element;
     private readonly route: google.maps.Polyline;
     private readonly track: Track;
 
@@ -20,29 +22,29 @@ export class TrackPath {
     private visible: boolean;
 
     constructor(container: Element, track: Track, map: TrackMap) {
-        this.container = container;
+
         this.map = map;
         this.track = track;
         this.route = this.createRoute();
         this.visible = true;
 
-        this.container.nextElementSibling.querySelectorAll('[data-js-visible]').forEach((button) => {
-            button.addEventListener('click', () => {
-                if (this.visible) {
-                    this.hidePath();
-                    button.textContent = 'Show';
-                } else {
-                    this.showPath();
-                    button.textContent = 'Hide';
-                }
-            });
+        this.container = container;
+        this.panel = this.container.nextElementSibling;
+
+        this.button = Array.from(this.panel.querySelectorAll('[data-js-visible]'))[0];
+        this.button.addEventListener('click', () => {
+            if (this.visible) {
+                this.hidePath();
+            } else {
+                this.showPath();
+            }
         });
 
-        this.container.nextElementSibling.querySelectorAll('[data-js-name]').forEach((name) => {
+        this.panel.querySelectorAll('[data-js-name]').forEach((name) => {
             name.textContent = track.name;
         });
 
-        this.container.nextElementSibling.querySelectorAll('[data-js-timestamp]').forEach((timestamp) => {
+        this.panel.querySelectorAll('[data-js-timestamp]').forEach((timestamp) => {
             timestamp.textContent = moment(track.timestamp).toLocaleString();
         });
 
@@ -73,6 +75,7 @@ export class TrackPath {
     hidePath() {
         this.visible = false;
         this.route.setMap(null);
+        this.button.textContent = 'Show';
     }
 
     removeFromMap() {
@@ -82,6 +85,7 @@ export class TrackPath {
     showPath() {
         this.visible = true;
         this.route.setMap(this.map.getMap());
+        this.button.textContent = 'Hide';
     }
 
     toggleHighlighting() {

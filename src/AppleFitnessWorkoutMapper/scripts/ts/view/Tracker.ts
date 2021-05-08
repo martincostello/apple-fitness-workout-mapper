@@ -156,7 +156,9 @@ export class Tracker {
 
         this.updateWorkoutCount(tracks.length);
 
-        this.map.fitBounds();
+        if (tracks.length > 0) {
+            this.map.fitBounds();
+        }
 
         this.enableFilters();
         this.hideLoader();

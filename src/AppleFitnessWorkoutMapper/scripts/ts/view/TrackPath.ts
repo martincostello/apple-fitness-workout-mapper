@@ -74,13 +74,22 @@ export class TrackPath {
         }
 
         const numberToText = (value: number, units: string) => {
-            const options = { maximumFractionDigits: 2 };
+            const options = { maximumFractionDigits: 2, minimumFractionDigits: 2 };
             return `${value.toLocaleString(undefined, options)} ${units}`;
         };
 
         const distanceElement = this.panel.querySelector('[data-js-distance]');
         distanceElement.textContent = numberToText(distance, units);
         distanceElement.setAttribute('title', numberToText(distanceInMeters, 'meters'));
+
+        const pace = duration.asMinutes() / distance;
+        const paceUnit = useMiles ? 'mile' : 'km';
+
+        const paceMinutes = Math.floor(pace);
+        const paceSeconds = ((pace % 1) * 60).toFixed(0);
+
+        const paceElement = this.panel.querySelector('[data-js-pace]');
+        paceElement.textContent = `${paceMinutes}'${paceSeconds}"/${paceUnit}`;
 
         this.container.addEventListener('click', () => {
             this.expanded = !this.expanded;

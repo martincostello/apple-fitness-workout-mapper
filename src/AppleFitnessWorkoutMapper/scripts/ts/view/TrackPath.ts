@@ -15,6 +15,7 @@ export class TrackPath {
     private readonly route: google.maps.Polyline;
     private readonly track: Track;
 
+    private expanded: boolean;
     private highlighted: boolean;
     private visible: boolean;
 
@@ -46,7 +47,13 @@ export class TrackPath {
         });
 
         this.container.addEventListener('click', () => {
-            this.toggleHighlighting();
+            this.expanded = !this.expanded;
+        });
+        this.container.addEventListener('mouseover', () => {
+            this.highlightIfNotAlready();
+        });
+        this.container.addEventListener('mouseout', () => {
+            this.highlightIfNotAlready();
         });
     }
 
@@ -80,7 +87,8 @@ export class TrackPath {
     toggleHighlighting() {
         this.highlighted = !this.highlighted;
         this.route.setOptions({
-            strokeColor: this.highlighted ? TrackPath.blue : TrackPath.red
+            strokeColor: this.highlighted ? TrackPath.blue : TrackPath.red,
+            zIndex: this.highlighted ? 1 : 0
         });
     }
 
@@ -97,7 +105,8 @@ export class TrackPath {
             path: [],
             strokeColor: TrackPath.red,
             strokeOpacity: 1.0,
-            strokeWeight: 1
+            strokeWeight: 1,
+            zIndex: 0
         });
 
         const path = route.getPath();
@@ -108,8 +117,21 @@ export class TrackPath {
             });
         });
 
+        google.maps.event.addListener(route, 'mouseout', () => {
+            this.highlightIfNotAlready();
+        });
+        google.maps.event.addListener(route, 'mouseover', () => {
+            this.highlightIfNotAlready();
+        });
+
         route.setMap(this.map.getMap());
 
         return route;
+    }
+
+    private highlightIfNotAlready() {
+        if (!this.expanded) {
+            this.toggleHighlighting();
+        }
     }
 }

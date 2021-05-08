@@ -191,6 +191,8 @@ export class Tracker {
             notAfter = moment(this.notAfterElement.value).add(1, 'days');
         }
 
+        this.updateWorkoutCount(0);
+
         const tracks = await this.client.getTracks(notBefore, notAfter);
 
         // TODO Apply labels to the tracks on the map

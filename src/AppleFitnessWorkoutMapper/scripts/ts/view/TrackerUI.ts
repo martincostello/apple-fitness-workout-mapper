@@ -7,6 +7,7 @@ import { Track } from '../models/Track';
 
 export class TrackerUI {
 
+    readonly distanceUnits: HTMLInputElement;
     readonly filterButton: Element;
     readonly hideAllButton: Element;
     readonly importButton: Element;
@@ -23,6 +24,7 @@ export class TrackerUI {
     private readonly tracksList: Element;
 
     constructor() {
+        this.distanceUnits = <HTMLInputElement>document.getElementById('unit-of-distance');
         this.filterButton = document.getElementById('filter');
         this.hideAllButton = document.getElementById('hide-all');
         this.importButton = document.getElementById('import');

@@ -38,6 +38,20 @@ export class Tracker {
             this.ui.enable(this.ui.showAllButton);
         });
 
+        const milesKey = 'use-miles';
+
+        try {
+            this.ui.distanceUnits.checked = localStorage.getItem(milesKey) === 'true';
+        } catch {}
+
+        // HACK addEventListener() doesn't fire the event, so go via jQuery
+        $(this.ui.distanceUnits).on('change', () => {
+            try {
+                localStorage.setItem(milesKey, this.ui.distanceUnits.checked.toString());
+            } catch {}
+            this.loadTracks();
+        });
+
         const count = await this.client.getCount();
 
         if (count < 1) {

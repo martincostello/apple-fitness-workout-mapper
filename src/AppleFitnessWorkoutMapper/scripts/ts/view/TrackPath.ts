@@ -58,6 +58,30 @@ export class TrackPath {
         durationElement.textContent = duration.humanize();
         durationElement.setAttribute('title', duration.toISOString());
 
+        const distanceInMeters = google.maps.geometry.spherical.computeLength(this.route.getPath());
+
+        const useMiles = (<HTMLInputElement>document.getElementById('unit-of-distance')).checked;
+
+        let distance: number;
+        let units: string;
+
+        if (useMiles) {
+            distance = distanceInMeters * 0.000621371;
+            units = 'miles';
+        } else {
+            distance = distanceInMeters / 1000.0;
+            units = 'km';
+        }
+
+        const numberToText = (value: number, units: string) => {
+            const options = { maximumFractionDigits: 2 };
+            return `${value.toLocaleString(undefined, options)} ${units}`;
+        };
+
+        const distanceElement = this.panel.querySelector('[data-js-distance]');
+        distanceElement.textContent = numberToText(distance, units);
+        distanceElement.setAttribute('title', numberToText(distanceInMeters, 'meters'));
+
         this.container.addEventListener('click', () => {
             this.expanded = !this.expanded;
         });

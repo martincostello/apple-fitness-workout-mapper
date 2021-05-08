@@ -1,5 +1,12 @@
 @page
-@model MartinCostello.AppleFitnessWorkoutMapper.Pages.IndexModel
+@using System.Globalization;
+@using MartinCostello.AppleFitnessWorkoutMapper.Pages;
+@model IndexModel
+@{
+    var today = DateTimeOffset.UtcNow.Date;
+    string startDate = today.AddDays(-28).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+    string endDate = today.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,13 +37,13 @@
                             <div class="input-group-prepend" aria-hidden="true">
                                 <span class="input-group-text"><img src="~/static/images/calendar.svg" /></span>
                             </div>
-                            <input type="text" class="form-control calendar" placeholder="Start date" aria-label="Start date" id="not-before" disabled>
+                            <input type="text" class="form-control calendar" placeholder="Start date" value="@startDate" aria-label="Start date" id="not-before" disabled>
                         </div>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend" aria-hidden="true">
                                 <span class="input-group-text"><img src="~/static/images/calendar.svg" /></span>
                             </div>
-                            <input type="text" class="form-control calendar" placeholder="End date" aria-label="End date" id="not-after" disabled>
+                            <input type="text" class="form-control calendar" placeholder="End date" value="@endDate" aria-label="End date" id="not-after" disabled>
                         </div>
                         <div class="input-group mb-3">
                             <div class="btn-toolbar" role="toolbar">

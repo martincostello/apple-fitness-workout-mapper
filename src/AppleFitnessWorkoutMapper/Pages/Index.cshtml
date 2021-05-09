@@ -144,9 +144,6 @@
                         <i class="bi-map" aria-hidden="true"></i>
                     </h1>
                 </div>
-                <div class="alert alert-primary d-none" role="alert" id="total-distance-container">
-                    You have travelled a total distance of <span js-data-total-distance></span>. <i class="bi bi-stars" aria-hidden="true"></i>
-                </div>
                 @if (string.IsNullOrEmpty(Model.GoogleMapsApiKey))
                 {
                     <div class="alert alert-warning" role="alert">
@@ -165,6 +162,9 @@
                         </p>
                     </div>
                 }
+                <div class="alert alert-primary d-none" role="alert" id="total-distance-container">
+                    You have travelled a total distance of <span js-data-total-distance></span>. <i class="bi bi-stars" aria-hidden="true"></i>
+                </div>
                 <div id="map"></div>
                 <footer class="mt-2 text-muted">
                     Designed with <i class="bi bi-heart-fill" aria-label="love"></i> by <a href="https://martincostello.com/home/about/" rel="nofollow" target="_blank">Martin Costello</a>, &copy; @DateTimeOffset.UtcNow.Year |

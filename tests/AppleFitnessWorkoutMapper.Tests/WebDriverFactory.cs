@@ -46,7 +46,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             {
                 var manage = driver.Manage();
 
-                var timeout = TimeSpan.FromSeconds(10);
+                var timeout = TimeSpan.FromSeconds(15);
                 var timeouts = manage.Timeouts();
 
                 timeouts.AsynchronousJavaScript = timeout;

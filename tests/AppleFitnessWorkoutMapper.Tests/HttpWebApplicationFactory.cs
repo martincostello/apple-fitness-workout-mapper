@@ -11,12 +11,11 @@ using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Xunit;
 using Xunit.Abstractions;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper
 {
-    internal class HttpWebApplicationFactory : WebApplicationFactory, IAsyncLifetime
+    internal class HttpWebApplicationFactory : WebApplicationFactory
     {
         private IHost? _host;
         private bool _disposed;
@@ -32,16 +31,6 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
 
         public async Task InitializeAsync()
             => await EnsureHttpServerAsync();
-
-        async Task IAsyncLifetime.DisposeAsync()
-        {
-            if (_host != null)
-            {
-                await _host.StopAsync();
-                _host.Dispose();
-                _host = null;
-            }
-        }
 
         public HttpClient CreateHttpClient()
         {

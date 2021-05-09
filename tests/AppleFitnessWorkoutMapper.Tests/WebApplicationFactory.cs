@@ -27,23 +27,33 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
 
         public ITestOutputHelper? OutputHelper { get; set; }
 
-        public void Reset()
+        private string DatabaseFileName { get; } = Guid.NewGuid().ToString() + ".db";
+
+        protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            var config = new[]
+            {
+                KeyValuePair.Create("DatabaseFileName", DatabaseFileName),
+                KeyValuePair.Create("DataDirectory", AppDataDirectory),
+            };
+
+            builder.ConfigureAppConfiguration((p) => p.AddInMemoryCollection(config))
+                   .ConfigureLogging((p) => p.AddXUnit(this))
+                   .UseContentRoot(GetApplicationContentRootPath());
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
             try
             {
-                File.Delete(Path.Combine(AppDataDirectory, "tracks.db"));
+                File.Delete(Path.Combine(AppDataDirectory, DatabaseFileName));
             }
             catch (Exception)
             {
                 // Ignore
             }
-        }
-
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
-        {
-            builder.ConfigureAppConfiguration((p) => p.AddInMemoryCollection(new[] { KeyValuePair.Create("DataDirectory", AppDataDirectory) }))
-                   .ConfigureLogging((p) => p.AddXUnit(this))
-                   .UseContentRoot(GetApplicationContentRootPath());
         }
 
         private string GetApplicationContentRootPath()

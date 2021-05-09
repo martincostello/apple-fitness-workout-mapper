@@ -47,7 +47,12 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                             options.DataDirectory = Path.Combine(Environment.ContentRootPath, "App_Data");
                         }
 
-                        options.DatabaseFile = Path.Combine(options.DataDirectory, "tracks.db");
+                        if (string.IsNullOrEmpty(options.DatabaseFileName))
+                        {
+                            options.DatabaseFileName = "tracks.db";
+                        }
+
+                        options.DatabaseFile = Path.Combine(options.DataDirectory, options.DatabaseFileName);
                     });
 
             services.AddDbContext<TracksContext>((serviceProvider, builder) =>

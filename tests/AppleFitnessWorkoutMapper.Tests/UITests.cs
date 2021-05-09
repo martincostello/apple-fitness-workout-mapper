@@ -26,8 +26,6 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             using var fixture = new HttpWebApplicationFactory(OutputHelper);
             await fixture.InitializeAsync();
 
-            fixture.Reset();
-
             using var driver = WebDriverFactory.CreateWebDriver();
             driver.Navigate().GoToUrl(fixture.ServerAddress);
 

@@ -5,10 +5,12 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
 {
     public sealed class ApplicationOptions
     {
-        public string DatabaseFile { get; set; } = string.Empty;
+        public string DatabaseFileName { get; set; } = "tracks.db";
 
         public string DataDirectory { get; set; } = string.Empty;
 
         public string GoogleMapsApiKey { get; set; } = string.Empty;
+
+        internal string DatabaseFile { get; set; } = string.Empty;
     }
 }

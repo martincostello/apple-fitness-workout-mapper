@@ -43,7 +43,6 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
         {
             // Arrange
             using var fixture = new WebApplicationFactory(OutputHelper);
-            fixture.Reset();
 
             using var client = fixture.CreateClient();
 

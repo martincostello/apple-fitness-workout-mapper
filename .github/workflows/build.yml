@@ -53,3 +53,10 @@ jobs:
       with:
         file: ./artifacts/coverage.cobertura.xml
         flags: ${{ matrix.codecov_os }}
+
+    - name: Publish artifacts
+      uses: actions/upload-artifact@v2
+      if: ${{ runner.os == 'Windows' }}
+      with:
+        name: app-zips
+        path: ./artifacts/publish/*.zip

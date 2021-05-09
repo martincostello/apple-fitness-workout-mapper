@@ -100,10 +100,8 @@ function DotNetTest {
 }
 
 function DotNetPublish {
-    param([string]$Project, [string] $Runtime)
-    $publishPath = (Join-Path $OutputPath "publish")
-    $publishPath = (Join-Path $publishPath $Runtime)
-    & $dotnet publish $Project --output $publishPath --configuration "Release" --runtime $Runtime
+    param([string]$Project, [string] $Runtime, [string] $PublishPath)
+    & $dotnet publish $Project --output $PublishPath --configuration "Release" --runtime $Runtime
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet publish failed with exit code $LASTEXITCODE"
     }
@@ -119,9 +117,23 @@ $publishProjects = @(
 
 Write-Host "Publishing solution..." -ForegroundColor Green
 ForEach ($project in $publishProjects) {
-    DotNetPublish $project "linux-x64"
-    DotNetPublish $project "osx-x64"
-    DotNetPublish $project "win-x64"
+
+    $runtimes = @(
+        "linux-x64",
+        "osx-x64",
+        "win-x64"
+    )
+
+    $publishRootPath = (Join-Path $OutputPath "publish")
+
+    ForEach ($runtime in $runtimes) {
+        $publishPath = (Join-Path $publishRootPath $runtime)
+        DotNetPublish $project $runtime $publishPath
+
+        if ($null -ne $env:GITHUB_ACTIONS ) {
+            Compress-Archive -Path ($publishPath + "/*") -DestinationPath $publishPath -Force
+        }
+    }
 }
 
 if ($SkipTests -eq $false) {

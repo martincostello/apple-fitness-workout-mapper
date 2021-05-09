@@ -51,9 +51,17 @@ it works.
 
 1. [Visual Studio Code](https://code.visualstudio.com/download)
 1. [PowerShell](https://github.com/PowerShell/PowerShell#get-powershell)
+1. [Google Chrome](https://www.google.com/chrome/) (to run the UI tests)
 
-To build and test the application locally run the following command using PowerShell 7 or later:
+To build, publish and test the application locally, run the following command
+after cloning the repository if you have PowerShell installed:
 
 ```powershell
 ./build.ps1
+```
+
+Otherwise run the following command to build and test the application:
+
+```sh
+dotnet test
 ```

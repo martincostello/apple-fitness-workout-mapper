@@ -85,6 +85,9 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             actual.ShouldNotBeEmpty();
             actual.Count.ShouldBe(2);
 
+            Track item = actual[0];
+            item.Timestamp.ShouldBe(new DateTimeOffset(2021, 05, 04, 11, 25, 35, TimeSpan.Zero));
+
             // Act
             actual = await client.GetFromJsonAsync<IList<Track>>("api/tracks?notBefore=2021-05-05T00:00:00Z");
 
@@ -93,7 +96,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             actual.ShouldNotBeEmpty();
             actual.Count.ShouldBe(1);
 
-            Track item = actual.ShouldHaveSingleItem();
+            item = actual.ShouldHaveSingleItem();
             item.Timestamp.ShouldBe(new DateTimeOffset(2021, 05, 05, 11, 25, 35, TimeSpan.Zero));
         }
 

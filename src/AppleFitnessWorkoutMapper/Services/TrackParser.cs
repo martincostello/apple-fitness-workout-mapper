@@ -51,7 +51,9 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Services
                 }
             }
 
-            result.Sort((x, y) => Comparer<DateTimeOffset>.Default.Compare(x.Timestamp, y.Timestamp));
+            var comparer = Comparer<DateTimeOffset>.Default;
+
+            result.Sort((x, y) => comparer.Compare(x.Timestamp, y.Timestamp));
 
             _logger.LogInformation("Parsed {Count} tracks from {Path}.", result.Count, path);
 

@@ -19,6 +19,7 @@ packages
 project.lock.json
 src/AppleFitnessWorkoutMapper/App_Data/*
 src/AppleFitnessWorkoutMapper/wwwroot/static/js/*
+tests/AppleFitnessWorkoutMapper.Tests/App_Data/tracks.db
 TestResults
 UpgradeLog*.htm
 UpgradeLog*.XML

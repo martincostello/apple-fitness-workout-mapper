@@ -25,8 +25,8 @@ This will give you a directory that looks something like this:
 
 ![Application directory](./images/application-directory.png "Example directory once the ZIP file is extracted on a Windows 10 computer")
 
-Now find the `AppleFitnessWorkoutMapper.exe` file in the directory you extracted
-the application to.
+Now find the `AppleFitnessWorkoutMapper` file or (`AppleFitnessWorkoutMapper.exe` on
+Windows) in the directory you extracted the application to.
 
 ![Application file](./images/application-file.png "The AppleFitnessWorkoutMapper.exe file to run the application")
 
@@ -36,14 +36,15 @@ the application to.
 >
 > ![Windows unblock file dialog](./images/unblock-application.png "Unblocking the AppleFitnessWorkoutMapper.exe file")
 
-To run Apple Fitness Workout Mapper, double-click the `AppleFitnessWorkoutMapper.exe`
-file to start the application. If the application is running successfully, you
-should see a window similar to the one below.
+To run Apple Fitness Workout Mapper, double-click the `AppleFitnessWorkoutMapper`
+(or `AppleFitnessWorkoutMapper.exe`) file to start the application. If the
+application is running successfully, you should see a terminal window similar to
+the one shown below.
 
 ![Application running](./images/application-running.png "The AppleFitnessWorkoutMapper.exe file to run the application")
 
 If the application is running successfully you should see no errors or warnings
-logged to the terminal and the addresses the application is running on.
+logged to the terminal and the URL the application is listening on.
 
 To open the application, copy one of the URLs as highlighted below from the
 terminal window and visit it in your preferred web browser. The default recommended
@@ -72,7 +73,7 @@ you wish to visualise it from the Apple Health app.
 not be able to use this application as there is no way to access the data
 remotely from another device (such as your computer).
 >
-> Ensure you export your Health #Ddata to a secure location, and delete any
+> Ensure you export your Health Data to a secure location, and delete any
 copies of it when you are finished using the application, including from the
 `App_Data` directory of any copies of the _Apple Fitness
 Workout Mapper_ application itself you have on your computer. It is your own
@@ -86,7 +87,7 @@ Data from your Apple device.
 
 First locate the Health app on your device, and then open it.
 
-![Health app](./images/1-find-health-app.png "Find the Health app")
+<img src="./images/1-find-health-app.png" alt="Find the Health app" height="50%"/>
 
 ### Open your Health profile
 
@@ -98,7 +99,7 @@ Once you've opened the Health app, tap your picture to open your profile.
 
 Now scroll to the bottom and tap the _Export All Health Data_ option.
 
-![Export data](./images/3-export-all-health-data.png "Tap Export All Health Data")
+<img src="./images/3-export-all-health-data.png" alt="Tap Export All Health Data" height="50%"/>
 
 Confirm that you wish to export your Health Data.
 
@@ -159,7 +160,7 @@ route data to visualise in the application on a map.
 
 ![Workout route files](./images/export-workouts.png "Workout route files")
 
-> These files are stored in [GPS Exchange Format](https://en.wikipedia.org/wiki/GPS_Exchange_Format).
+> ℹ️ These files are stored in [GPS Exchange Format](https://en.wikipedia.org/wiki/GPS_Exchange_Format).
 
 Open the `App_Data` directory in the directory you unzipped the application to
 in the first section of this guide. The directory will contain a single `.empty`
@@ -204,7 +205,7 @@ this directory, you will need to repeat the import process.
 ## Exploring your workouts
 
 Now that you have imported your Health Data into the application, you can now
-explore it to your heart's content in the application. Below are some of the
+explore it to your heart's content in the map. Below are some of the
 features that let you see where you've been and other information.
 
 1. Select one or more workouts to highlight them on the map.
@@ -220,3 +221,5 @@ over the distance with your mouse will always show the distance in metres.
 If there's a feature you'd like doesn't seem to be there, consider [opening a
 GitHub issue](https://github.com/martincostello/apple-fitness-workout-mapper/issues) to request a new feature (or try doing it yourself and opening a
 pull request to contribute back to the application 😃).
+
+Enjoy!

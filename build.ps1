@@ -130,8 +130,9 @@ ForEach ($project in $publishProjects) {
         $publishPath = (Join-Path $publishRootPath $runtime)
         DotNetPublish $project $runtime $publishPath
 
-        if ($null -ne $env:GITHUB_ACTIONS ) {
-            Compress-Archive -Path ($publishPath + "/*") -DestinationPath $publishPath -Force
+        if ($null -ne $env:GITHUB_ACTIONS) {
+            $zipPath = (Join-Path $publishRootPath ("AppleFitnessWorkoutMapper-" + $runtime + ".zip"))
+            Compress-Archive -Path ($publishPath + "/*") -DestinationPath $zipPath -Force
         }
     }
 }

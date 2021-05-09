@@ -125,8 +125,11 @@ export class Tracker {
             this.map.addPath(path);
         });
 
+        const totalDistanceUnits = useMiles ? 'miles' : 'km';
+        const totalDistanceString = totalDistance.toLocaleString(undefined, { maximumFractionDigits: 0 });
+
         this.ui.updateSidebarCount(tracks.length);
-        this.ui.updateTotalDistance(`${totalDistance.toFixed(0)} ${useMiles ? 'miles' : 'km'}`);
+        this.ui.updateTotalDistance(`${totalDistanceString} ${totalDistanceUnits}`);
 
         if (tracks.length > 0) {
             this.map.fitBounds(this.ui.showPolygon.checked);

@@ -160,7 +160,13 @@ export class TrackerUI {
     }
 
     getNotAfter(): Moment {
-        return this.getMoment(this.notAfterDate);
+        let result = this.getMoment(this.notAfterDate);
+
+        if (result !== null) {
+            result = result.add(1, 'days');
+        }
+
+        return result;
     }
 
     getNotBefore(): Moment {

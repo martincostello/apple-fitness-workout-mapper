@@ -9,11 +9,21 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
 {
     public sealed class ApplicationPage
     {
+        private static readonly By _filter = By.Id("filter");
+
         private readonly IWebDriver _driver;
 
         public ApplicationPage(IWebDriver driver)
         {
             _driver = driver;
+        }
+
+        public void Filter()
+        {
+            var filter = _driver.FindElementWithWait(_filter);
+            _driver.WaitForInteractable(filter).Click();
+
+            WaitForReload();
         }
 
         public void ImportData()
@@ -23,12 +33,34 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
             _driver.WaitForInteractable(import).Click();
 
             // Wait for the import to complete
-            var filter = _driver.FindElementWithWait(By.Id("filter"));
+            var filter = _driver.FindElementWithWait(_filter);
             _driver.WaitForInteractable(filter);
         }
 
         public bool IsMapDisplayed()
             => _driver.FindElement(By.CssSelector("[aria-label='Map']")).Displayed;
+
+        public ApplicationPage NotBefore(string value)
+        {
+            var notBefore = _driver.FindElementWithWait(By.Id("not-before"));
+            _driver.WaitForInteractable(notBefore);
+
+            notBefore.Clear();
+            notBefore.SendKeys(value + Keys.Escape);
+
+            return this;
+        }
+
+        public ApplicationPage NotAfter(string value)
+        {
+            var notAfter = _driver.FindElementWithWait(By.Id("not-after"));
+            _driver.WaitForInteractable(notAfter);
+
+            notAfter.Clear();
+            notAfter.SendKeys(value + Keys.Escape);
+
+            return this;
+        }
 
         public string TotalDistance()
             => _driver.FindElement(By.CssSelector("[js-data-total-distance]")).Text;
@@ -63,7 +95,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
 
         public void WaitForReload()
         {
-            _driver.WaitForInteractable(_driver.FindElementWithWait(By.Id("filter")));
+            _driver.WaitForInteractable(_driver.FindElementWithWait(_filter));
         }
 
         private void ToggleOption(By by)

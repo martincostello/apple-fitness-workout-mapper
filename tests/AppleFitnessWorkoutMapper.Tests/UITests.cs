@@ -98,6 +98,18 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             track.Distance().ShouldBe("1.31 km");
             track.AveragePace().ShouldBe(@"14'59""/km");
             page.TotalDistance().ShouldBe("3 km");
+
+            // Act
+            page.NotBefore("2021-05-05")
+                .NotAfter("2021-05-05")
+                .Filter();
+
+            // Assert
+            tracks = page.Tracks();
+            track = tracks.ShouldHaveSingleItem();
+
+            track.LinkText().ShouldBe("Route 2");
+            track.Name().ShouldBe("Route 2");
         }
     }
 }

@@ -6,6 +6,8 @@
 
 A .NET web application for visualising workouts from Apple Fitness in a map.
 
+![AppleFitnessWorkoutMapper](./docs/app-screenshot.png "AppleFitnessWorkoutMapper")
+
 ### Getting started
 
 To get started with the application to run it for your own workout data, check

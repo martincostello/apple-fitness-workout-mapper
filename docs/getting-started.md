@@ -63,7 +63,62 @@ If you don't see something like the above in your browser check out the
 
 ## Exporting your workout data from an Apple device
 
-## Importing your workout data into Apple Fitness Workout Mapper
+> ⚠️ For privacy and security reasons, Apple Health Data is only stored locally
+on your Apple Device. To be able to display your workout routes in _Apple Fitness
+Workout Mapper_ you will need to export your Health Data to the computer on which
+you wish to visualise it from the Apple Health app.
+>
+> If you are not comfortable with doing this, you will
+not be able to use this application as there is no way to access the data
+remotely from another device (such as your computer).
+>
+> Ensure you export your Health #Ddata to a secure location, and delete any
+copies of it when you are finished using the application, including from the
+`App_Data` directory of any copies of the _Apple Fitness
+Workout Mapper_ application itself you have on your computer. It is your own
+personal responsibility to keep your Health Data private, safe and secure.
+>
+> If you are comfortable with exporting your Health Data for use with the
+application, then continue below for instructions on how to export your Health
+Data from your Apple device.
+
+### Open the Health app
+
+First locate the Health app on your device, and then open it.
+
+![Health app](./images/1-find-health-app.png "Find the Health app")
+
+### Open your Health profile
+
+Once you've opened the Health app, tap your picture to open your profile.
+
+![Open profile](./images/2-open-health-profile.png "Tap your profile")
+
+### Export Health Data
+
+Now scroll to the bottom and tap the _Export All Health Data_ option.
+
+![Export data](./images/3-export-all-health-data.png "Tap Export All Health Data")
+
+Confirm that you wish to export your Health Data.
+
+![Confirm export](./images/4-confirm-export.png "Tap Export")
+
+The Health app will now start preparing the export of your Health Data.
+Depending on how much data you have, this may take several minutes.
+
+![Export Health Data](./images/5-wait-for-export.png "Exporting Health Data")
+
+Once the export is processed and ready, you will be prompted to share it.
+
+![Share Health Data](./images/6-export-to-computer.png "Share data")
+
+If you have an Apple computer, AirDrop should be the easiest way to share the
+Health Data export to your computer to use with the application. Other possible
+locations to share the export to include a cloud file storage app, such as
+OneDrive.
+
+> ⚠️ Ensure you trust the location you are sharing your Health Data to.
 
 ## Configuring a Google Maps API key
 
@@ -71,4 +126,97 @@ If you don't see something like the above in your browser check out the
 > will not be able to remove the _For development purposes only_ overlay from
 > the map on which the workouts are rendered.
 
+To configure a Google Maps API key, follow the [instructions that can be found
+here](https://developers.google.com/maps/gmp-get-started#quickstart) so that you
+can use the application without development-only overlays.
+
+Once you have generated an API key, put the value of the key that was generated
+into the `GoogleMapsApiKey` setting in the `appsettings.json` file located in
+the directory that you extracted the application ZIP file to in the first section.
+
+![Configre the Google Maps API key](./images/configure-api-key.png "Configure Google Maps API key")
+
+If the application is still running, close it and re-run it for the API key to
+be used by the application to render the map.
+
+## Importing your workout data into Apple Fitness Workout Mapper
+
+Once you have shared your Health Data to your computer, you will find a file
+with the name `export.zip` where you shared the export to.
+
+Extract the ZIP file to a directory of your choosing. It will contain a single
+directory named `apple_health_export`.
+
+![Export root directory](./images/export-root-directory.png "apple_health_export")
+
+Opening this directory will reveal the actual exported health data. The
+directory we are interested in here is named `workout-routes`.
+
+![Export routes directory](./images/export-contents.png "workout-routes")
+
+Opening this directory will reveal the individual files containing the workout
+route data to visualise in the application on a map.
+
+![Workout route files](./images/export-workouts.png "Workout route files")
+
+> These files are stored in [GPS Exchange Format](https://en.wikipedia.org/wiki/GPS_Exchange_Format).
+
+Open the `App_Data` directory in the directory you unzipped the application to
+in the first section of this guide. The directory will contain a single `.empty`
+file by default.
+
+![Workout route files](./images/app-data-directory.png "App_Data directory")
+
+Copy (or move) all of the `.gpx` files from the extracted Health Data export ZIP
+file to the `App_Data` directory.
+
+Once you have copied the files to the `App_Data` directory, return to the
+application in your web browser and click the _Import workouts_ button.
+
+![Import workouts](./images/import-workouts-1.png "Import workouts")
+
+The application will now start reading the `.gpx` files from the `App_Data`
+directory and store them in a local database file in the same directory.
+
+![Importing workouts](./images/import-workouts-2.png "Importing workouts")
+
+Depending on how many workout files you have and how long your workouts are on
+average, this process may take several minutes to complete.
+
+You can see the progress of the import in the terminal window of the application.
+
+![Importing workouts](./images/import-workouts-3.png "Importing workouts")
+
+When the import is completed you should see the number imported printed to the
+terminal and the map should show you all the workouts that were imported that
+have taken place within the last 28 days.
+
+![Imported workouts](./images/import-workouts-4.png "Imported workouts")
+
+![Imported workouts](./images/import-workouts-5.png "Imported workouts")
+
+Congratulations! 🥳 You can now explore your workouts from your Apple Health Data!
+
+> You can now delete any additional copies of your Apple Health Data export,
+provided that you retain the files in the `App_Data` directory. If you delete
+this directory, you will need to repeat the import process.
+
 ## Exploring your workouts
+
+Now that you have imported your Health Data into the application, you can now
+explore it to your heart's content in the application. Below are some of the
+features that let you see where you've been and other information.
+
+1. Select one or more workouts to highlight them on the map.
+1. Select a workout to see the times, the duration, the distance and average
+pace. The default units are kilometres and kilometres per hour, but you can use
+the toggle in the navigation bar to switch to miles and miles per hour. Hovering
+over the distance with your mouse will always show the distance in metres.
+1. Show or hide individual workouts on the map.
+1. Filter to a specific date range, or see all of the workouts.
+1. Toggle the _Polygon_ option to see the area enclosed by your workouts.
+1. See the total distance travelled by all the workouts visible on the map.
+
+If there's a feature you'd like doesn't seem to be there, consider [opening a
+GitHub issue](https://github.com/martincostello/apple-fitness-workout-mapper/issues) to request a new feature (or try doing it yourself and opening a
+pull request to contribute back to the application 😃).

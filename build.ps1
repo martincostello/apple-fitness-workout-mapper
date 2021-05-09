@@ -100,9 +100,10 @@ function DotNetTest {
 }
 
 function DotNetPublish {
-    param([string]$Project)
+    param([string]$Project, [string] $Runtime)
     $publishPath = (Join-Path $OutputPath "publish")
-    & $dotnet publish $Project --output $publishPath --configuration "Release"
+    $publishPath = (Join-Path $publishPath $Runtime)
+    & $dotnet publish $Project --output $publishPath --configuration "Release" --runtime $Runtime
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet publish failed with exit code $LASTEXITCODE"
     }
@@ -118,7 +119,9 @@ $publishProjects = @(
 
 Write-Host "Publishing solution..." -ForegroundColor Green
 ForEach ($project in $publishProjects) {
-    DotNetPublish $project
+    DotNetPublish $project "linux-x64"
+    DotNetPublish $project "osx-x64"
+    DotNetPublish $project "win-x64"
 }
 
 if ($SkipTests -eq $false) {

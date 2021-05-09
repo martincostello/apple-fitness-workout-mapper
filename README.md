@@ -16,7 +16,7 @@ out the [Getting started guide](https://github.com/martincostello/apple-fitness-
 ### Help
 
 If you are having issues with the application, check out the
-[help guide](https://github.com/martincostello/apple-fitness-workout-mapper/blob/main/docs/help.md "Help").
+[help guide](https://github.com/martincostello/apple-fitness-workout-mapper/blob/main/docs/help.md#help "Help").
 
 ## Feedback
 

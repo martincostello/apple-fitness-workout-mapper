@@ -17,6 +17,9 @@ export class TrackPath {
     private readonly route: google.maps.Polyline;
     private readonly track: Track;
 
+    private readonly displayDistance: string;
+    private readonly displayDuration: string;
+
     private expanded: boolean;
     private highlighted: boolean;
     private visible: boolean;
@@ -54,8 +57,10 @@ export class TrackPath {
 
         const duration = moment.duration(endMoment.diff(startMoment));
 
+        this.displayDuration = duration.humanize();
+
         const durationElement = this.panel.querySelector('[data-js-duration]');
-        durationElement.textContent = duration.humanize();
+        durationElement.textContent = this.displayDuration;
         durationElement.setAttribute('title', duration.toISOString());
 
         const distanceInMeters = this.getDistanceInMeters();
@@ -67,8 +72,10 @@ export class TrackPath {
             return `${value.toLocaleString(undefined, options)} ${units}`;
         };
 
+        this.displayDistance = numberToText(distance, units);
+
         const distanceElement = this.panel.querySelector('[data-js-distance]');
-        distanceElement.textContent = numberToText(distance, units);
+        distanceElement.textContent = this.displayDistance;
         distanceElement.setAttribute('title', numberToText(distanceInMeters, 'meters'));
 
         const pace = duration.asMinutes() / distance;
@@ -173,7 +180,20 @@ export class TrackPath {
 
             this.highlightIfNotAlready();
 
-            infoWindow.setContent(this.track.name);
+            const content = `
+<div class="card border-secondary mb-3">
+  <div class="card-header">${this.track.name}</div>
+  <div class="card-body text-secondary">
+    <p class="card-text">
+        Duration: <span>${this.displayDuration}</span>
+    </p>
+    <p class="card-text">
+        Distance: <span>${this.displayDistance}</span>
+    </p>
+  </div>
+</div>`;
+
+            infoWindow.setContent(content);
             infoWindow.setPosition(e.latLng);
             infoWindow.open(googleMap);
         });

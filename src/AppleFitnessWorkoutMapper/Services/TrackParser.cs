@@ -11,8 +11,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using MartinCostello.AppleFitnessWorkoutMapper.Models;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper.Services
 {
@@ -20,20 +20,20 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Services
     {
         private static readonly XNamespace XS = "http://www.topografix.com/GPX/1/1";
 
-        private readonly IWebHostEnvironment _environment;
+        private readonly ApplicationOptions _options;
         private readonly ILogger _logger;
 
         public TrackParser(
-            IWebHostEnvironment environment,
+            IOptions<ApplicationOptions> options,
             ILogger<TrackParser> logger)
         {
-            _environment = environment;
+            _options = options.Value;
             _logger = logger;
         }
 
         public async Task<IList<Track>> GetTracksAsync(CancellationToken cancellationToken = default)
         {
-            string path = Path.Combine(_environment.ContentRootPath, "App_Data");
+            string path = _options.DataDirectory;
 
             _logger.LogInformation("Parsing track data from {Path}.", path);
 

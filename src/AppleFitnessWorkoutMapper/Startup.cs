@@ -12,26 +12,50 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper
 {
     public class Startup
     {
-        public Startup(IWebHostEnvironment environment)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
+            Configuration = configuration;
             Environment = environment;
         }
+
+        private IConfiguration Configuration { get; }
 
         private IWebHostEnvironment Environment { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            string databaseFileName = Path.Combine(Environment.ContentRootPath, "App_Data", "tracks.db");
+            services.Configure<ApplicationOptions>(Configuration)
+                    .PostConfigure<ApplicationOptions>((options) =>
+                    {
+                        if (!string.IsNullOrEmpty(options.DataDirectory) && !Path.IsPathRooted(options.DataDirectory))
+                        {
+                            options.DataDirectory = Path.Combine(Environment.ContentRootPath, options.DataDirectory);
+                        }
 
-            services.AddDbContext<TracksContext>((p) => p.UseSqlite("Data Source=" + databaseFileName));
+                        if (string.IsNullOrEmpty(options.DataDirectory))
+                        {
+                            options.DataDirectory = Path.Combine(Environment.ContentRootPath, "App_Data");
+                        }
+
+                        options.DatabaseFile = Path.Combine(options.DataDirectory, "tracks.db");
+                    });
+
+            services.AddDbContext<TracksContext>((serviceProvider, builder) =>
+            {
+                var options = serviceProvider.GetRequiredService<IOptions<ApplicationOptions>>();
+                builder.UseSqlite("Data Source=" + options.Value.DatabaseFile);
+            });
+
             services.AddScoped<TrackImporter>();
             services.AddScoped<TrackService>();
             services.AddSingleton<TrackParser>();

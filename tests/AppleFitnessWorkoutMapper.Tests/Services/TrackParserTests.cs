@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using MartinCostello.AppleFitnessWorkoutMapper.Models;
-using Microsoft.AspNetCore.Hosting;
-using Moq;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
@@ -83,15 +81,15 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Services
         {
             string? thisDirectory = Path.GetDirectoryName(GetType().Assembly.Location);
 
-            var mock = new Mock<IWebHostEnvironment>();
+            var application = new ApplicationOptions()
+            {
+                DataDirectory = Path.Combine(thisDirectory!, "App_Data"),
+            };
 
-            mock.Setup((p) => p.ContentRootPath)
-                .Returns(thisDirectory!);
-
-            var environment = mock.Object;
+            var options = Microsoft.Extensions.Options.Options.Create(application);
             var logger = _outputHelper.ToLogger<TrackParser>();
 
-            return new TrackParser(environment, logger);
+            return new TrackParser(options, logger);
         }
     }
 }

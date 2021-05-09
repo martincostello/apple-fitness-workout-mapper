@@ -3,15 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using MartinCostello.AppleFitnessWorkoutMapper.Models;
-using MartinCostello.Logging.XUnit;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Logging;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
@@ -48,16 +43,9 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
         {
             // Arrange
             using var fixture = new WebApplicationFactory(OutputHelper);
-            using var client = fixture.CreateClient();
+            fixture.Reset();
 
-            try
-            {
-                File.Delete(Path.Combine(fixture.AppDataDirectory, "App_Data", "tracks.db"));
-            }
-            catch (Exception ex) when (ex is OutOfMemoryException)
-            {
-                // Ignore
-            }
+            using var client = fixture.CreateClient();
 
             // Act
             var result = await client.GetFromJsonAsync<CountResponse>("/api/tracks/count");
@@ -98,26 +86,6 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
 
             item = actual.ShouldHaveSingleItem();
             item.Timestamp.ShouldBe(new DateTimeOffset(2021, 05, 05, 11, 25, 35, TimeSpan.Zero));
-        }
-
-        private sealed class WebApplicationFactory : WebApplicationFactory<Startup>, ITestOutputHelperAccessor
-        {
-            public WebApplicationFactory(ITestOutputHelper outputHelper)
-            {
-                OutputHelper = outputHelper;
-            }
-
-            public string AppDataDirectory { get; private set; } = string.Empty;
-
-            public ITestOutputHelper? OutputHelper { get; set; }
-
-            protected override void ConfigureWebHost(IWebHostBuilder builder)
-            {
-                AppDataDirectory = Path.GetDirectoryName(GetType().Assembly.Location) !;
-                builder.UseContentRoot(AppDataDirectory);
-
-                builder.ConfigureLogging((p) => p.AddXUnit(this));
-            }
         }
 
         private sealed class CountResponse

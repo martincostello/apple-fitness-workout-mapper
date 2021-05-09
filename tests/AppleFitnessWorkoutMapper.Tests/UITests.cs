@@ -54,8 +54,8 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             page.ShowPolygon();
 
             // Assert
-            track.StartedAt().ShouldBe("May 4, 2021 12:25 PM");
-            track.EndedAt().ShouldBe("May 4, 2021 12:45 PM");
+            track.StartedAt().ShouldBeOneOf("May 4, 2021 11:25 AM", "May 4, 2021 12:25 PM");
+            track.EndedAt().ShouldBeOneOf("May 4, 2021 11:45 AM", "May 4, 2021 12:45 PM");
             track.Duration().ShouldBe("20 minutes");
 
             track.Distance().ShouldBe("1.31 km");

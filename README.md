@@ -4,14 +4,44 @@
 
 ## Overview
 
-A .NET web application for visualising workouts from Apple Fitness in a map.
+A .NET web application that lets you visualise the workouts from the Apple Fitness app on a map.
 
 ![AppleFitnessWorkoutMapper](./docs/images/app-screenshot.png "AppleFitnessWorkoutMapper")
+
+Workout data is obtained by exporting your Health Data from the Apple Health app and importing
+it into a local copy of this application running on your own computer.
+
+### Motivation
+
+This application was borne out of a [personal curiosity](https://twitter.com/martin_costello/status/1389216982487158790)
+to find out how far I'd been from home when going out for a walk for exercise
+during the COVID-19 pandemic in the United Kingdom from March 2020 to May 2021.
+
+While the Apple Fitness app lets you see individual workouts on a map, there is
+no functionality to allow you to see _all_ the workouts at once. This
+application was created so I could see my own workout data for my walks on a map
+to answer that question.
+
+It is made available here for free as an open source software application so
+that other people who are similarly curious about where they've been over time
+can see the same information from their own Health Data for free ([donations are nice though](https://www.buymeacoffee.com/martincostello) 😉).
+
+### Requirements
+
+To use this application, other than some time and patience to set it up, you
+only need the following things:
+
+1. An Apple device that stores Health Data
+1. At least one workout with GPS data recorded by the Apple Fitness app
+(such as from a workout recorded on an Apple Watch)
+1. A Linux, macOS or Linux computer capable of running [.NET 5.0](https://github.com/dotnet/core/blob/main/release-notes/5.0/5.0-supported-os.md#net-5---supported-os-versions)
+(running this application is not supported on mobile devices such as iOS or
+  Android)
 
 ### Getting started
 
 To get started with the application to run it for your own workout data, check
-out the [Getting started guide](https://github.com/martincostello/apple-fitness-workout-mapper/blob/main/docs/getting-started.md "Getting started").
+out the [Getting started guide](https://github.com/martincostello/apple-fitness-workout-mapper/blob/main/docs/getting-started.md#getting-started "Getting started").
 
 ### Help
 

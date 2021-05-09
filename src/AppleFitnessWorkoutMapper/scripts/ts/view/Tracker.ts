@@ -125,15 +125,16 @@ export class Tracker {
             this.map.addPath(path);
         });
 
-        totalDistance = Math.ceil(totalDistance);
-
-        const totalDistanceUnits = useMiles ? 'miles' : 'km';
-        const totalDistanceString = totalDistance.toLocaleString(undefined, { maximumFractionDigits: 0 });
-
-        this.ui.updateSidebarCount(tracks.length);
-        this.ui.updateTotalDistance(`${totalDistanceString} ${totalDistanceUnits}`);
-
         if (tracks.length > 0) {
+
+            totalDistance = Math.ceil(totalDistance);
+
+            const totalDistanceUnits = useMiles ? 'miles' : 'km';
+            const totalDistanceString = totalDistance.toLocaleString(undefined, { maximumFractionDigits: 0 });
+
+            this.ui.updateSidebarCount(tracks.length);
+            this.ui.updateTotalDistance(`${totalDistanceString} ${totalDistanceUnits}`);
+
             this.map.fitBounds(this.ui.showPolygon.checked);
         }
 

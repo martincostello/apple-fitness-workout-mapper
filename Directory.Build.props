@@ -34,7 +34,4 @@
     <VersionPrefix>1.0.0</VersionPrefix>
     <VersionSuffix></VersionSuffix>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(CI)' != '' or !Exists('$(MSBuildThisFileDirectory)\src\AppleFitnessWorkoutMapper\node_modules') ">
-    <InstallWebPackages>true</InstallWebPackages>
-  </PropertyGroup>
 </Project>

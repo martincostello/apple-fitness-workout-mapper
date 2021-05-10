@@ -16,7 +16,7 @@
     <TypeScriptCompile Include="scripts\ts\**\*.ts" />
   </ItemGroup>
   <Target Name="BundleAssets" BeforeTargets="BeforeBuild">
-    <Exec Command="npm install" Condition=" '$(InstallWebPackages)' == 'true' " />
+    <Exec Command="npm install" Condition=" !Exists('$(MSBuildThisFileDirectory)\src\AppleFitnessWorkoutMapper\node_modules') " />
     <Exec Command="npm run build" Condition=" ('$(BuildingInsideVisualStudio)' != 'true' and '$(GITHUB_ACTIONS)' != 'true') or !Exists('$(MSBuildThisFileDirectory)\src\AppleFitnessWorkoutMapper\wwwroot\static\js\main.js') " />
   </Target>
   <Target Name="AddGeneratedContentItems" BeforeTargets="AssignTargetPaths">

@@ -130,8 +130,13 @@ export class Tracker {
             totalDistance = Math.ceil(totalDistance);
 
             const emissionsPerMile = (280 + 310 + 410) / 3; // Taken from https://www.carbonindependent.org/17.html for gCO2/mile
-            const emissionsPerKilometer = emissionsPerMile * 1.60934;
-            const totalCO2EmissionsKilos = (totalDistance * (useMiles ? emissionsPerMile : emissionsPerKilometer)) / 1000;
+            let distanceInMiles = totalDistance;
+
+            if (!useMiles) {
+                distanceInMiles = totalDistance * 0.621371;
+            }
+
+            const totalCO2EmissionsKilos = (distanceInMiles * emissionsPerMile) / 1000;
 
             const totalDistanceUnits = useMiles ? 'miles' : 'km';
             const totalDistanceString = totalDistance.toLocaleString(undefined, { maximumFractionDigits: 0 });

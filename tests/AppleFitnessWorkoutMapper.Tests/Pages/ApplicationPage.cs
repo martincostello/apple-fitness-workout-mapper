@@ -62,6 +62,9 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
             return this;
         }
 
+        public string Emissions()
+            => _driver.FindElement(By.CssSelector("[js-data-emissions]")).Text;
+
         public string TotalDistance()
             => _driver.FindElement(By.CssSelector("[js-data-total-distance]")).Text;
 

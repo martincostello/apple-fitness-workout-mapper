@@ -57,7 +57,7 @@ jobs:
 
     - name: Publish artifacts
       uses: actions/upload-artifact@v2
-      if: ${{ runner.os == 'Windows' }}
+      if: ${{ runner.os == 'Linux' }}
       with:
         name: app-zips
         path: ./artifacts/publish/*.zip

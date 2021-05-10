@@ -15,6 +15,9 @@ indent_size = 2
 [*.{cs,csx,vb,vbx}]
 charset = utf-8-bom
 
+[*.plist]
+indent_style = tab
+
 [*.sln]
 charset = unset
 end_of_line = unset

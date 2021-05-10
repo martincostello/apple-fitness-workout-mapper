@@ -129,6 +129,7 @@ ForEach ($project in $publishProjects) {
 
     $runtimes = @(
         "linux-x64",
+        "osx-x64",
         "win-x64"
     )
 

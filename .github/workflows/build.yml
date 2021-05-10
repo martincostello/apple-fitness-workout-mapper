@@ -18,6 +18,9 @@ env:
   DOTNET_MULTILEVEL_LOOKUP: 0
   DOTNET_NOLOGO: true
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  MACOS_APP_NAME: AppleFitnessWorkoutMapper.app
+  MACOS_APP_PATH: ./artifacts/AppleFitnessWorkoutMapper.app
+  MACOS_ARTIFACTS_PATH: ./artifacts
   NUGET_XMLDOC_MODE: skip
 
 jobs:
@@ -62,10 +65,102 @@ jobs:
         name: app-zips
         path: ./artifacts/publish/*.zip
 
+    - name: Publish artifacts
+      uses: actions/upload-artifact@v2
+      if: ${{ runner.os == 'Linux' }}
+      with:
+        name: app-macos
+        path: ./artifacts/publish/osx-x64
+
+  notarize:
+    #if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    name: notarize
+    needs: build
+    runs-on: macos-latest
+
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Download artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: app-macos
+        path: ${{ env.MACOS_ARTIFACTS_PATH }}
+
+    - name: Generate macOS app
+      shell: pwsh
+      run: |
+        $Artifacts = "${{ env.MACOS_ARTIFACTS_PATH }}"
+        $AppName = "${{ env.MACOS_APP_NAME }}"
+        $AppPath = "${{ env.MACOS_APP_PATH }}"
+        $ContentsPath = (Join-Path ${AppPath} "Contents")
+        $PublishPath = (Join-Path ${Artifacts} "publish")
+        New-Item -Path ${Artifacts} -Name ${AppName} -ItemType "Directory" | Out-Null
+        New-Item -Path ${AppPath} -Name "Contents" -ItemType "Directory" | Out-Null
+        New-Item -Path ${ContentsPath} -Name "Resources" -ItemType "Directory" | Out-Null
+        Copy-Item -Path ${PublishPath} -Destination (Join-Path ${ContentsPath} "MacOS") -Recurse | Out-Null
+        Copy-Item -Path ./src/AppleFitnessWorkoutMapper/Info.plist -Destination ${ContentsPath} | Out-Null
+    - name: Configure Xcode
+      uses: devbotsxyz/xcode-select@v1
+      with:
+        version: "12.4"
+
+    - name: Import Distribution Certificate
+      uses: devbotsxyz/import-signing-certificate@v1
+      with:
+        certificate-data: ${{ secrets.DISTRIBUTION_CERTIFICATE_DATA }}
+        certificate-passphrase: ${{ secrets.DISTRIBUTION_CERTIFICATE_PASSPHRASE }}
+        keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+
+    - name: Sign app
+      shell: bash
+      env:
+        APP_NAME: ${{ env.MACOS_APP_PATH }}
+        ENTITLEMENTS: ./src/AppleFitnessWorkoutMapper/AppleFitnessWorkoutMapper.entitlements
+        SIGNING_IDENTITY: ${{ secrets.SIGNING_IDENTITY }}
+      run: |
+        chmod +x $APP_NAME/Contents/MacOS/AppleFitnessWorkoutMapper
+        find "$APP_NAME/Contents/MacOS/"|while read fname; do
+            if [[ -f $fname ]]; then
+                echo "Signing $fname"
+                codesign --force --timestamp --options=runtime --entitlements "$ENTITLEMENTS" --sign "$SIGNING_IDENTITY" "$fname" || true
+            fi
+        done
+        echo "Signing app file"
+        codesign --force --timestamp --options=runtime --entitlements "$ENTITLEMENTS" --sign "$SIGNING_IDENTITY" "$APP_NAME"
+    - name: Notarize app
+      uses: devbotsxyz/xcode-notarize@v1
+      with:
+        product-path: ${{ env.MACOS_APP_PATH }}
+        appstore-connect-username: ${{ secrets.NOTARIZATION_USERNAME }}
+        appstore-connect-password: ${{ secrets.NOTARIZATION_PASSWORD }}
+
+    - name: Staple app
+      uses: devbotsxyz/xcode-staple@v1
+      with:
+        product-path: ${{ env.MACOS_APP_PATH }}
+
+    - name: Package signed app
+      run: ditto -V -c -k --keepParent ${{ env.MACOS_APP_PATH }} ./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip
+
+    - name: Publish signed app
+      uses: actions/upload-artifact@v2
+      with:
+        name: app-macos-signed
+        path: ./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip
+
+    - name: Publish signed app
+      uses: actions/upload-artifact@v2
+      with:
+        name: app-zips
+        path: ./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip
+
   release:
     if: ${{ startsWith(github.ref, 'refs/tags/v') }}
     name: release
-    needs: build
+    needs: notarize
     runs-on: windows-latest
 
     steps:

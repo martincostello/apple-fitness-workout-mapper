@@ -108,7 +108,7 @@ export class Tracker {
         let notAfter = this.ui.getNotAfter();
 
         this.ui.updateSidebarCount(0);
-        this.ui.updateTotalDistance(null);
+        this.ui.updateTotalDistanceAndEmissions(null, null);
 
         const tracks = await this.client.getTracks(notBefore, notAfter);
 
@@ -129,11 +129,16 @@ export class Tracker {
 
             totalDistance = Math.ceil(totalDistance);
 
+            const emissionsPerMile = (280 + 310 + 410) / 3; // Taken from https://www.carbonindependent.org/17.html for gCO2/mile
+            const emissionsPerKilometer = emissionsPerMile * 1.60934;
+            const totalCO2EmissionsKilos = (totalDistance * (useMiles ? emissionsPerMile : emissionsPerKilometer)) / 1000;
+
             const totalDistanceUnits = useMiles ? 'miles' : 'km';
             const totalDistanceString = totalDistance.toLocaleString(undefined, { maximumFractionDigits: 0 });
+            const emissionsString = totalCO2EmissionsKilos.toLocaleString(undefined, { maximumFractionDigits: 0 });
 
             this.ui.updateSidebarCount(tracks.length);
-            this.ui.updateTotalDistance(`${totalDistanceString} ${totalDistanceUnits}`);
+            this.ui.updateTotalDistanceAndEmissions(`${totalDistanceString} ${totalDistanceUnits}`, emissionsString);
 
             this.map.fitBounds(this.ui.showPolygon.checked);
         }

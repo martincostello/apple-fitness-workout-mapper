@@ -101,7 +101,16 @@ function DotNetTest {
 
 function DotNetPublish {
     param([string]$Project, [string] $Runtime, [string] $PublishPath)
-    & $dotnet publish $Project --output $PublishPath --configuration "Release" --runtime $Runtime
+
+    $additionalArgs = @()
+
+    if (![string]::IsNullOrEmpty($Runtime)) {
+        $additionalArgs += "--runtime"
+        $additionalArgs += $Runtime
+    }
+
+    & $dotnet publish $Project --output $PublishPath --configuration "Release" $additionalArgs
+
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet publish failed with exit code $LASTEXITCODE"
     }
@@ -120,13 +129,13 @@ ForEach ($project in $publishProjects) {
 
     $runtimes = @(
         "linux-x64",
-        "osx-x64",
         "win-x64"
     )
 
     $publishRootPath = (Join-Path $OutputPath "publish")
 
     ForEach ($runtime in $runtimes) {
+
         $publishPath = (Join-Path $publishRootPath $runtime)
         DotNetPublish $project $runtime $publishPath
 
@@ -134,6 +143,14 @@ ForEach ($project in $publishProjects) {
             $zipPath = (Join-Path $publishRootPath ("AppleFitnessWorkoutMapper-" + $runtime + ".zip"))
             Compress-Archive -Path ($publishPath + "/*") -DestinationPath $zipPath -Force
         }
+    }
+
+    $publishPath = (Join-Path $publishRootPath "portable")
+    DotNetPublish $project "" $publishPath
+
+    if ($null -ne $env:GITHUB_ACTIONS) {
+        $zipPath = (Join-Path $publishRootPath ("AppleFitnessWorkoutMapper.zip"))
+        Compress-Archive -Path ($publishPath + "/*") -DestinationPath $zipPath -Force
     }
 }
 

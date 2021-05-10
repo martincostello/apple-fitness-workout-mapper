@@ -12,11 +12,19 @@ To install Apple Fitness Workout Mapper, navigate to the
 Find the latest stable release and download the ZIP file for the operating
 system of the computer you wish to run Apple Fitness Workout Mapper on.
 
-For example, if you have an Apple Mac computer download the
-`AppleFitnessWorkoutMapper-osx-x64.zip` file.
-
-If you have a Windows 10 computer, you would download the
+For example, if you have a Windows 10 computer, you would download the
 `AppleFitnessWorkoutMapper-win-x64.zip` file.
+
+If you do not see a specific download for your operating system, for example if
+you are using an Apple computer running macOS, then download the portable
+version of the application, which is the ZIP file named
+`AppleFitnessWorkoutMapper.zip`.
+
+If you need to use the portable version of the application, you will also need
+to install the .NET runtime. Instructions for installing it can be found
+[here](https://docs.microsoft.com/en-us/dotnet/core/install/ "Install .NET on Windows, Linux, and macOS")
+and the downloads can be found [here](https://dotnet.microsoft.com/download/dotnet/5.0 "Download .NET 5.0").
+The easiest way to install .NET is to install the .NET SDK.
 
 Once you have downloaded the ZIP file, unzip it to a directory of your choice
 on the computer you wish to run the application on.
@@ -25,21 +33,33 @@ This will give you a directory that looks something like this:
 
 ![Application directory](./images/application-directory.png "Example directory once the ZIP file is extracted on a Windows 10 computer")
 
-Now find the `AppleFitnessWorkoutMapper` file or (`AppleFitnessWorkoutMapper.exe` on
-Windows) in the directory you extracted the application to.
+Now find the `AppleFitnessWorkoutMapper` or `AppleFitnessWorkoutMapper.exe` file
+in the directory you extracted the application to.
 
 ![Application file](./images/application-file.png "The AppleFitnessWorkoutMapper.exe file to run the application")
 
-> ℹ️ On a Windows computer the file may need to be unblocked before you can run
-> the application. To do this, right-click the application and check the **Unblock**
-> checkbox and click **Apply** as shown below.
+> ℹ️ On an macOS computer, you may receive a warning promoting you to check
+whether you want to run the application. This is because the application is not
+[notarized by Apple](https://developer.apple.com/documentation/security/notarizing_macos_software_before_distribution "Notarizing macOS Software Before Distribution").
+To do this, click **Open** when prompted by macOS. You may have to do this for
+several different files.
 >
-> ![Windows unblock file dialog](./images/unblock-application.png "Unblocking the AppleFitnessWorkoutMapper.exe file")
+> ![Windows unblock file dialog](./images/unblock-application-macos.png "Unblocking the AppleFitnessWorkoutMapper.exe file on macOS")
+
+> ℹ️ On a Windows computer the file may need to be unblocked before you can run
+the application. To do this, right-click the application and check the **Unblock**
+checkbox and click **Apply** as shown below.
+>
+> ![Windows unblock file dialog](./images/unblock-application.png "Unblocking the AppleFitnessWorkoutMapper.exe file on Windows")
 
 To run Apple Fitness Workout Mapper, double-click the `AppleFitnessWorkoutMapper`
-(or `AppleFitnessWorkoutMapper.exe`) file to start the application. If the
-application is running successfully, you should see a terminal window similar to
-the one shown below.
+(or `AppleFitnessWorkoutMapper.exe`) file to start the application, or start it
+from a terminal window by typing `AppleFitnessWorkoutMapper.exe` or
+`./AppleFitnessWorkoutMapper`. If the application is running successfully, you
+should see a terminal window similar to the one shown below.
+
+> ℹ️ If running the application from the terminal, ensure that the current
+directory is set to the directory you extracted the application to.
 
 ![Application running](./images/application-running.png "The AppleFitnessWorkoutMapper.exe file to run the application")
 

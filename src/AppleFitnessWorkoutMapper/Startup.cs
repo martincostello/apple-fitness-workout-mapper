@@ -53,6 +53,12 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                         }
 
                         options.DatabaseFile = Path.Combine(options.DataDirectory, options.DatabaseFileName);
+
+                        // Ensure the configured data directory exists
+                        if (!Directory.Exists(options.DataDirectory))
+                        {
+                            Directory.CreateDirectory(options.DataDirectory);
+                        }
                     });
 
             services.AddDbContext<TracksContext>((serviceProvider, builder) =>

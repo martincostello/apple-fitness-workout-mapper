@@ -62,6 +62,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             track.AveragePace().ShouldBe(@"14'59""/km");
 
             page.TotalDistance().ShouldBe("3 km");
+            page.Emissions().ShouldBe("1");
 
             // Act
             page.HidePolygon();
@@ -81,7 +82,9 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             // Assert
             track.Distance().ShouldBe("0.81 miles");
             track.AveragePace().ShouldBe(@"24'8""/mile");
+
             page.TotalDistance().ShouldBe("2 miles");
+            page.Emissions().ShouldBe("1");
 
             // Act
             page.UseKilometers();
@@ -97,7 +100,9 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             // Assert
             track.Distance().ShouldBe("1.31 km");
             track.AveragePace().ShouldBe(@"14'59""/km");
+
             page.TotalDistance().ShouldBe("3 km");
+            page.Emissions().ShouldBe("1");
 
             // Act
             page.NotBefore("2021-05-05")

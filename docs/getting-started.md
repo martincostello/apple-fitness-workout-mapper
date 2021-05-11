@@ -12,54 +12,44 @@ To install Apple Fitness Workout Mapper, navigate to the
 Find the latest stable release and download the ZIP file for the operating
 system of the computer you wish to run Apple Fitness Workout Mapper on.
 
-For example, if you have a Windows 10 computer, you would download the
-`AppleFitnessWorkoutMapper-win-x64.zip` file.
+For example, if you have an Apple Mac computer download the
+`AppleFitnessWorkoutMapper-osx-x64.zip` file, or if you have a Windows 10
+computer you would download the `AppleFitnessWorkoutMapper-win-x64.zip` file.
 
-If you do not see a specific download for your operating system, for example if
-you are using an Apple computer running macOS, then download the portable
-version of the application, which is the ZIP file named
+If you do not see a specific download for your operating system, then download
+the portable version of the application, which is the ZIP file named
 `AppleFitnessWorkoutMapper.zip`.
 
-If you need to use the portable version of the application, you will also need
-to install the .NET runtime. Instructions for installing it can be found
+> ℹ️ If you need to use the portable version of the application, you will also
+need to install the .NET runtime. Instructions for installing it can be found
 [here](https://docs.microsoft.com/en-us/dotnet/core/install/ "Install .NET on Windows, Linux, and macOS")
-and the downloads can be found [here](https://dotnet.microsoft.com/download/dotnet/5.0 "Download .NET 5.0").
-The easiest way to install .NET is to install the .NET SDK.
+and the downloads can be found [here](https://dotnet.microsoft.com/download/dotnet/5.0 "Download .NET 5.0"). The easiest way to install .NET is to install the .NET SDK.
 
 Once you have downloaded the ZIP file, unzip it to a directory of your choice
-on the computer you wish to run the application on.
-
-This will give you a directory that looks something like this:
+on the computer you wish to run the application on. This will give you a
+directory that looks something like this:
 
 ![Application directory](./images/application-directory.png "Example directory once the ZIP file is extracted on a Windows 10 computer")
 
 Now find the `AppleFitnessWorkoutMapper` or `AppleFitnessWorkoutMapper.exe` file
-in the directory you extracted the application to.
+in the directory you extracted the application to. This is the main file that
+runs the application.
 
 ![Application file](./images/application-file.png "The AppleFitnessWorkoutMapper.exe file to run the application")
 
-> ℹ️ On an macOS computer, you may receive a warning promoting you to check
-whether you want to run the application. This is because the application is not
-[notarized by Apple](https://developer.apple.com/documentation/security/notarizing_macos_software_before_distribution "Notarizing macOS Software Before Distribution").
-To do this, click **Open** when prompted by macOS. You may have to do this for
-several different files.
->
-> ![Windows unblock file dialog](./images/unblock-application-macos.png "Unblocking the AppleFitnessWorkoutMapper.exe file on macOS")
-
 > ℹ️ On a Windows computer the file may need to be unblocked before you can run
-the application. To do this, right-click the application and check the **Unblock**
-checkbox and click **Apply** as shown below.
+the application. To do this, right-click the application and check the
+**Unblock** checkbox and click **Apply** as shown below.
 >
 > ![Windows unblock file dialog](./images/unblock-application.png "Unblocking the AppleFitnessWorkoutMapper.exe file on Windows")
 
-To run Apple Fitness Workout Mapper, double-click the `AppleFitnessWorkoutMapper`
-(or `AppleFitnessWorkoutMapper.exe`) file to start the application, or start it
-from a terminal window by typing `AppleFitnessWorkoutMapper.exe` or
-`./AppleFitnessWorkoutMapper`. If the application is running successfully, you
-should see a terminal window similar to the one shown below.
-
-> ℹ️ If running the application from the terminal, ensure that the current
-directory is set to the directory you extracted the application to.
+To run Apple Fitness Workout Mapper, open a terminal window and change the
+current directory to the directory you extracted the ZIP file to (for example,
+on macOS you might run a command similar to `cd /Users/YourName/Desktop/AppleFitnessWorkoutMapper`). Once the terminal directory is changed to the
+one containing the application run the command `./AppleFitnessWorkoutMapper`
+(for macOS and Linux) or `AppleFitnessWorkoutMapper.exe` (on Windows) to start
+the application. If the application is running successfully, you should see
+output in your terminal window similar to the one shown below.
 
 ![Application running](./images/application-running.png "The AppleFitnessWorkoutMapper.exe file to run the application")
 
@@ -67,8 +57,8 @@ If the application is running successfully you should see no errors or warnings
 logged to the terminal and the URL the application is listening on.
 
 To open the application, copy one of the URLs as highlighted below from the
-terminal window and visit it in your preferred web browser. The default recommended
-URL for you to use is `http://localhost:5000`.
+terminal window and visit it in your preferred web browser. The default
+recommended URL for you to use is `http://localhost:5000`.
 
 ![Application addresses](./images/application-addresses.png "The application's URLs")
 
@@ -85,9 +75,9 @@ If you don't see something like the above in your browser check out the
 ## Exporting your workout data from an Apple device
 
 > ⚠️ For privacy and security reasons, Apple Health Data is only stored locally
-on your Apple Device. To be able to display your workout routes in _Apple Fitness
-Workout Mapper_ you will need to export your Health Data to the computer on which
-you wish to visualise it from the Apple Health app.
+on your Apple Device. To be able to display your workout routes in _Apple
+Fitness Workout Mapper_ you will need to export your Health Data to the computer
+on which you wish to visualise it from the Apple Health app.
 >
 > If you are not comfortable with doing this, you will
 not be able to use this application as there is no way to access the data
@@ -153,7 +143,8 @@ can use the application without development-only overlays.
 
 Once you have generated an API key, put the value of the key that was generated
 into the `GoogleMapsApiKey` setting in the `appsettings.json` file located in
-the directory that you extracted the application ZIP file to in the first section.
+the directory that you extracted the application ZIP file to in the first
+section.
 
 ![Configre the Google Maps API key](./images/configure-api-key.png "Configure Google Maps API key")
 
@@ -204,7 +195,8 @@ directory and store them in a local database file in the same directory.
 Depending on how many workout files you have and how long your workouts are on
 average, this process may take several minutes to complete.
 
-You can see the progress of the import in the terminal window of the application.
+You can see the progress of the import in the terminal window of the
+application.
 
 ![Importing workouts](./images/import-workouts-3.png "Importing workouts")
 
@@ -216,7 +208,8 @@ have taken place within the last 28 days.
 
 ![Imported workouts](./images/import-workouts-5.png "Imported workouts")
 
-Congratulations! 🥳 You can now explore your workouts from your Apple Health Data!
+Congratulations! 🥳 You can now explore your workouts from your Apple Health
+Data!
 
 > You can now delete any additional copies of your Apple Health Data export,
 provided that you retain the files in the `App_Data` directory. If you delete
@@ -236,10 +229,13 @@ over the distance with your mouse will always show the distance in metres.
 1. Show or hide individual workouts on the map.
 1. Filter to a specific date range, or see all of the workouts.
 1. Toggle the _Polygon_ option to see the area enclosed by your workouts.
-1. See the total distance travelled by all the workouts visible on the map.
+1. See the total distance travelled by all the workouts visible on the map. You
+can also see the CO<sub>2</sub> emissions equivalent saved compared to if you
+had driven the same distance instead of walked/ran/cycled.
 
 If there's a feature you'd like doesn't seem to be there, consider [opening a
-GitHub issue](https://github.com/martincostello/apple-fitness-workout-mapper/issues) to request a new feature (or try doing it yourself and opening a
-pull request to contribute back to the application 😃).
+GitHub issue](https://github.com/martincostello/apple-fitness-workout-mapper/issues)
+to request a new feature (or try doing it yourself and opening a Pull Request to
+contribute back to the application 😃).
 
 Enjoy!

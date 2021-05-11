@@ -114,7 +114,7 @@ jobs:
             fi
         done
         echo "Signing app file"
-        codesign --force --timestamp --options=runtime --entitlements "$ENTITLEMENTS" --sign "$SIGNING_IDENTITY" "$APP_PATH"
+        codesign --force --timestamp --options=runtime --entitlements "$ENTITLEMENTS" --sign "$SIGNING_IDENTITY" "$APP_PATH/AppleFitnessWorkoutMapper"
 
     - name: Notarize app
       uses: devbotsxyz/xcode-notarize@v1

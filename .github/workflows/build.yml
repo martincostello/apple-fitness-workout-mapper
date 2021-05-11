@@ -122,13 +122,13 @@ jobs:
         appstore-connect-username: ${{ secrets.NOTARIZATION_USERNAME }}
         appstore-connect-password: ${{ secrets.NOTARIZATION_PASSWORD }}
 
-    - name: Staple app
-      uses: devbotsxyz/xcode-staple@v1
-      with:
-        product-path: ${{ env.MACOS_APP_PATH }}/AppleFitnessWorkoutMapper
-
     - name: Package signed app
       run: ditto -V -c -k --keepParent ${{ env.MACOS_APP_PATH }} ./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip
+
+    - name: Staple signed app ZIP
+      uses: devbotsxyz/xcode-staple@v1
+      with:
+        product-path: ./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip
 
     - name: Publish signed app
       uses: actions/upload-artifact@v2

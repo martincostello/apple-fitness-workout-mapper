@@ -31,12 +31,12 @@ jobs:
       matrix:
         os: [ ubuntu-latest ]
         include:
-          #- os: macos-latest
-          #  codecov_os: macos
+          - os: macos-latest
+            codecov_os: macos
           - os: ubuntu-latest
             codecov_os: linux
-          #- os: windows-latest
-          #  codecov_os: windows
+          - os: windows-latest
+            codecov_os: windows
 
     steps:
 
@@ -71,7 +71,7 @@ jobs:
         path: ./artifacts/publish/osx-x64
 
   notarize:
-    #if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
     name: notarize
     needs: build
     runs-on: macos-latest
@@ -138,7 +138,6 @@ jobs:
         path: ./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip
 
   release:
-    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
     name: release
     needs: notarize
     runs-on: windows-latest

@@ -117,6 +117,7 @@ jobs:
     - name: Notarize app
       uses: devbotsxyz/xcode-notarize@v1
       with:
+        primary-bundle-id: com.martincostello.applefitnessworkoutmapper
         product-path: ${{ env.MACOS_APP_PATH }}
         appstore-connect-username: ${{ secrets.NOTARIZATION_USERNAME }}
         appstore-connect-password: ${{ secrets.NOTARIZATION_PASSWORD }}

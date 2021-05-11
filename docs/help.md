@@ -6,6 +6,21 @@ This guide contains information to help you troubleshoot issues with the app.
 
 ## FAQs
 
+### _Where is my health data stored?_
+
+All Apple Health Data imported to the application by you is stored locally on
+your computer. No data is shared externally from the application to any other
+location or service.
+
+By default your workouts are imported from the `.gpx` files you add to the
+`App_Data` directory where you installed the application and stored in an SQLite
+database that is stored in the same directory (`tracks.db`). This is the only
+copy of the data available to and used by the application.
+
+You can delete it at any time by deleting the files in the `App_Data` directory.
+If you delete the data, you will need to re-import it to visualise it on the map
+again.
+
 ### _How do I change from kilometres to miles?_
 
 By default the application uses kilometres to measure distances and kilometres

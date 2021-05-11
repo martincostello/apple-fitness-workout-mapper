@@ -6,6 +6,8 @@ then importing it into the application so you can visualise your workouts.
 
 ## Installing Apple Fitness Workout Mapper
 
+### Downloading the application
+
 To install Apple Fitness Workout Mapper, navigate to the
 [releases page in GitHub](https://github.com/martincostello/apple-fitness-workout-mapper/releases/latest).
 
@@ -25,11 +27,28 @@ need to install the .NET runtime. Instructions for installing it can be found
 [here](https://docs.microsoft.com/en-us/dotnet/core/install/ "Install .NET on Windows, Linux, and macOS")
 and the downloads can be found [here](https://dotnet.microsoft.com/download/dotnet/5.0 "Download .NET 5.0"). The easiest way to install .NET is to install the .NET SDK.
 
+### Running the application
+
+#### Open the application directory in a terminal
+
 Once you have downloaded the ZIP file, unzip it to a directory of your choice
-on the computer you wish to run the application on. This will give you a
-directory that looks something like this:
+on the computer you wish to run the application on.
+
+On Windows and Linux this will give you a directory that looks something like
+this:
 
 ![Application directory](./images/application-directory.png "Example directory once the ZIP file is extracted on a Windows 10 computer")
+
+On macOS the ZIP file will contain a `AppleFitnessWorkoutMapper.app` file
+instead. This is to ensure the application is not flagged as malicious by
+macOS and anti-virus software. An AppleFitnessWorkoutMapper icon may appear in
+the system tray, but clicking it will not make the application run.
+
+To run Apple Fitness Workout Mapper, open a terminal window and change the
+current directory to the directory you extracted the ZIP file to. For example,
+on macOS you might run a command similar to
+`cd /Users/YourName/Desktop/AppleFitnessWorkoutMapper.app/Contents/MacOS`, or
+on Windows `cd C:\Users\YourName\Desktop\AppleFitnessWorkoutMapper-win-x64"`.
 
 Now find the `AppleFitnessWorkoutMapper` or `AppleFitnessWorkoutMapper.exe` file
 in the directory you extracted the application to. This is the main file that
@@ -37,26 +56,30 @@ runs the application.
 
 ![Application file](./images/application-file.png "The AppleFitnessWorkoutMapper.exe file to run the application")
 
-> ℹ️ On a Windows computer the file may need to be unblocked before you can run
+#### Unblock the application (Windows only)
+
+On a Windows computer the file may need to be unblocked before you can run
 the application. To do this, right-click the application and check the
 **Unblock** checkbox and click **Apply** as shown below.
->
-> ![Windows unblock file dialog](./images/unblock-application.png "Unblocking the AppleFitnessWorkoutMapper.exe file on Windows")
 
-To run Apple Fitness Workout Mapper, open a terminal window and change the
-current directory to the directory you extracted the ZIP file to (for example,
-on macOS you might run a command similar to `cd /Users/YourName/Desktop/AppleFitnessWorkoutMapper`). Once the terminal directory is changed to the
-one containing the application run the command `./AppleFitnessWorkoutMapper`
-(for macOS and Linux) or `AppleFitnessWorkoutMapper.exe` (on Windows) to start
-the application. If the application is running successfully, you should see
-output in your terminal window similar to the one shown below.
+![Windows unblock file dialog](./images/unblock-application.png "Unblocking the AppleFitnessWorkoutMapper.exe file on Windows")
+
+#### Run the application in a terminal
+
+Once the terminal directory is changed to the one containing the application run
+the command `./AppleFitnessWorkoutMapper` (for macOS and Linux) or
+`AppleFitnessWorkoutMapper.exe` (on Windows) to start the application. If the
+application is running successfully, you should see output in your terminal
+window similar to the one shown below.
 
 ![Application running](./images/application-running.png "The AppleFitnessWorkoutMapper.exe file to run the application")
 
 If the application is running successfully you should see no errors or warnings
 logged to the terminal and the URL the application is listening on.
 
-To open the application, copy one of the URLs as highlighted below from the
+#### Opening the user interface
+
+To open the user interface, copy one of the URLs as highlighted below from the
 terminal window and visit it in your preferred web browser. The default
 recommended URL for you to use is `http://localhost:5000`.
 
@@ -148,8 +171,8 @@ section.
 
 ![Configre the Google Maps API key](./images/configure-api-key.png "Configure Google Maps API key")
 
-If the application is still running, close it and re-run it for the API key to
-be used by the application to render the map.
+> ℹ️ If the application is still running, close it and re-run it for the API key
+to be used by the application to render the map.
 
 ## Importing your workout data into Apple Fitness Workout Mapper
 
@@ -175,7 +198,8 @@ route data to visualise in the application on a map.
 
 Open the `App_Data` directory in the directory you unzipped the application to
 in the first section of this guide. The directory will contain a single `.empty`
-file by default.
+file by default. If you have already run the application before it may also
+contain a `tracks.db` file.
 
 ![Workout route files](./images/app-data-directory.png "App_Data directory")
 

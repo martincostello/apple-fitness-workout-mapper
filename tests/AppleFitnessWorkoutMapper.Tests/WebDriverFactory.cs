@@ -40,7 +40,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             options.SetLoggingPreference(LogType.Server, LogLevel.All);
 #endif
 
-            var driver = new ChromeDriver(chromeDriverDirectory, options, TimeSpan.FromSeconds(20));
+            var driver = new ChromeDriver(chromeDriverDirectory, options);
 
             try
             {

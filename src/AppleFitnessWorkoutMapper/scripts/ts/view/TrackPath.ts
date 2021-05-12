@@ -176,7 +176,7 @@ export class TrackPath {
             this.highlightIfNotAlready();
             infoWindow.close();
         });
-        google.maps.event.addListener(route, 'mouseover', (e) => {
+        google.maps.event.addListener(route, 'mouseover', (e: any) => {
 
             this.highlightIfNotAlready();
 

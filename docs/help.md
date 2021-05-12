@@ -51,3 +51,9 @@ imported the data. Check for:
   the `App_Data` directory in the application's directory).
 * All workout data file names end in `.gpx`.
 * There are no invalid/corrupt `.gpx` files in the data directory.
+
+### _How do I re-import my data?_
+
+Delete the `tracks.db` file from the `App_Data` directory and reload the user
+webpage for the application in your browser. The Import functionality will
+re-appear and you will be able to re-import your workout data again.

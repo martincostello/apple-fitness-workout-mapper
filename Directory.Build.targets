@@ -1,8 +1,8 @@
 <Project>
   <PropertyGroup>
+    <BuildId Condition=" '$(BuildId)' == '' ">$(GITHUB_RUN_ID)</BuildId>
     <CommitBranch Condition=" '$(CommitBranch)' == '' and '$(GITHUB_REF)' != '' ">$(GITHUB_REF.Substring(11))</CommitBranch>
     <CommitHash Condition=" '$(CommitHash)' == '' ">$(GITHUB_SHA)</CommitHash>
-    <DeployId Condition=" '$(DeployId)' == '' ">$(GITHUB_RUN_ID)</DeployId>
   </PropertyGroup>
   <Target Name="AddGitMetadaAssemblyAttributes"
           BeforeTargets="CoreGenerateAssemblyInfo"
@@ -18,6 +18,10 @@
         <_Parameter1>BuildTimestamp</_Parameter1>
         <_Parameter2>$([System.DateTime]::UtcNow.ToString(yyyy-MM-ddTHH:mm:ssK))</_Parameter2>
       </AssemblyAttribute>
+      <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute" Condition=" $(BuildId) != '' ">
+        <_Parameter1>BuildId</_Parameter1>
+        <_Parameter2>$(BuildId)</_Parameter2>
+      </AssemblyAttribute>
       <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute" Condition=" $(CommitHash) != '' ">
         <_Parameter1>CommitHash</_Parameter1>
         <_Parameter2>$(CommitHash)</_Parameter2>
@@ -25,10 +29,6 @@
       <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute" Condition=" $(CommitBranch) != '' ">
         <_Parameter1>CommitBranch</_Parameter1>
         <_Parameter2>$(CommitBranch)</_Parameter2>
-      </AssemblyAttribute>
-      <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute" Condition=" $(DeployId) != '' ">
-        <_Parameter1>DeployId</_Parameter1>
-        <_Parameter2>$(DeployId)</_Parameter2>
       </AssemblyAttribute>
     </ItemGroup>
   </Target>

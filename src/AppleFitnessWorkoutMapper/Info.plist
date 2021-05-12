@@ -4,29 +4,27 @@
 	<dict>
 		<key>CFBundleName</key>
 		<string>AppleFitnessWorkoutMapper</string>
+		<key>CFBundleDevelopmentRegion</key>
+		<string>en-GB</string>
 		<key>CFBundleDisplayName</key>
 		<string>Apple Fitness Workout Mapper</string>
-		<key>CFBundleIdentifier</key>
-		<string>com.martincostello.applefitnessworkoutmapper</string>
-		<key>CFBundleVersion</key>
-		<string>1.0.0</string>
-		<key>CFBundlePackageType</key>
-		<string>APPL</string>
-		<key>CFBundleSignature</key>
-		<string>????</string>
 		<key>CFBundleExecutable</key>
 		<string>AppleFitnessWorkoutMapper</string>
+		<key>CFBundleIdentifier</key>
+		<string>com.martincostello.applefitnessworkoutmapper</string>
+		<key>CFBundleInfoDictionaryVersion</key>
+		<string>6.0</string>
+		<key>CFBundlePackageType</key>
+		<string>APPL</string>
 		<key>CFBundleShortVersionString</key>
+		<string>1.0.0</string>
+		<key>CFBundleSignature</key>
+		<string>????</string>
+		<key>CFBundleVersion</key>
 		<string>1.0.0</string>
 		<key>LSMinimumSystemVersion</key>
 		<string>10.13</string>
-		<key>NSPrincipalClass</key>
-		<string>NSApplication</string>
-		<key>NSHighResolutionCapable</key>
-		<true />
-		<key>CFBundleDevelopmentRegion</key>
-		<string>en-GB</string>
-		<key>CFBundleInfoDictionaryVersion</key>
-		<string>6.0</string>
+		<key>NSHumanReadableCopyright</key>
+		<string>Martin Costello (c) 2021</string>
 	</dict>
 </plist>

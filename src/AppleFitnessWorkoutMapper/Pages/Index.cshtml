@@ -1,5 +1,6 @@
 @page
 @using System.Globalization;
+@using MartinCostello.AppleFitnessWorkoutMapper; 
 @using MartinCostello.AppleFitnessWorkoutMapper.Pages;
 @model IndexModel
 @{
@@ -193,4 +194,10 @@
         });
     </script>
 </body>
+<!--
+    Build:         https://github.com/martincostello/apple-fitness-workout-mapper/actions/runs/@(GitMetadata.BuildId)
+    Commit SHA:    @(GitMetadata.Commit)
+    Commit branch: @(GitMetadata.Branch)
+    Timestamp      @(GitMetadata.Timestamp)
+-->
 </html>

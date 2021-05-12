@@ -25,7 +25,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                 Console.Error.WriteLine(ex.Message);
                 Console.Error.WriteLine(ex.InnerException.Message);
                 Console.Error.WriteLine();
-                Console.Error.WriteLine("Close any other copies of AppleFitnessWorkoutMapper that might be running and try again.");
+                Console.Error.WriteLine($"Close any other copies of {nameof(AppleFitnessWorkoutMapper)} that might be running and try again.");
                 Console.Error.WriteLine();
 
                 Console.ForegroundColor = oldColor;

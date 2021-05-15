@@ -1,7 +1,7 @@
 {
   "name": "applefitnessworkoutmapper",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Visualise multiple journeys from Apple Fitness on a map",
   "scripts": {
     "build": "gulp default",

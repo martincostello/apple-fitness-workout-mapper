@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MartinCostello.AppleFitnessWorkoutMapper.Pages;
+using Microsoft.Playwright;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
@@ -26,95 +27,119 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             using var fixture = new HttpWebApplicationFactory(OutputHelper);
             await fixture.InitializeAsync();
 
-            using var driver = WebDriverFactory.CreateWebDriver();
-            driver.Navigate().GoToUrl(fixture.ServerAddress);
+            using IPlaywright playwright = await Playwright.CreateAsync();
 
-            var page = new ApplicationPage(driver);
+            await using IBrowser browser = await CreateBrowserAsync(playwright);
+
+            var options = new BrowserNewPageOptions()
+            {
+                IgnoreHTTPSErrors = true,
+                Locale = "en-GB",
+            };
+
+            IPage page = await browser.NewPageAsync(options);
+
+            page.Console += (_, e) => OutputHelper.WriteLine(e.Text);
+            page.PageError += (_, e) => OutputHelper.WriteLine(e);
+
+            await page.GotoAsync(fixture.ServerAddress.ToString());
+
+            var app = new ApplicationPage(page);
 
             // Act
-            page.ImportData();
+            await app.ImportDataAsync();
 
             // Assert
-            page.IsMapDisplayed().ShouldBeTrue();
+            (await app.IsMapDisplayedAsync()).ShouldBeTrue();
 
-            IReadOnlyList<TrackItem> tracks = page.Tracks();
+            IReadOnlyList<TrackItem> tracks = await app.TracksAsync();
 
             tracks.Count.ShouldBe(2);
 
-            tracks[0].LinkText().ShouldBe("Route 1");
-            tracks[0].Name().ShouldBe("Route 1");
+            (await tracks[0].LinkTextAsync()).ShouldBe("Route 1");
+            (await tracks[0].NameAsync()).ShouldBe("Route 1");
 
-            tracks[1].LinkText().ShouldBe("Route 2");
-            tracks[1].Name().ShouldBe("Route 2");
+            (await tracks[1].LinkTextAsync()).ShouldBe("Route 2");
+            (await tracks[1].NameAsync()).ShouldBe("Route 2");
 
             TrackItem track = tracks[0];
 
             // Act
-            track.Expand();
-            page.ShowPolygon();
+            await track.ExpandAsync();
+            await app.ShowPolygonAsync();
 
             // Assert
-            track.StartedAt().ShouldBeOneOf("May 4, 2021 11:25 AM", "May 4, 2021 12:25 PM");
-            track.EndedAt().ShouldBeOneOf("May 4, 2021 11:45 AM", "May 4, 2021 12:45 PM");
-            track.Duration().ShouldBe("20 minutes");
+            (await track.StartedAtAsync()).ShouldBeOneOf("May 4, 2021 11:25 AM", "May 4, 2021 12:25 PM");
+            (await track.EndedAtAsync()).ShouldBeOneOf("May 4, 2021 11:45 AM", "May 4, 2021 12:45 PM");
+            (await track.DurationAsync()).ShouldBe("20 minutes");
 
-            track.Distance().ShouldBe("1.31 km");
-            track.AveragePace().ShouldBe(@"14'59""/km");
+            (await track.DistanceAsync()).ShouldBe("1.31 km");
+            (await track.AveragePaceAsync()).ShouldBe(@"14'59""/km");
 
-            page.TotalDistance().ShouldBe("3 km");
-            page.Emissions().ShouldBe("1");
-
-            // Act
-            page.HidePolygon();
-            track.Collapse();
+            (await app.TotalDistanceAsync()).ShouldBe("3 km");
+            (await app.EmissionsAsync()).ShouldBe("1");
 
             // Act
-            page.UseMiles();
+            await app.HidePolygonAsync();
+            await track.CollapseAsync();
+
+            // Act
+            await app.UseMilesAsync();
 
             // Assert
-            page.WaitForReload();
-
-            tracks = page.Tracks();
+            tracks = await app.TracksAsync();
             track = tracks[0];
 
-            track.Expand();
+            await track.ExpandAsync();
 
             // Assert
-            track.Distance().ShouldBe("0.81 miles");
-            track.AveragePace().ShouldBe(@"24'8""/mile");
+            (await track.DistanceAsync()).ShouldBe("0.81 miles");
+            (await track.AveragePaceAsync()).ShouldBe(@"24'8""/mile");
 
-            page.TotalDistance().ShouldBe("2 miles");
-            page.Emissions().ShouldBe("1");
+            (await app.TotalDistanceAsync()).ShouldBe("2 miles");
+            (await app.EmissionsAsync()).ShouldBe("1");
 
             // Act
-            page.UseKilometers();
+            await app.UseKilometersAsync();
 
             // Assert
-            page.WaitForReload();
-
-            tracks = page.Tracks();
+            tracks = await app.TracksAsync();
             track = tracks[0];
 
-            track.Expand();
+            await track.ExpandAsync();
 
             // Assert
-            track.Distance().ShouldBe("1.31 km");
-            track.AveragePace().ShouldBe(@"14'59""/km");
+            (await track.DistanceAsync()).ShouldBe("1.31 km");
+            (await track.AveragePaceAsync()).ShouldBe(@"14'59""/km");
 
-            page.TotalDistance().ShouldBe("3 km");
-            page.Emissions().ShouldBe("1");
+            (await app.TotalDistanceAsync()).ShouldBe("3 km");
+            (await app.EmissionsAsync()).ShouldBe("1");
 
             // Act
-            page.NotBefore("2021-05-05")
-                .NotAfter("2021-05-05")
-                .Filter();
+            await app.NotBeforeAsync("2021-05-05");
+            await app.NotAfterAsync("2021-05-05");
+            await app.FilterAsync();
 
             // Assert
-            tracks = page.Tracks();
+            tracks = await app.TracksAsync();
             track = tracks.ShouldHaveSingleItem();
 
-            track.LinkText().ShouldBe("Route 2");
-            track.Name().ShouldBe("Route 2");
+            (await track.LinkTextAsync()).ShouldBe("Route 2");
+            (await track.NameAsync()).ShouldBe("Route 2");
+        }
+
+        private static async Task<IBrowser> CreateBrowserAsync(IPlaywright playwright)
+        {
+            var options = new BrowserTypeLaunchOptions();
+
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                options.Devtools = true;
+                options.Headless = false;
+                options.SlowMo = 100;
+            }
+
+            return await playwright.Chromium.LaunchAsync(options);
         }
     }
 }

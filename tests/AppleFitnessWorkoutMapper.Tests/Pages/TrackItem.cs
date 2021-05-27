@@ -1,51 +1,62 @@
 ﻿// Copyright (c) Martin Costello, 2021. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
-using OpenQA.Selenium;
+using System.Threading.Tasks;
+using Microsoft.Playwright;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
 {
     public sealed class TrackItem
     {
-        private readonly IWebDriver _driver;
-        private readonly IWebElement _element;
+        private readonly IElementHandle _element;
 
-        public TrackItem(IWebDriver driver, IWebElement element)
+        public TrackItem(IElementHandle element)
         {
-            _driver = driver;
             _element = element;
         }
 
-        public void Expand()
+        public async Task ExpandAsync()
         {
-            _element.Click();
-            _driver.WaitForInteractable(_element.FindElement(By.CssSelector("[data-js-visible]")));
+            await _element.ClickAsync();
+
+            var child = await _element.QuerySelectorAsync("[data-js-visible]");
+            await child.WaitForElementStateAsync(ElementState.Visible);
         }
 
-        public void Collapse()
+        public async Task CollapseAsync()
+            => await _element.ClickAsync();
+
+        public async Task<string> LinkTextAsync()
+            => await GetTextAsync("a");
+
+        public async Task<string> NameAsync()
         {
-            _element.Click();
+            IElementHandle child = await _element.QuerySelectorAsync("[data-track-name]");
+            return await child.GetAttributeAsync("data-track-name");
         }
 
-        public string LinkText()
-            => _element.FindElement(By.TagName("a")).Text;
+        public async Task<string> StartedAtAsync()
+            => await GetTextAsync("[data-js-start]");
 
-        public string Name()
-            => _element.FindElement(By.CssSelector("[data-track-name]")).GetAttribute("data-track-name");
+        public async Task<string> EndedAtAsync()
+            => await GetTextAsync("[data-js-end]");
 
-        public string StartedAt()
-            => _element.FindElement(By.CssSelector("[data-js-start]")).Text;
+        public async Task<string> DurationAsync()
+            => await GetTextAsync("[data-js-duration]");
 
-        public string EndedAt()
-            => _element.FindElement(By.CssSelector("[data-js-end]")).Text;
+        public async Task<string> DistanceAsync()
+            => await GetTextAsync("[data-js-distance]");
 
-        public string Duration()
-            => _element.FindElement(By.CssSelector("[data-js-duration]")).Text;
+        public async Task<string> AveragePaceAsync()
+            => await GetTextAsync("[data-js-pace]");
 
-        public string Distance()
-            => _element.FindElement(By.CssSelector("[data-js-distance]")).Text;
+        private async Task<string> GetTextAsync(string selector)
+        {
+            IElementHandle child = await _element.QuerySelectorAsync(selector);
 
-        public string AveragePace()
-            => _element.FindElement(By.CssSelector("[data-js-pace]")).Text;
+            string text = await child.InnerTextAsync();
+
+            return text.Trim();
+        }
     }
 }

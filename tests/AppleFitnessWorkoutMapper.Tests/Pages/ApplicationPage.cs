@@ -3,108 +3,92 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using OpenQA.Selenium;
+using System.Threading.Tasks;
+using Microsoft.Playwright;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
 {
     public sealed class ApplicationPage
     {
-        private static readonly By _filter = By.Id("filter");
+        private const string FilterSelector = "id=filter";
 
-        private readonly IWebDriver _driver;
+        private readonly IPage _page;
 
-        public ApplicationPage(IWebDriver driver)
+        public ApplicationPage(IPage page)
         {
-            _driver = driver;
+            _page = page;
         }
 
-        public void Filter()
+        public async Task FilterAsync()
         {
-            var filter = _driver.FindElementWithWait(_filter);
-            _driver.WaitForInteractable(filter).Click();
-
-            WaitForReload();
+            await _page.ClickAsync(FilterSelector);
+            await _page.WaitUntilEnabledAsync(FilterSelector);
         }
 
-        public void ImportData()
+        public async Task ImportDataAsync()
         {
             // Start the import
-            var import = _driver.FindElementWithWait(By.Id("import"));
-            _driver.WaitForInteractable(import).Click();
+            await _page.ClickAsync("id=import");
 
             // Wait for the import to complete
-            var filter = _driver.FindElementWithWait(_filter);
-            _driver.WaitForInteractable(filter);
+            await _page.WaitUntilEnabledAsync(FilterSelector);
         }
 
-        public bool IsMapDisplayed()
-            => _driver.FindElement(By.CssSelector("[aria-label='Map']")).Displayed;
+        public async Task<bool> IsMapDisplayedAsync()
+            => await _page.IsVisibleAsync("[aria-label='Map']");
 
-        public ApplicationPage NotBefore(string value)
+        public async Task NotBeforeAsync(string value)
         {
-            var notBefore = _driver.FindElementWithWait(By.Id("not-before"));
-            _driver.WaitForInteractable(notBefore);
-
-            notBefore.Clear();
-            notBefore.SendKeys(value + Keys.Escape);
-
-            return this;
+            await _page.EnterTextAsync("id=not-before", value);
+            await _page.Keyboard.PressAsync("Escape");
         }
 
-        public ApplicationPage NotAfter(string value)
+        public async Task NotAfterAsync(string value)
         {
-            var notAfter = _driver.FindElementWithWait(By.Id("not-after"));
-            _driver.WaitForInteractable(notAfter);
-
-            notAfter.Clear();
-            notAfter.SendKeys(value + Keys.Escape);
-
-            return this;
+            await _page.EnterTextAsync("id=not-after", value);
+            await _page.Keyboard.PressAsync("Escape");
         }
 
-        public string Emissions()
-            => _driver.FindElement(By.CssSelector("[js-data-emissions]")).Text;
+        public async Task<string> EmissionsAsync()
+            => (await _page.InnerTextAsync("[js-data-emissions]")).Trim();
 
-        public string TotalDistance()
-            => _driver.FindElement(By.CssSelector("[js-data-total-distance]")).Text;
+        public async Task<string> TotalDistanceAsync()
+            => (await _page.InnerTextAsync("[js-data-total-distance]")).Trim();
 
-        public IReadOnlyList<TrackItem> Tracks()
+        public async Task<IReadOnlyList<TrackItem>> TracksAsync()
         {
-            return _driver.FindElementsWithWait(By.ClassName("track-item"))
+            IReadOnlyList<IElementHandle> children = await _page.QuerySelectorAllAsync("css=.track-item");
+
+            return children
                 .Skip(1)
-                .Select((p) => new TrackItem(_driver, p))
+                .Select((p) => new TrackItem(p))
                 .ToList();
         }
 
-        public void HidePolygon()
+        public async Task HidePolygonAsync()
         {
-            ToggleOption(By.CssSelector("[for='show-polygon'][class~='toggle-on']"));
+            await _page.ClickAsync("[for='show-polygon'][class~='toggle-on']");
         }
 
-        public void ShowPolygon()
+        public async Task ShowPolygonAsync()
         {
-            ToggleOption(By.CssSelector("[for='show-polygon'][class~='toggle-off']"));
+            await _page.ClickAsync("[for='show-polygon'][class~='toggle-off']");
         }
 
-        public void UseKilometers()
+        public async Task UseKilometersAsync()
         {
-            ToggleOption(By.CssSelector("[for='unit-of-distance'][class~='toggle-on']"));
+            string selector = "[for='unit-of-distance'][class~='toggle-on']";
+
+            await _page.ClickAsync(selector);
+            await _page.WaitUntilEnabledAsync(selector);
         }
 
-        public void UseMiles()
+        public async Task UseMilesAsync()
         {
-            ToggleOption(By.CssSelector("[for='unit-of-distance'][class~='toggle-off']"));
-        }
+            string selector = "[for='unit-of-distance'][class~='toggle-off']";
 
-        public void WaitForReload()
-        {
-            _driver.WaitForInteractable(_driver.FindElementWithWait(_filter));
-        }
-
-        private void ToggleOption(By by)
-        {
-            var option = _driver.FindElementWithWait(by);
-            _driver.WaitForInteractable(option).Click();
+            await _page.ClickAsync(selector);
+            await _page.WaitUntilEnabledAsync(selector);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Martin Costello, 2021. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MartinCostello.AppleFitnessWorkoutMapper.Pages;
@@ -20,8 +21,10 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
 
         public ITestOutputHelper OutputHelper { get; set; }
 
-        [Fact]
-        public async Task Can_Import_Data_And_View_Workouts()
+        [Theory]
+        [InlineData("chromium")]
+        [InlineData("firefox")]
+        public async Task Can_Import_Data_And_View_Workouts(string browserName)
         {
             // Arrange
             using var fixture = new HttpWebApplicationFactory(OutputHelper);
@@ -29,7 +32,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
 
             using IPlaywright playwright = await Playwright.CreateAsync();
 
-            await using IBrowser browser = await CreateBrowserAsync(playwright);
+            await using IBrowser browser = await CreateBrowserAsync(playwright, browserName);
 
             var options = new BrowserNewPageOptions()
             {
@@ -128,7 +131,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             (await track.NameAsync()).ShouldBe("Route 2");
         }
 
-        private static async Task<IBrowser> CreateBrowserAsync(IPlaywright playwright)
+        private static async Task<IBrowser> CreateBrowserAsync(IPlaywright playwright, string browser)
         {
             var options = new BrowserTypeLaunchOptions();
 
@@ -139,7 +142,15 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                 options.SlowMo = 100;
             }
 
-            return await playwright.Chromium.LaunchAsync(options);
+            IBrowserType browserType = browser.ToUpperInvariant() switch
+            {
+                "CHROMIUM" => playwright.Chromium,
+                "FIREFOX" => playwright.Firefox,
+                "WEBKIT" => playwright.Webkit,
+                _ => throw new NotSupportedException($"The {browser} browser is not supported."),
+            };
+
+            return await browserType.LaunchAsync(options);
         }
     }
 }

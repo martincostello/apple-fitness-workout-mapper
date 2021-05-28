@@ -72,6 +72,13 @@ jobs:
         name: app-macos
         path: ./artifacts/publish/osx-x64
 
+    - name: Publish screenshots
+      uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: screenshots
+        path: ./artifacts/screenshots/*.png
+
   notarize:
     if: ${{ startsWith(github.ref, 'refs/tags/v') }}
     name: notarize

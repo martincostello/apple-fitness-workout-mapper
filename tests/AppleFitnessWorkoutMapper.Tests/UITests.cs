@@ -102,7 +102,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
 
                 // Assert
                 tracks = await app.TracksAsync();
-                track = tracks[0];
+                track = tracks.ShouldHaveSingleItem();
 
                 await track.ExpandAsync();
 
@@ -118,7 +118,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
 
                 // Assert
                 tracks = await app.TracksAsync();
-                track = tracks[0];
+                track = tracks.ShouldHaveSingleItem();
 
                 await track.ExpandAsync();
 

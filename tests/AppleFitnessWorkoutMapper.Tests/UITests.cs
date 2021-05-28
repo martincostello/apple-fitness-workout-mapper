@@ -43,7 +43,9 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                 TimezoneId = "Europe/London",
             };
 
-            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GITHUB_ACTIONS")))
+            bool isGitHubActions = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GITHUB_ACTIONS"));
+
+            if (isGitHubActions)
             {
                 options.RecordVideoDir = "videos";
                 options.RecordVideoSize = new RecordVideoSize() { Width = 800, Height = 600 };
@@ -168,7 +170,11 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             }
             finally
             {
-                await page.CloseAsync();
+                if (isGitHubActions)
+                {
+                    await page.CloseAsync();
+                    OutputHelper.WriteLine($"Video saved to {await page.Video.PathAsync()}.");
+                }
             }
         }
 

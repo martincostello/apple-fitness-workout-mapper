@@ -1,13 +1,9 @@
 ﻿// Copyright (c) Martin Costello, 2021. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
-using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Threading.Tasks;
 using MartinCostello.AppleFitnessWorkoutMapper.Pages;
-using Microsoft.Playwright;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
@@ -30,38 +26,16 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
         {
             // Arrange
             using var fixture = new HttpWebApplicationFactory(OutputHelper);
+            var browser = new BrowserFixture(OutputHelper);
+
             await fixture.InitializeAsync();
 
-            using IPlaywright playwright = await Playwright.CreateAsync();
-
-            await using IBrowser browser = await CreateBrowserAsync(playwright, browserType);
-
-            var options = new BrowserNewPageOptions()
+            await browser.WithPageAsync(browserType, async (page) =>
             {
-                IgnoreHTTPSErrors = true,
-                Locale = "en-GB",
-                TimezoneId = "Europe/London",
-            };
+                await page.GotoAsync(fixture.ServerAddress);
 
-            bool isGitHubActions = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GITHUB_ACTIONS"));
+                var app = new ApplicationPage(page);
 
-            if (isGitHubActions)
-            {
-                options.RecordVideoDir = "videos";
-                options.RecordVideoSize = new RecordVideoSize() { Width = 800, Height = 600 };
-            }
-
-            IPage page = await browser.NewPageAsync(options);
-
-            page.Console += (_, e) => OutputHelper.WriteLine(e.Text);
-            page.PageError += (_, e) => OutputHelper.WriteLine(e);
-
-            await page.GotoAsync(fixture.ServerAddress.ToString());
-
-            var app = new ApplicationPage(page);
-
-            try
-            {
                 // Act
                 await app.ImportDataAsync();
 
@@ -146,50 +120,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
 
                 (await track.LinkTextAsync()).ShouldBe("Route 2");
                 (await track.NameAsync()).ShouldBe("Route 2");
-            }
-            catch (Exception)
-            {
-                string os =
-                    OperatingSystem.IsLinux() ? "linux" :
-                    OperatingSystem.IsMacOS() ? "macos" :
-                    OperatingSystem.IsWindows() ? "windows" :
-                    "other";
-
-                string name = nameof(Can_Import_Data_And_View_Workouts);
-                string utcNow = DateTimeOffset.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
-                string path = Path.Combine("screenshots", $"{name}_{browserType}_{os}_{utcNow}.png");
-
-                await page.ScreenshotAsync(new PageScreenshotOptions()
-                {
-                    Path = path,
-                });
-
-                OutputHelper.WriteLine($"Screenshot saved to {path}.");
-
-                throw;
-            }
-            finally
-            {
-                if (isGitHubActions)
-                {
-                    await page.CloseAsync();
-                    OutputHelper.WriteLine($"Video saved to {await page.Video.PathAsync()}.");
-                }
-            }
-        }
-
-        private static async Task<IBrowser> CreateBrowserAsync(IPlaywright playwright, string browserType)
-        {
-            var options = new BrowserTypeLaunchOptions();
-
-            if (System.Diagnostics.Debugger.IsAttached)
-            {
-                options.Devtools = true;
-                options.Headless = false;
-                options.SlowMo = 100;
-            }
-
-            return await playwright[browserType].LaunchAsync(options);
+            });
         }
     }
 }

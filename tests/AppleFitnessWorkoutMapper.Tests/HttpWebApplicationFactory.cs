@@ -25,7 +25,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
         {
         }
 
-        public Uri ServerAddress => ClientOptions.BaseAddress;
+        public string ServerAddress => ClientOptions.BaseAddress.ToString();
 
         public override IServiceProvider? Services => _host?.Services;
 

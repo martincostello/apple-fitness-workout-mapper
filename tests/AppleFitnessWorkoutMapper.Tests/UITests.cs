@@ -146,6 +146,8 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                 });
 
                 OutputHelper.WriteLine($"Screenshot saved to {path}.");
+
+                throw;
             }
         }
 

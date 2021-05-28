@@ -46,6 +46,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GITHUB_ACTIONS")))
             {
                 options.RecordVideoDir = "videos";
+                options.RecordVideoSize = new RecordVideoSize() { Width = 800, Height = 600 };
             }
 
             IPage page = await browser.NewPageAsync(options);

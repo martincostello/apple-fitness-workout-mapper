@@ -3,6 +3,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Shouldly;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper
 {
@@ -16,6 +17,24 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
         public static async Task ThenAsync<T>(this Task<T> value, Func<T, Task> continuation)
         {
             await continuation(await value);
+        }
+
+        public static async Task ShouldBe(this Task<string> task, string expected)
+        {
+            string actual = await task;
+            actual.ShouldBe(expected);
+        }
+
+        public static async Task ShouldBeOneOf<T>(this Task<T> task, params T[] expected)
+        {
+            T actual = await task;
+            actual.ShouldBeOneOf(expected);
+        }
+
+        public static async Task ShouldBeTrue(this Task<bool> task)
+        {
+            bool actual = await task;
+            actual.ShouldBeTrue();
         }
     }
 }

@@ -40,17 +40,17 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                 await app.ImportDataAsync();
 
                 // Assert
-                (await app.IsMapDisplayedAsync()).ShouldBeTrue();
+                await app.IsMapDisplayedAsync().ShouldBeTrue();
 
                 IReadOnlyList<TrackItem> tracks = await app.TracksAsync();
 
                 tracks.Count.ShouldBe(2);
 
-                (await tracks[0].LinkTextAsync()).ShouldBe("Route 1");
-                (await tracks[0].NameAsync()).ShouldBe("Route 1");
+                await tracks[0].LinkTextAsync().ShouldBe("Route 1");
+                await tracks[0].NameAsync().ShouldBe("Route 1");
 
-                (await tracks[1].LinkTextAsync()).ShouldBe("Route 2");
-                (await tracks[1].NameAsync()).ShouldBe("Route 2");
+                await tracks[1].LinkTextAsync().ShouldBe("Route 2");
+                await tracks[1].NameAsync().ShouldBe("Route 2");
 
                 TrackItem track = tracks[0];
 
@@ -59,15 +59,15 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                 await app.ShowPolygonAsync();
 
                 // Assert
-                (await track.StartedAtAsync()).ShouldBeOneOf("May 4, 2021 11:25 AM", "May 4, 2021 12:25 PM");
-                (await track.EndedAtAsync()).ShouldBeOneOf("May 4, 2021 11:45 AM", "May 4, 2021 12:45 PM");
-                (await track.DurationAsync()).ShouldBe("20 minutes");
+                await track.StartedAtAsync().ShouldBeOneOf("May 4, 2021 11:25 AM", "May 4, 2021 12:25 PM");
+                await track.EndedAtAsync().ShouldBeOneOf("May 4, 2021 11:45 AM", "May 4, 2021 12:45 PM");
+                await track.DurationAsync().ShouldBe("20 minutes");
 
-                (await track.DistanceAsync()).ShouldBe("1.31 km");
-                (await track.AveragePaceAsync()).ShouldBe(@"14'59""/km");
+                await track.DistanceAsync().ShouldBe("1.31 km");
+                await track.AveragePaceAsync().ShouldBe(@"14'59""/km");
 
-                (await app.TotalDistanceAsync()).ShouldBe("3 km");
-                (await app.EmissionsAsync()).ShouldBe("1");
+                await app.TotalDistanceAsync().ShouldBe("3 km");
+                await app.EmissionsAsync().ShouldBe("1");
 
                 // Act
                 await app.HidePolygonAsync();
@@ -85,11 +85,11 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                 await track.ExpandAsync();
 
                 // Assert
-                (await track.DistanceAsync()).ShouldBe("0.81 miles");
-                (await track.AveragePaceAsync()).ShouldBe(@"24'8""/mile");
+                await track.DistanceAsync().ShouldBe("0.81 miles");
+                await track.AveragePaceAsync().ShouldBe(@"24'8""/mile");
 
-                (await app.TotalDistanceAsync()).ShouldBe("2 miles");
-                (await app.EmissionsAsync()).ShouldBe("1");
+                await app.TotalDistanceAsync().ShouldBe("2 miles");
+                await app.EmissionsAsync().ShouldBe("1");
 
                 // Act
                 await app.UseKilometersAsync();
@@ -103,11 +103,11 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                 await track.ExpandAsync();
 
                 // Assert
-                (await track.DistanceAsync()).ShouldBe("1.31 km");
-                (await track.AveragePaceAsync()).ShouldBe(@"14'59""/km");
+                await track.DistanceAsync().ShouldBe("1.31 km");
+                await track.AveragePaceAsync().ShouldBe(@"14'59""/km");
 
-                (await app.TotalDistanceAsync()).ShouldBe("3 km");
-                (await app.EmissionsAsync()).ShouldBe("1");
+                await app.TotalDistanceAsync().ShouldBe("3 km");
+                await app.EmissionsAsync().ShouldBe("1");
 
                 // Act
                 await app.NotBeforeAsync("2021-05-05")
@@ -118,8 +118,8 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                 tracks = await app.TracksAsync();
                 track = tracks.ShouldHaveSingleItem();
 
-                (await track.LinkTextAsync()).ShouldBe("Route 2");
-                (await track.NameAsync()).ShouldBe("Route 2");
+                await track.LinkTextAsync().ShouldBe("Route 2");
+                await track.NameAsync().ShouldBe("Route 2");
             });
         }
     }

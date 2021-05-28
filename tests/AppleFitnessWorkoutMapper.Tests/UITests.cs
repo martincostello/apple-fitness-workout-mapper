@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Martin Costello, 2021. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MartinCostello.AppleFitnessWorkoutMapper.Pages;
@@ -19,9 +20,19 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
 
         public ITestOutputHelper OutputHelper { get; set; }
 
+        public static IEnumerable<object[]> Browsers()
+        {
+            yield return new object[] { "chromium" };
+            yield return new object[] { "firefox" };
+
+            if (OperatingSystem.IsMacOS())
+            {
+                yield return new object[] { "webkit" };
+            }
+        }
+
         [Theory]
-        [InlineData("chromium")]
-        [InlineData("firefox")]
+        [MemberData(nameof(Browsers))]
         public async Task Can_Import_Data_And_View_Workouts(string browserType)
         {
             // Arrange

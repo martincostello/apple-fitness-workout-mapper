@@ -3,7 +3,7 @@
     <IsPackable>false</IsPackable>
     <NoWarn>$(NoWarn);CA1707;CA2234</NoWarn>
     <RootNamespace>MartinCostello.AppleFitnessWorkoutMapper</RootNamespace>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="coverlet.msbuild" PrivateAssets="All" />

@@ -11,18 +11,12 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
     {
         public static async Task EnterTextAsync(this IPage page, string selector, string value)
         {
+            // Clear any existing value
             await page.FocusAsync(selector);
-
-            if (OperatingSystem.IsMacOS())
-            {
-                await page.Keyboard.PressAsync("Meta+A");
-            }
-            else
-            {
-                await page.Keyboard.PressAsync("Control+A");
-            }
-
+            await page.Keyboard.PressAsync(OperatingSystem.IsMacOS() ? "Meta+A" : "Control+A");
             await page.Keyboard.PressAsync("Delete");
+
+            // Enter the new vaue
             await page.TypeAsync(selector, value);
         }
 

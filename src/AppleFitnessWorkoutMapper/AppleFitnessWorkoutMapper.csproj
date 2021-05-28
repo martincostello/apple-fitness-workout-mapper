@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
     <RootNamespace>MartinCostello.AppleFitnessWorkoutMapper</RootNamespace>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>latest</TypeScriptToolsVersion>
     <UserSecretsId>AppleFitnessWorkoutMapper</UserSecretsId>

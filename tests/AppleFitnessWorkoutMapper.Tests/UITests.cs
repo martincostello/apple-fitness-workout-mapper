@@ -136,9 +136,15 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             }
             catch (Exception)
             {
+                string os =
+                    OperatingSystem.IsLinux() ? "linux" :
+                    OperatingSystem.IsMacOS() ? "macos" :
+                    OperatingSystem.IsWindows() ? "windows" :
+                    "other";
+
                 string name = nameof(Can_Import_Data_And_View_Workouts);
                 string utcNow = DateTimeOffset.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
-                string path = Path.Combine("screenshots", $"{name}_{browserName}_{utcNow}.png");
+                string path = Path.Combine("screenshots", $"{name}_{browserName}_{os}_{utcNow}.png");
 
                 await page.ScreenshotAsync(new PageScreenshotOptions()
                 {

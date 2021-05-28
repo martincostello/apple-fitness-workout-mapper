@@ -26,7 +26,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
         [Theory]
         [InlineData("chromium")]
         [InlineData("firefox")]
-        public async Task Can_Import_Data_And_View_Workouts(string browserName)
+        public async Task Can_Import_Data_And_View_Workouts(string browserType)
         {
             // Arrange
             using var fixture = new HttpWebApplicationFactory(OutputHelper);
@@ -34,7 +34,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
 
             using IPlaywright playwright = await Playwright.CreateAsync();
 
-            await using IBrowser browser = await CreateBrowserAsync(playwright, browserName);
+            await using IBrowser browser = await CreateBrowserAsync(playwright, browserType);
 
             var options = new BrowserNewPageOptions()
             {
@@ -144,7 +144,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
 
                 string name = nameof(Can_Import_Data_And_View_Workouts);
                 string utcNow = DateTimeOffset.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
-                string path = Path.Combine("screenshots", $"{name}_{browserName}_{os}_{utcNow}.png");
+                string path = Path.Combine("screenshots", $"{name}_{browserType}_{os}_{utcNow}.png");
 
                 await page.ScreenshotAsync(new PageScreenshotOptions()
                 {
@@ -157,7 +157,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             }
         }
 
-        private static async Task<IBrowser> CreateBrowserAsync(IPlaywright playwright, string browser)
+        private static async Task<IBrowser> CreateBrowserAsync(IPlaywright playwright, string browserType)
         {
             var options = new BrowserTypeLaunchOptions();
 
@@ -168,15 +168,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                 options.SlowMo = 100;
             }
 
-            IBrowserType browserType = browser.ToUpperInvariant() switch
-            {
-                "CHROMIUM" => playwright.Chromium,
-                "FIREFOX" => playwright.Firefox,
-                "WEBKIT" => playwright.Webkit,
-                _ => throw new NotSupportedException($"The {browser} browser is not supported."),
-            };
-
-            return await browserType.LaunchAsync(options);
+            return await playwright[browserType].LaunchAsync(options);
         }
     }
 }

@@ -37,16 +37,20 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
         public async Task<bool> IsMapDisplayedAsync()
             => await _page.IsVisibleAsync("[aria-label='Map']");
 
-        public async Task NotBeforeAsync(string value)
+        public async Task<ApplicationPage> NotBeforeAsync(string value)
         {
             await _page.EnterTextAsync("id=not-before", value);
             await _page.Keyboard.PressAsync("Escape");
+
+            return this;
         }
 
-        public async Task NotAfterAsync(string value)
+        public async Task<ApplicationPage> NotAfterAsync(string value)
         {
             await _page.EnterTextAsync("id=not-after", value);
             await _page.Keyboard.PressAsync("Escape");
+
+            return this;
         }
 
         public async Task<string> EmissionsAsync()

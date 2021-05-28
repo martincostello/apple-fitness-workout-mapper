@@ -119,9 +119,9 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             (await app.EmissionsAsync()).ShouldBe("1");
 
             // Act
-            await app.NotBeforeAsync("2021-05-05");
-            await app.NotAfterAsync("2021-05-05");
-            await app.FilterAsync();
+            await app.NotBeforeAsync("2021-05-05")
+                     .ThenAsync((p) => p.NotAfterAsync("2021-05-05"))
+                     .ThenAsync((p) => p.FilterAsync());
 
             // Assert
             tracks = await app.TracksAsync();

@@ -24,5 +24,14 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
 
             return element;
         }
+
+        public static async Task<IElementHandle> WaitUntilHiddenAsync(this IPage page, string selector)
+        {
+            IElementHandle element = await page.QuerySelectorAsync(selector);
+
+            await element.WaitForElementStateAsync(ElementState.Hidden);
+
+            return element;
+        }
     }
 }

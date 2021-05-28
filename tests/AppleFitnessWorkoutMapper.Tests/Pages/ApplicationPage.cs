@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Martin Costello, 2021. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,9 +25,6 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
             await _page.ClickAsync(FilterSelector);
             await _page.WaitUntilEnabledAsync(FilterSelector);
             await _page.WaitUntilHiddenAsync(LoaderSelector);
-
-            // HACK Temporary delay to see if that fixes the macOS tests
-            await Task.Delay(TimeSpan.FromSeconds(3));
         }
 
         public async Task ImportDataAsync()

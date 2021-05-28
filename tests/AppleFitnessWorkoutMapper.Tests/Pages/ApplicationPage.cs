@@ -11,7 +11,6 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
     public sealed class ApplicationPage
     {
         private const string FilterSelector = "id=filter";
-        private const string LoaderSelector = "id=tracks-loader";
 
         private readonly IPage _page;
 
@@ -24,7 +23,8 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
         {
             await _page.ClickAsync(FilterSelector);
             await _page.WaitUntilEnabledAsync(FilterSelector);
-            await _page.WaitUntilHiddenAsync(LoaderSelector);
+
+            await WaitForLoaderToBeHiddenAsync();
         }
 
         public async Task ImportDataAsync()
@@ -34,7 +34,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
 
             // Wait for the import to complete
             await _page.WaitUntilEnabledAsync(FilterSelector);
-            await _page.WaitUntilHiddenAsync(LoaderSelector);
+            await WaitForLoaderToBeHiddenAsync();
         }
 
         public async Task<bool> IsMapDisplayedAsync()
@@ -88,6 +88,8 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
 
             await _page.ClickAsync(selector);
             await _page.WaitUntilEnabledAsync(selector);
+
+            await WaitForLoaderToBeHiddenAsync();
         }
 
         public async Task UseMilesAsync()
@@ -96,6 +98,11 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
 
             await _page.ClickAsync(selector);
             await _page.WaitUntilEnabledAsync(selector);
+
+            await WaitForLoaderToBeHiddenAsync();
         }
+
+        private async Task WaitForLoaderToBeHiddenAsync()
+            => await _page.WaitUntilHiddenAsync("id=tracks-loader");
     }
 }

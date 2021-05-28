@@ -80,6 +80,14 @@ jobs:
         path: ./artifacts/screenshots/*.png
         if-no-files-found: ignore
 
+    - name: Publish videos
+      uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: videos
+        path: ./artifacts/videos/*
+        if-no-files-found: ignore
+
   notarize:
     if: ${{ startsWith(github.ref, 'refs/tags/v') }}
     name: notarize

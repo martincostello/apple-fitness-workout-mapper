@@ -43,6 +43,11 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                 TimezoneId = "Europe/London",
             };
 
+            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GITHUB_ACTIONS")))
+            {
+                options.RecordVideoDir = "videos";
+            }
+
             IPage page = await browser.NewPageAsync(options);
 
             page.Console += (_, e) => OutputHelper.WriteLine(e.Text);
@@ -155,6 +160,10 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                 OutputHelper.WriteLine($"Screenshot saved to {path}.");
 
                 throw;
+            }
+            finally
+            {
+                await page.CloseAsync();
             }
         }
 

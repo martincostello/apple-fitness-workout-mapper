@@ -40,6 +40,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             {
                 IgnoreHTTPSErrors = true,
                 Locale = "en-GB",
+                TimezoneId = "Europe/London",
             };
 
             IPage page = await browser.NewPageAsync(options);

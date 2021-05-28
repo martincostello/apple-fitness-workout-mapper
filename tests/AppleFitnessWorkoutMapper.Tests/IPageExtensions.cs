@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Martin Costello, 2021. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
+using System;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 
@@ -11,7 +12,16 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
         public static async Task EnterTextAsync(this IPage page, string selector, string value)
         {
             await page.FocusAsync(selector);
-            await page.Keyboard.PressAsync("Control+A");
+
+            if (OperatingSystem.IsMacOS())
+            {
+                await page.Keyboard.PressAsync("Meta+A");
+            }
+            else
+            {
+                await page.Keyboard.PressAsync("Control+A");
+            }
+
             await page.Keyboard.PressAsync("Delete");
             await page.TypeAsync(selector, value);
         }

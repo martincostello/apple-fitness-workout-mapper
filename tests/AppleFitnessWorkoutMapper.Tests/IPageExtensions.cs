@@ -9,15 +9,17 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
 {
     internal static class IPageExtensions
     {
-        public static async Task EnterTextAsync(this IPage page, string selector, string value)
+        public static async Task ClearTextAsync(this IPage page, string selector)
         {
-            // Clear any existing value
             await page.FocusAsync(selector);
             await page.Keyboard.PressAsync(OperatingSystem.IsMacOS() ? "Meta+A" : "Control+A");
             await page.Keyboard.PressAsync("Delete");
+        }
 
-            // Enter the new vaue
-            await page.TypeAsync(selector, value);
+        public static async Task<string> InnerTextTrimmedAsync(this IPage page, string selector)
+        {
+            string text = await page.InnerTextAsync(selector);
+            return text.Trim();
         }
 
         public static async Task<IElementHandle> WaitUntilEnabledAsync(this IPage page, string selector)

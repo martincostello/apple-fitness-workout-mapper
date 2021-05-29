@@ -44,6 +44,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             await browser.WithPageAsync(browserType, async (page) =>
             {
                 await page.GotoAsync(fixture.ServerAddress);
+                await page.WaitForLoadStateAsync();
 
                 var app = new ApplicationPage(page);
 

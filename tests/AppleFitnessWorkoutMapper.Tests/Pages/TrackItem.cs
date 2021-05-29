@@ -27,7 +27,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
             => await _element.ClickAsync();
 
         public async Task<string> LinkTextAsync()
-            => await GetTextAsync("a");
+            => await InnerTextTrimmedAsync("a");
 
         public async Task<string> NameAsync()
         {
@@ -36,21 +36,21 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
         }
 
         public async Task<string> StartedAtAsync()
-            => await GetTextAsync("[data-js-start]");
+            => await InnerTextTrimmedAsync("[data-js-start]");
 
         public async Task<string> EndedAtAsync()
-            => await GetTextAsync("[data-js-end]");
+            => await InnerTextTrimmedAsync("[data-js-end]");
 
         public async Task<string> DurationAsync()
-            => await GetTextAsync("[data-js-duration]");
+            => await InnerTextTrimmedAsync("[data-js-duration]");
 
         public async Task<string> DistanceAsync()
-            => await GetTextAsync("[data-js-distance]");
+            => await InnerTextTrimmedAsync("[data-js-distance]");
 
         public async Task<string> AveragePaceAsync()
-            => await GetTextAsync("[data-js-pace]");
+            => await InnerTextTrimmedAsync("[data-js-pace]");
 
-        private async Task<string> GetTextAsync(string selector)
+        private async Task<string> InnerTextTrimmedAsync(string selector)
         {
             IElementHandle child = await _element.QuerySelectorAsync(selector);
 

@@ -42,25 +42,21 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
 
         public async Task<ApplicationPage> NotBeforeAsync(string value)
         {
-            await _page.EnterTextAsync("id=not-before", value);
-            await _page.Keyboard.PressAsync("Escape");
-
+            await EnterDateAsync("id=not-before", value);
             return this;
         }
 
         public async Task<ApplicationPage> NotAfterAsync(string value)
         {
-            await _page.EnterTextAsync("id=not-after", value);
-            await _page.Keyboard.PressAsync("Escape");
-
+            await EnterDateAsync("id=not-after", value);
             return this;
         }
 
         public async Task<string> EmissionsAsync()
-            => (await _page.InnerTextAsync("[js-data-emissions]")).Trim();
+            => await _page.InnerTextTrimmedAsync("[js-data-emissions]");
 
         public async Task<string> TotalDistanceAsync()
-            => (await _page.InnerTextAsync("[js-data-total-distance]")).Trim();
+            => await _page.InnerTextTrimmedAsync("[js-data-total-distance]");
 
         public async Task<IReadOnlyList<TrackItem>> TracksAsync()
         {
@@ -100,6 +96,15 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
             await _page.WaitUntilEnabledAsync(selector);
 
             await WaitForLoaderToBeHiddenAsync();
+        }
+
+        public async Task<ApplicationPage> EnterDateAsync(string selector, string value)
+        {
+            await _page.ClearTextAsync(selector);
+            await _page.TypeAsync(selector, value);
+            await _page.Keyboard.PressAsync("Escape");
+
+            return this;
         }
 
         private async Task WaitForLoaderToBeHiddenAsync()

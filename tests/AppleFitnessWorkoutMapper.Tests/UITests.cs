@@ -23,6 +23,8 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
         public static IEnumerable<object[]> Browsers()
         {
             yield return new object[] { "chromium" };
+            yield return new object[] { "chromium:chrome" };
+            yield return new object[] { "chromium:msedge" };
             yield return new object[] { "firefox" };
 
             if (OperatingSystem.IsMacOS())

@@ -14,9 +14,11 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
+using NodaTime;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper
 {
@@ -67,6 +69,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                 builder.UseSqlite("Data Source=" + options.Value.DatabaseFile);
             });
 
+            services.TryAddSingleton<IClock>((_) => SystemClock.Instance);
             services.AddScoped<TrackImporter>();
             services.AddScoped<TrackService>();
             services.AddSingleton<TrackParser>();

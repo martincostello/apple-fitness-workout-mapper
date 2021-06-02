@@ -10,7 +10,9 @@ using MartinCostello.Logging.XUnit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NodaTime;
 using Xunit.Abstractions;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper
@@ -37,8 +39,11 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
                 KeyValuePair.Create("DataDirectory", AppDataDirectory),
             };
 
+            var utcNow = Instant.FromUtc(2021, 06, 01, 12, 34, 56);
+
             builder.ConfigureAppConfiguration((p) => p.AddInMemoryCollection(config))
                    .ConfigureLogging((p) => p.AddXUnit(this))
+                   .ConfigureServices((p) => p.AddSingleton<IClock>((_) => new NodaTime.Testing.FakeClock(utcNow)))
                    .UseContentRoot(GetApplicationContentRootPath());
         }
 

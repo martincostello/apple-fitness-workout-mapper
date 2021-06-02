@@ -4,7 +4,7 @@
 @using MartinCostello.AppleFitnessWorkoutMapper.Pages;
 @model IndexModel
 @{
-    var today = DateTimeOffset.UtcNow.Date;
+    var today = Model.Clock.GetCurrentInstant().ToDateTimeUtc().Date;
     string startDate = today.AddDays(-28).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
     string endDate = today.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 }

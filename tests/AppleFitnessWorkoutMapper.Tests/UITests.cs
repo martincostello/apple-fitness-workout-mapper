@@ -24,7 +24,12 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
         {
             yield return new object[] { "chromium" };
             yield return new object[] { "chromium:chrome" };
-            yield return new object[] { "chromium:msedge" };
+
+            if (!OperatingSystem.IsLinux())
+            {
+                yield return new object[] { "chromium:msedge" };
+            }
+
             yield return new object[] { "firefox" };
 
             if (OperatingSystem.IsMacOS())

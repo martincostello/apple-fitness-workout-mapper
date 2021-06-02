@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Microsoft.Playwright" />
     <PackageReference Include="Moq" />
+    <PackageReference Include="NodaTime.Testing" />
     <PackageReference Include="ReportGenerator" PrivateAssets="All" />
     <PackageReference Include="Shouldly" />
     <PackageReference Include="xunit" />

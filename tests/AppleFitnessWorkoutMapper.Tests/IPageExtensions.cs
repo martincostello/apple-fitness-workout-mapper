@@ -24,18 +24,18 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
 
         public static async Task<IElementHandle> WaitUntilEnabledAsync(this IPage page, string selector)
         {
-            IElementHandle element = await page.QuerySelectorAsync(selector);
+            IElementHandle? element = await page.QuerySelectorAsync(selector);
 
-            await element.WaitForElementStateAsync(ElementState.Enabled);
+            await element!.WaitForElementStateAsync(ElementState.Enabled);
 
             return element;
         }
 
         public static async Task<IElementHandle> WaitUntilHiddenAsync(this IPage page, string selector)
         {
-            IElementHandle element = await page.QuerySelectorAsync(selector);
+            IElementHandle? element = await page.QuerySelectorAsync(selector);
 
-            await element.WaitForElementStateAsync(ElementState.Hidden);
+            await element!.WaitForElementStateAsync(ElementState.Hidden);
 
             return element;
         }

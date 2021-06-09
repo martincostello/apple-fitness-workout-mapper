@@ -19,8 +19,8 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
         {
             await _element.ClickAsync();
 
-            var child = await _element.QuerySelectorAsync("[data-js-visible]");
-            await child.WaitForElementStateAsync(ElementState.Visible);
+            IElementHandle? child = await _element.QuerySelectorAsync("[data-js-visible]");
+            await child!.WaitForElementStateAsync(ElementState.Visible);
         }
 
         public async Task CollapseAsync()
@@ -31,8 +31,8 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
 
         public async Task<string> NameAsync()
         {
-            IElementHandle child = await _element.QuerySelectorAsync("[data-track-name]");
-            return await child.GetAttributeAsync("data-track-name");
+            IElementHandle? child = await _element.QuerySelectorAsync("[data-track-name]");
+            return await child!.GetAttributeAsync("data-track-name") ?? string.Empty;
         }
 
         public async Task<string> StartedAtAsync()
@@ -52,9 +52,9 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
 
         private async Task<string> InnerTextTrimmedAsync(string selector)
         {
-            IElementHandle child = await _element.QuerySelectorAsync(selector);
+            IElementHandle? child = await _element.QuerySelectorAsync(selector);
 
-            string text = await child.InnerTextAsync();
+            string text = await child!.InnerTextAsync();
 
             return text.Trim();
         }

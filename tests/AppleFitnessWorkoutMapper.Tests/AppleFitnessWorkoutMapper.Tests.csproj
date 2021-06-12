@@ -48,6 +48,6 @@
       <Output TaskParameter="ExitCode" PropertyName="_PlaywrightCLIInstalled" />
     </Exec>
     <Warning Condition=" $(_PlaywrightCLIInstalled) != 0 " Text="The Playwright CLI .NET Global Tool is not installed. To install this tool, run the following command: dotnet tool install --global Microsoft.Playwright.CLI" />
-    <Exec Condition=" $(_PlaywrightCLIInstalled) == 0 " Command="playwright install" WorkingDirectory="$(MSBuildThisFileDirectory)\..\..\" ConsoleToMsBuild="true" StandardOutputImportance="Normal" />
+    <Exec Condition=" $(_PlaywrightCLIInstalled) == 0 " Command="playwright install" WorkingDirectory="$(MSBuildThisFileDirectory)../../" ConsoleToMsBuild="true" StandardOutputImportance="Normal" />
   </Target>
 </Project>

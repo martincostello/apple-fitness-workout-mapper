@@ -48,16 +48,16 @@ jobs:
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v1
 
+    - name: Install Playwright CLI
+      shell: pwsh
+      run: |
+        dotnet tool install --global Microsoft.Playwright.CLI
+
     - name: Build, test and publish
       shell: pwsh
       run: ./build.ps1
       env:
         GoogleMapsApiKey: ${{ secrets.GOOGLE_MAPS_API_KEY }}
-
-    - name: Install Playwright CLI
-      shell: pwsh
-      run: |
-        dotnet tool install --global Microsoft.Playwright.CLI
 
     - uses: codecov/codecov-action@v1
       name: Upload coverage to Codecov

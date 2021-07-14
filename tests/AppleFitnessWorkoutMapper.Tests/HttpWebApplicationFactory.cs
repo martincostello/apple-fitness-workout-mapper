@@ -33,7 +33,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             }
         }
 
-        public override IServiceProvider? Services
+        public override IServiceProvider Services
         {
             get
             {

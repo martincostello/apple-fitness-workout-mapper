@@ -7,7 +7,6 @@
     <TypeScriptToolsVersion>latest</TypeScriptToolsVersion>
     <UserSecretsId>AppleFitnessWorkoutMapper</UserSecretsId>
     <!-- Workaround for https://github.com/dotnet/aspnetcore/issues/31719 -->
-    <_UseRazorSourceGenerator>false</_UseRazorSourceGenerator>
     <UseRazorSourceGenerator>false</UseRazorSourceGenerator>
   </PropertyGroup>
   <ItemGroup>

@@ -44,10 +44,8 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
         {
             // Arrange
             using var fixture = new HttpWebApplicationFactory(OutputHelper);
+
             var browser = new BrowserFixture(OutputHelper);
-
-            await fixture.InitializeAsync();
-
             await browser.WithPageAsync(browserType, async (page) =>
             {
                 await page.GotoAsync(fixture.ServerAddress);

@@ -3,12 +3,11 @@
 
 using System;
 using System.Linq;
-using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Xunit.Abstractions;
@@ -25,35 +24,24 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
         {
         }
 
-        public string ServerAddress => ClientOptions.BaseAddress.ToString();
-
-        public override IServiceProvider? Services => _host?.Services;
-
-        public async Task InitializeAsync()
-            => await EnsureHttpServerAsync();
-
-        public HttpClient CreateHttpClient()
+        public string ServerAddress
         {
-#pragma warning disable CA2000
-            var handler = new HttpClientHandler()
+            get
             {
-                AllowAutoRedirect = ClientOptions.AllowAutoRedirect,
-                CheckCertificateRevocationList = true,
-                MaxAutomaticRedirections = ClientOptions.MaxAutomaticRedirections,
-                UseCookies = ClientOptions.HandleCookies,
-            };
-#pragma warning restore CA2000
-
-            var client = new HttpClient(handler, disposeHandler: true);
-
-            ConfigureClient(client);
-
-            client.BaseAddress = ClientOptions.BaseAddress;
-
-            return client;
+                EnsureServer();
+                return ClientOptions.BaseAddress.ToString();
+            }
         }
 
-        /// <inheritdoc />
+        public override IServiceProvider? Services
+        {
+            get
+            {
+                EnsureServer();
+                return _host!.Services!;
+            }
+        }
+
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             base.ConfigureWebHost(builder);
@@ -65,6 +53,31 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             // Configure the server address for the server to
             // listen on for HTTPS requests on a dynamic port.
             builder.UseUrls("https://127.0.0.1:0");
+        }
+
+        protected override IHost CreateHost(IHostBuilder builder)
+        {
+            builder.ConfigureWebHost((p) => p.UseKestrel());
+
+            _host = builder.Build();
+            _host.Start();
+
+            var server = _host.Services.GetRequiredService<IServer>();
+            var addresses = server.Features.Get<IServerAddressesFeature>();
+
+            ClientOptions.BaseAddress = addresses!.Addresses
+                .Select((p) => new Uri(p))
+                .Last();
+
+            // The base class still needs a separate host using TestServer
+            var testHostBuilder = CreateHostBuilder();
+            var testHost = testHostBuilder!
+                .ConfigureWebHost((p) => p.UseTestServer())
+                .Build();
+
+            testHost.Start();
+
+            return testHost;
         }
 
         protected override void Dispose(bool disposing)
@@ -82,29 +95,14 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
             }
         }
 
-        private async Task EnsureHttpServerAsync()
+        private void EnsureServer()
         {
-            if (_host == null)
+            if (_host is null)
             {
-                await CreateHttpServer();
+                using (CreateDefaultClient())
+                {
+                }
             }
-        }
-
-        private async Task CreateHttpServer()
-        {
-            var builder = CreateHostBuilder().ConfigureWebHost(ConfigureWebHost);
-
-            _host = builder.Build();
-
-            // Force creation of the Kestrel server and start it
-            var hostedService = _host.Services.GetService<IHostedService>();
-            await hostedService!.StartAsync(default);
-
-            var server = _host.Services.GetRequiredService<IServer>();
-
-            ClientOptions.BaseAddress = server.Features.Get<IServerAddressesFeature>()?.Addresses
-                .Select((p) => new Uri(p))
-                .First();
         }
     }
 }

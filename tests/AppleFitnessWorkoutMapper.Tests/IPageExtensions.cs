@@ -3,39 +3,38 @@
 
 using Microsoft.Playwright;
 
-namespace MartinCostello.AppleFitnessWorkoutMapper
+namespace MartinCostello.AppleFitnessWorkoutMapper;
+
+internal static class IPageExtensions
 {
-    internal static class IPageExtensions
+    public static async Task ClearTextAsync(this IPage page, string selector)
     {
-        public static async Task ClearTextAsync(this IPage page, string selector)
-        {
-            await page.FocusAsync(selector);
-            await page.Keyboard.PressAsync(OperatingSystem.IsMacOS() ? "Meta+A" : "Control+A");
-            await page.Keyboard.PressAsync("Delete");
-        }
+        await page.FocusAsync(selector);
+        await page.Keyboard.PressAsync(OperatingSystem.IsMacOS() ? "Meta+A" : "Control+A");
+        await page.Keyboard.PressAsync("Delete");
+    }
 
-        public static async Task<string> InnerTextTrimmedAsync(this IPage page, string selector)
-        {
-            string text = await page.InnerTextAsync(selector);
-            return text.Trim();
-        }
+    public static async Task<string> InnerTextTrimmedAsync(this IPage page, string selector)
+    {
+        string text = await page.InnerTextAsync(selector);
+        return text.Trim();
+    }
 
-        public static async Task<IElementHandle> WaitUntilEnabledAsync(this IPage page, string selector)
-        {
-            IElementHandle? element = await page.QuerySelectorAsync(selector);
+    public static async Task<IElementHandle> WaitUntilEnabledAsync(this IPage page, string selector)
+    {
+        IElementHandle? element = await page.QuerySelectorAsync(selector);
 
-            await element!.WaitForElementStateAsync(ElementState.Enabled);
+        await element!.WaitForElementStateAsync(ElementState.Enabled);
 
-            return element;
-        }
+        return element;
+    }
 
-        public static async Task<IElementHandle> WaitUntilHiddenAsync(this IPage page, string selector)
-        {
-            IElementHandle? element = await page.QuerySelectorAsync(selector);
+    public static async Task<IElementHandle> WaitUntilHiddenAsync(this IPage page, string selector)
+    {
+        IElementHandle? element = await page.QuerySelectorAsync(selector);
 
-            await element!.WaitForElementStateAsync(ElementState.Hidden);
+        await element!.WaitForElementStateAsync(ElementState.Hidden);
 
-            return element;
-        }
+        return element;
     }
 }

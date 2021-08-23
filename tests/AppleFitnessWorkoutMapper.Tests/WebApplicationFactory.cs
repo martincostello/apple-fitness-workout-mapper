@@ -10,50 +10,49 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NodaTime;
 
-namespace MartinCostello.AppleFitnessWorkoutMapper
+namespace MartinCostello.AppleFitnessWorkoutMapper;
+
+internal class WebApplicationFactory : WebApplicationFactory<Startup>, ITestOutputHelperAccessor
 {
-    internal class WebApplicationFactory : WebApplicationFactory<Startup>, ITestOutputHelperAccessor
+    public WebApplicationFactory(ITestOutputHelper outputHelper)
     {
-        public WebApplicationFactory(ITestOutputHelper outputHelper)
+        OutputHelper = outputHelper;
+        AppDataDirectory = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location)!, "App_Data");
+    }
+
+    public string AppDataDirectory { get; }
+
+    public ITestOutputHelper? OutputHelper { get; set; }
+
+    private string DatabaseFileName { get; } = Guid.NewGuid().ToString() + ".db";
+
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        var config = new[]
         {
-            OutputHelper = outputHelper;
-            AppDataDirectory = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location)!, "App_Data");
+            KeyValuePair.Create("DatabaseFileName", DatabaseFileName),
+            KeyValuePair.Create("DataDirectory", AppDataDirectory),
+        };
+
+        var utcNow = Instant.FromUtc(2021, 06, 01, 12, 34, 56);
+
+        builder.ConfigureAppConfiguration((p) => p.AddInMemoryCollection(config))
+               .ConfigureLogging((p) => p.AddXUnit(this))
+               .ConfigureServices((p) => p.AddSingleton<IClock>((_) => new NodaTime.Testing.FakeClock(utcNow)))
+               .UseSolutionRelativeContentRoot(Path.Combine("src", "AppleFitnessWorkoutMapper"));
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+
+        try
+        {
+            File.Delete(Path.Combine(AppDataDirectory, DatabaseFileName));
         }
-
-        public string AppDataDirectory { get; }
-
-        public ITestOutputHelper? OutputHelper { get; set; }
-
-        private string DatabaseFileName { get; } = Guid.NewGuid().ToString() + ".db";
-
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
+        catch (Exception)
         {
-            var config = new[]
-            {
-                KeyValuePair.Create("DatabaseFileName", DatabaseFileName),
-                KeyValuePair.Create("DataDirectory", AppDataDirectory),
-            };
-
-            var utcNow = Instant.FromUtc(2021, 06, 01, 12, 34, 56);
-
-            builder.ConfigureAppConfiguration((p) => p.AddInMemoryCollection(config))
-                   .ConfigureLogging((p) => p.AddXUnit(this))
-                   .ConfigureServices((p) => p.AddSingleton<IClock>((_) => new NodaTime.Testing.FakeClock(utcNow)))
-                   .UseSolutionRelativeContentRoot(Path.Combine("src", "AppleFitnessWorkoutMapper"));
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            try
-            {
-                File.Delete(Path.Combine(AppDataDirectory, DatabaseFileName));
-            }
-            catch (Exception)
-            {
-                // Ignore
-            }
+            // Ignore
         }
     }
 }

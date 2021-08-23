@@ -5,22 +5,21 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 using NodaTime;
 
-namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
+namespace MartinCostello.AppleFitnessWorkoutMapper.Pages;
+
+public class IndexModel : PageModel
 {
-    public class IndexModel : PageModel
+    public IndexModel(IClock clock, IOptions<ApplicationOptions> options)
     {
-        public IndexModel(IClock clock, IOptions<ApplicationOptions> options)
-        {
-            Clock = clock;
-            GoogleMapsApiKey = options.Value.GoogleMapsApiKey;
-        }
+        Clock = clock;
+        GoogleMapsApiKey = options.Value.GoogleMapsApiKey;
+    }
 
-        public IClock Clock { get; }
+    public IClock Clock { get; }
 
-        public string GoogleMapsApiKey { get; }
+    public string GoogleMapsApiKey { get; }
 
-        public void OnGet()
-        {
-        }
+    public void OnGet()
+    {
     }
 }

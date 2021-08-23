@@ -4,16 +4,15 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace MartinCostello.AppleFitnessWorkoutMapper.Data
+namespace MartinCostello.AppleFitnessWorkoutMapper.Data;
+
+[Index(nameof(Timestamp))]
+public class Track
 {
-    [Index(nameof(Timestamp))]
-    public class Track
-    {
-        [Key]
-        public Guid Id { get; set; }
+    [Key]
+    public Guid Id { get; set; }
 
-        public string Name { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 
-        public DateTime Timestamp { get; set; }
-    }
+    public DateTime Timestamp { get; set; }
 }

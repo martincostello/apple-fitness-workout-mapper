@@ -12,7 +12,7 @@ using NodaTime;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper;
 
-internal class WebApplicationFactory : WebApplicationFactory<Startup>, ITestOutputHelperAccessor
+internal class WebApplicationFactory : WebApplicationFactory<ApplicationOptions>, ITestOutputHelperAccessor
 {
     public WebApplicationFactory(ITestOutputHelper outputHelper)
     {

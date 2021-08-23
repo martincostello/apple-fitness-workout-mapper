@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Primitives;
 using NodaTime;
 
 try
@@ -96,61 +95,26 @@ static void RunApplication(string[] args)
     app.UseRouting();
     app.MapRazorPages();
 
-    app.MapGet("/api/tracks", async (HttpContext context) =>
+    app.MapGet("/api/tracks", async (
+        TrackService service,
+        DateTimeOffset? notBefore,
+        DateTimeOffset? notAfter,
+        CancellationToken cancellationToken) =>
     {
-        DateTimeOffset? since = null;
-        DateTimeOffset? until = null;
-
-        StringValues noteBefore = context.Request.Query["notBefore"];
-
-        if (!StringValues.IsNullOrEmpty(noteBefore) &&
-            DateTimeOffset.TryParse(noteBefore, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out var value))
-        {
-            since = value;
-        }
-
-        StringValues notAfter = context.Request.Query["notAfter"];
-
-        if (!StringValues.IsNullOrEmpty(notAfter) &&
-            DateTimeOffset.TryParse(notAfter, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out value))
-        {
-            until = value;
-        }
-
-        var service = context.RequestServices.GetRequiredService<TrackService>();
-
-        var tracks = await service.GetTracksAsync(since, until, context.RequestAborted);
-
-        await context.Response.WriteAsJsonAsync(tracks, context.RequestAborted);
+        var tracks = await service.GetTracksAsync(notBefore, notAfter, cancellationToken);
+        return Results.Json(tracks);
     });
 
-    app.MapGet("/api/tracks/count", async (context) =>
+    app.MapGet("/api/tracks/count", async (TrackService service, CancellationToken cancellationToken) =>
     {
-        var service = context.RequestServices.GetRequiredService<TrackService>();
-
-        int count = await service.GetTrackCountAsync(context.RequestAborted);
-
-        var result = new
-        {
-            count,
-        };
-
-        await context.Response.WriteAsJsonAsync(result, context.RequestAborted);
+        int count = await service.GetTrackCountAsync(cancellationToken);
+        return Results.Json(new { count });
     });
 
-    app.MapPost("/api/tracks/import", async (context) =>
+    app.MapPost("/api/tracks/import", async (TrackImporter importer, CancellationToken cancellationToken) =>
     {
-        var importer = context.RequestServices.GetRequiredService<TrackImporter>();
-        int count = await importer.ImportTracksAsync(context.RequestAborted);
-
-        var result = new
-        {
-            count,
-        };
-
-        context.Response.StatusCode = StatusCodes.Status201Created;
-
-        await context.Response.WriteAsJsonAsync(result, context.RequestAborted);
+        int count = await importer.ImportTracksAsync(cancellationToken);
+        return Results.Json(new { count }, statusCode: StatusCodes.Status201Created);
     });
 
     app.Run();

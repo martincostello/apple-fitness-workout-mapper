@@ -1,13 +1,9 @@
 ﻿// Copyright (c) Martin Costello, 2021. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
 using MartinCostello.AppleFitnessWorkoutMapper.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper.Services
 {

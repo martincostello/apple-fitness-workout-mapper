@@ -21,7 +21,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper
         public WebApplicationFactory(ITestOutputHelper outputHelper)
         {
             OutputHelper = outputHelper;
-            AppDataDirectory = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location) !, "App_Data");
+            AppDataDirectory = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location)!, "App_Data");
         }
 
         public string AppDataDirectory { get; }

@@ -16,6 +16,7 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <GenerateGitMetadata Condition=" '$(CI)' != '' and '$(GenerateGitMetadata)' == '' ">true</GenerateGitMetadata>
+    <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -34,4 +35,12 @@
     <VersionPrefix>1.0.1</VersionPrefix>
     <VersionSuffix></VersionSuffix>
   </PropertyGroup>
+  <ItemGroup>
+    <Using Include="System.Globalization" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(IsTestProject)' == 'true' ">
+    <Using Include="Shouldly" />
+    <Using Include="Xunit" />
+    <Using Include="Xunit.Abstractions" />
+  </ItemGroup>
 </Project>

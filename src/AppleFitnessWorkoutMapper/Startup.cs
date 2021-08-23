@@ -1,21 +1,12 @@
 ﻿// Copyright (c) Martin Costello, 2021. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
-using System;
-using System.Globalization;
-using System.IO;
 using System.IO.Compression;
 using MartinCostello.AppleFitnessWorkoutMapper.Data;
 using MartinCostello.AppleFitnessWorkoutMapper.Services;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using NodaTime;

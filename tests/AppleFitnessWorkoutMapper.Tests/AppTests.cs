@@ -5,85 +5,84 @@ using System.Net;
 using System.Net.Http.Json;
 using MartinCostello.AppleFitnessWorkoutMapper.Models;
 
-namespace MartinCostello.AppleFitnessWorkoutMapper
+namespace MartinCostello.AppleFitnessWorkoutMapper;
+
+public class AppTests
 {
-    public class AppTests
+    public AppTests(ITestOutputHelper outputHelper)
     {
-        public AppTests(ITestOutputHelper outputHelper)
-        {
-            OutputHelper = outputHelper;
-        }
+        OutputHelper = outputHelper;
+    }
 
-        public ITestOutputHelper OutputHelper { get; set; }
+    public ITestOutputHelper OutputHelper { get; set; }
 
-        [Fact]
-        public async Task Can_Load_Homepage()
-        {
-            // Arrange
-            using var fixture = new WebApplicationFactory(OutputHelper);
-            using var client = fixture.CreateClient();
+    [Fact]
+    public async Task Can_Load_Homepage()
+    {
+        // Arrange
+        using var fixture = new WebApplicationFactory(OutputHelper);
+        using var client = fixture.CreateClient();
 
-            // Act
-            string actual = await client.GetStringAsync("/");
+        // Act
+        string actual = await client.GetStringAsync("/");
 
-            // Assert
-            actual.ShouldNotBeNull();
-            actual.ShouldNotBeEmpty();
-            actual.ShouldContain("<html");
-        }
+        // Assert
+        actual.ShouldNotBeNull();
+        actual.ShouldNotBeEmpty();
+        actual.ShouldContain("<html");
+    }
 
-        [Fact]
-        public async Task Can_Import_Tracks_And_Query()
-        {
-            // Arrange
-            using var fixture = new WebApplicationFactory(OutputHelper);
+    [Fact]
+    public async Task Can_Import_Tracks_And_Query()
+    {
+        // Arrange
+        using var fixture = new WebApplicationFactory(OutputHelper);
 
-            using var client = fixture.CreateClient();
+        using var client = fixture.CreateClient();
 
-            // Act
-            var result = await client.GetFromJsonAsync<CountResponse>("/api/tracks/count");
+        // Act
+        var result = await client.GetFromJsonAsync<CountResponse>("/api/tracks/count");
 
-            // Assert
-            result.ShouldNotBeNull();
-            result.Count.ShouldBe(0);
+        // Assert
+        result.ShouldNotBeNull();
+        result.Count.ShouldBe(0);
 
-            // Act
-            using var response = await client.PostAsJsonAsync("/api/tracks/import", new { });
+        // Act
+        using var response = await client.PostAsJsonAsync("/api/tracks/import", new { });
 
-            // Assert
-            response.StatusCode.ShouldBe(HttpStatusCode.Created);
+        // Assert
+        response.StatusCode.ShouldBe(HttpStatusCode.Created);
 
-            result = await response.Content.ReadFromJsonAsync<CountResponse>();
+        result = await response.Content.ReadFromJsonAsync<CountResponse>();
 
-            result.ShouldNotBeNull();
-            result.Count.ShouldBe(2);
+        result.ShouldNotBeNull();
+        result.Count.ShouldBe(2);
 
-            // Act
-            IList<Track>? actual = await client.GetFromJsonAsync<IList<Track>>("api/tracks");
+        // Act
+        IList<Track>? actual = await client.GetFromJsonAsync<IList<Track>>("api/tracks");
 
-            // Assert
-            actual.ShouldNotBeNull();
-            actual.ShouldNotBeEmpty();
-            actual.Count.ShouldBe(2);
+        // Assert
+        actual.ShouldNotBeNull();
+        actual.ShouldNotBeEmpty();
+        actual.Count.ShouldBe(2);
 
-            Track item = actual[0];
-            item.Timestamp.ShouldBe(new DateTimeOffset(2021, 05, 04, 11, 25, 35, TimeSpan.Zero));
+        Track item = actual[0];
+        item.Timestamp.ShouldBe(new DateTimeOffset(2021, 05, 04, 11, 25, 35, TimeSpan.Zero));
 
-            // Act
-            actual = await client.GetFromJsonAsync<IList<Track>>("api/tracks?notBefore=2021-05-05T00:00:00Z");
+        // Act
+        actual = await client.GetFromJsonAsync<IList<Track>>("api/tracks?notBefore=2021-05-05T00:00:00Z");
 
-            // Assert
-            actual.ShouldNotBeNull();
-            actual.ShouldNotBeEmpty();
-            actual.Count.ShouldBe(1);
+        // Assert
+        actual.ShouldNotBeNull();
+        actual.ShouldNotBeEmpty();
+        actual.Count.ShouldBe(1);
 
-            item = actual.ShouldHaveSingleItem();
-            item.Timestamp.ShouldBe(new DateTimeOffset(2021, 05, 05, 11, 25, 35, TimeSpan.Zero));
-        }
+        item = actual.ShouldHaveSingleItem();
+        item.Timestamp.ShouldBe(new DateTimeOffset(2021, 05, 05, 11, 25, 35, TimeSpan.Zero));
+    }
 
-        private sealed class CountResponse
-        {
-            public int Count { get; set; }
-        }
+    private sealed class CountResponse
+    {
+        public int Count { get; set; }
     }
 }

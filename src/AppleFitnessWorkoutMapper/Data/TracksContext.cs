@@ -3,17 +3,16 @@
 
 using Microsoft.EntityFrameworkCore;
 
-namespace MartinCostello.AppleFitnessWorkoutMapper.Data
+namespace MartinCostello.AppleFitnessWorkoutMapper.Data;
+
+public sealed class TracksContext : DbContext
 {
-    public sealed class TracksContext : DbContext
+    public TracksContext(DbContextOptions options)
+        : base(options)
     {
-        public TracksContext(DbContextOptions options)
-            : base(options)
-        {
-        }
-
-        public DbSet<Track> Tracks { get; set; } = null!;
-
-        public DbSet<TrackPoint> TrackPoints { get; set; } = null!;
     }
+
+    public DbSet<Track> Tracks { get; set; } = null!;
+
+    public DbSet<TrackPoint> TrackPoints { get; set; } = null!;
 }

@@ -4,21 +4,20 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace MartinCostello.AppleFitnessWorkoutMapper.Data
+namespace MartinCostello.AppleFitnessWorkoutMapper.Data;
+
+[Index(nameof(Timestamp))]
+[Index(nameof(TrackId))]
+public class TrackPoint
 {
-    [Index(nameof(Timestamp))]
-    [Index(nameof(TrackId))]
-    public class TrackPoint
-    {
-        [Key]
-        public Guid Id { get; set; }
+    [Key]
+    public Guid Id { get; set; }
 
-        public double Longitude { get; set; }
+    public double Longitude { get; set; }
 
-        public double Latitude { get; set; }
+    public double Latitude { get; set; }
 
-        public DateTime Timestamp { get; set; }
+    public DateTime Timestamp { get; set; }
 
-        public Guid TrackId { get; set; }
-    }
+    public Guid TrackId { get; set; }
 }

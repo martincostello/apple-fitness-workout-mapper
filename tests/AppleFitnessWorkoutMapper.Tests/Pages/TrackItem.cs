@@ -3,59 +3,58 @@
 
 using Microsoft.Playwright;
 
-namespace MartinCostello.AppleFitnessWorkoutMapper.Pages
+namespace MartinCostello.AppleFitnessWorkoutMapper.Pages;
+
+public sealed class TrackItem
 {
-    public sealed class TrackItem
+    private readonly IElementHandle _element;
+
+    public TrackItem(IElementHandle element)
     {
-        private readonly IElementHandle _element;
+        _element = element;
+    }
 
-        public TrackItem(IElementHandle element)
-        {
-            _element = element;
-        }
+    public async Task ExpandAsync()
+    {
+        await _element.ClickAsync();
 
-        public async Task ExpandAsync()
-        {
-            await _element.ClickAsync();
+        IElementHandle? child = await _element.QuerySelectorAsync("[data-js-visible]");
+        await child!.WaitForElementStateAsync(ElementState.Visible);
+    }
 
-            IElementHandle? child = await _element.QuerySelectorAsync("[data-js-visible]");
-            await child!.WaitForElementStateAsync(ElementState.Visible);
-        }
+    public async Task CollapseAsync()
+        => await _element.ClickAsync();
 
-        public async Task CollapseAsync()
-            => await _element.ClickAsync();
+    public async Task<string> LinkTextAsync()
+        => await InnerTextTrimmedAsync("a");
 
-        public async Task<string> LinkTextAsync()
-            => await InnerTextTrimmedAsync("a");
+    public async Task<string> NameAsync()
+    {
+        IElementHandle? child = await _element.QuerySelectorAsync("[data-track-name]");
+        return await child!.GetAttributeAsync("data-track-name") ?? string.Empty;
+    }
 
-        public async Task<string> NameAsync()
-        {
-            IElementHandle? child = await _element.QuerySelectorAsync("[data-track-name]");
-            return await child!.GetAttributeAsync("data-track-name") ?? string.Empty;
-        }
+    public async Task<string> StartedAtAsync()
+        => await InnerTextTrimmedAsync("[data-js-start]");
 
-        public async Task<string> StartedAtAsync()
-            => await InnerTextTrimmedAsync("[data-js-start]");
+    public async Task<string> EndedAtAsync()
+        => await InnerTextTrimmedAsync("[data-js-end]");
 
-        public async Task<string> EndedAtAsync()
-            => await InnerTextTrimmedAsync("[data-js-end]");
+    public async Task<string> DurationAsync()
+        => await InnerTextTrimmedAsync("[data-js-duration]");
 
-        public async Task<string> DurationAsync()
-            => await InnerTextTrimmedAsync("[data-js-duration]");
+    public async Task<string> DistanceAsync()
+        => await InnerTextTrimmedAsync("[data-js-distance]");
 
-        public async Task<string> DistanceAsync()
-            => await InnerTextTrimmedAsync("[data-js-distance]");
+    public async Task<string> AveragePaceAsync()
+        => await InnerTextTrimmedAsync("[data-js-pace]");
 
-        public async Task<string> AveragePaceAsync()
-            => await InnerTextTrimmedAsync("[data-js-pace]");
+    private async Task<string> InnerTextTrimmedAsync(string selector)
+    {
+        IElementHandle? child = await _element.QuerySelectorAsync(selector);
 
-        private async Task<string> InnerTextTrimmedAsync(string selector)
-        {
-            IElementHandle? child = await _element.QuerySelectorAsync(selector);
+        string text = await child!.InnerTextAsync();
 
-            string text = await child!.InnerTextAsync();
-
-            return text.Trim();
-        }
+        return text.Trim();
     }
 }

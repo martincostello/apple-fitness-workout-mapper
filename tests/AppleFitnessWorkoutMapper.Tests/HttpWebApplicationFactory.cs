@@ -9,96 +9,95 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace MartinCostello.AppleFitnessWorkoutMapper
+namespace MartinCostello.AppleFitnessWorkoutMapper;
+
+internal class HttpWebApplicationFactory : WebApplicationFactory
 {
-    internal class HttpWebApplicationFactory : WebApplicationFactory
+    private IHost? _host;
+    private bool _disposed;
+
+    public HttpWebApplicationFactory(ITestOutputHelper outputHelper)
+        : base(outputHelper)
     {
-        private IHost? _host;
-        private bool _disposed;
+    }
 
-        public HttpWebApplicationFactory(ITestOutputHelper outputHelper)
-            : base(outputHelper)
+    public string ServerAddress
+    {
+        get
         {
+            EnsureServer();
+            return ClientOptions.BaseAddress.ToString();
         }
+    }
 
-        public string ServerAddress
+    public override IServiceProvider Services
+    {
+        get
         {
-            get
+            EnsureServer();
+            return _host!.Services!;
+        }
+    }
+
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        base.ConfigureWebHost(builder);
+
+        builder.ConfigureKestrel(
+            (p) => p.ConfigureHttpsDefaults(
+                (r) => r.ServerCertificate = new X509Certificate2("localhost-dev.pfx", "Pa55w0rd!")));
+
+        // Configure the server address for the server to
+        // listen on for HTTPS requests on a dynamic port.
+        builder.UseUrls("https://127.0.0.1:0");
+    }
+
+    protected override IHost CreateHost(IHostBuilder builder)
+    {
+        builder.ConfigureWebHost((p) => p.UseKestrel());
+
+        _host = builder.Build();
+        _host.Start();
+
+        var server = _host.Services.GetRequiredService<IServer>();
+        var addresses = server.Features.Get<IServerAddressesFeature>();
+
+        ClientOptions.BaseAddress = addresses!.Addresses
+            .Select((p) => new Uri(p))
+            .Last();
+
+        // The base class still needs a separate host using TestServer
+        var testHostBuilder = CreateHostBuilder();
+        var testHost = testHostBuilder!
+            .ConfigureWebHost((p) => p.UseTestServer())
+            .Build();
+
+        testHost.Start();
+
+        return testHost;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+
+        if (!_disposed)
+        {
+            if (disposing)
             {
-                EnsureServer();
-                return ClientOptions.BaseAddress.ToString();
+                _host?.Dispose();
             }
-        }
 
-        public override IServiceProvider Services
+            _disposed = true;
+        }
+    }
+
+    private void EnsureServer()
+    {
+        if (_host is null)
         {
-            get
+            using (CreateDefaultClient())
             {
-                EnsureServer();
-                return _host!.Services!;
-            }
-        }
-
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
-        {
-            base.ConfigureWebHost(builder);
-
-            builder.ConfigureKestrel(
-                (p) => p.ConfigureHttpsDefaults(
-                    (r) => r.ServerCertificate = new X509Certificate2("localhost-dev.pfx", "Pa55w0rd!")));
-
-            // Configure the server address for the server to
-            // listen on for HTTPS requests on a dynamic port.
-            builder.UseUrls("https://127.0.0.1:0");
-        }
-
-        protected override IHost CreateHost(IHostBuilder builder)
-        {
-            builder.ConfigureWebHost((p) => p.UseKestrel());
-
-            _host = builder.Build();
-            _host.Start();
-
-            var server = _host.Services.GetRequiredService<IServer>();
-            var addresses = server.Features.Get<IServerAddressesFeature>();
-
-            ClientOptions.BaseAddress = addresses!.Addresses
-                .Select((p) => new Uri(p))
-                .Last();
-
-            // The base class still needs a separate host using TestServer
-            var testHostBuilder = CreateHostBuilder();
-            var testHost = testHostBuilder!
-                .ConfigureWebHost((p) => p.UseTestServer())
-                .Build();
-
-            testHost.Start();
-
-            return testHost;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-                    _host?.Dispose();
-                }
-
-                _disposed = true;
-            }
-        }
-
-        private void EnsureServer()
-        {
-            if (_host is null)
-            {
-                using (CreateDefaultClient())
-                {
-                }
             }
         }
     }

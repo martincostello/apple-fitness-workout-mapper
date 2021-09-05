@@ -26,6 +26,9 @@ UpgradeLog*.XML
 PublishProfiles
 *.binlog
 *.coverage
+*.db
+*.db-shm
+*.db-wal
 *.DotSettings
 *.GhostDoc.xml
 *.gpx

@@ -7,9 +7,10 @@ var source = require('vinyl-source-stream');
 var sourcemaps = require('gulp-sourcemaps');
 var tsify = require('tsify');
 var uglify = require('gulp-uglify');
+var sourceFiles = ['scripts/ts/**/*.ts'];
 
 gulp.task('lint', function () {
-  return gulp.src(['scripts/ts/**/*.ts'])
+  return gulp.src(sourceFiles)
     .pipe(eslint({
       formatter: 'visualstudio'
     }))
@@ -49,3 +50,7 @@ gulp.task('build', function () {
 });
 
 gulp.task('default', gulp.series('lint', 'build'));
+
+gulp.task('watch', function () {
+  gulp.watch(sourceFiles, gulp.series('default'));
+});

@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper.Services;
 
-public sealed class TrackParser
+public sealed partial class TrackParser
 {
     private static readonly XNamespace XS = "http://www.topografix.com/GPX/1/1";
 
@@ -27,7 +27,7 @@ public sealed class TrackParser
     {
         string path = _options.DataDirectory;
 
-        _logger.LogInformation("Parsing track data from {Path}.", path);
+        Log.ParsingTrackData(_logger, path);
 
         var result = new List<Track>();
 
@@ -47,7 +47,7 @@ public sealed class TrackParser
 
         result.Sort((x, y) => comparer.Compare(x.Timestamp, y.Timestamp));
 
-        _logger.LogInformation("Parsed {Count} tracks from {Path}.", result.Count, path);
+        Log.ParsedTrackData(_logger, result.Count, path);
 
         return result;
     }
@@ -84,7 +84,7 @@ public sealed class TrackParser
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to load track XML from {FileName}.", fileName);
+            Log.TrackXmlLoadFailed(_logger, ex, fileName);
             return null;
         }
 
@@ -101,21 +101,21 @@ public sealed class TrackParser
                     string? longitudeString = pointNode.Attribute("lon")?.Value;
                     string? latitudeString = pointNode.Attribute("lat")?.Value;
 
-                    if (!double.TryParse(longitudeString, NumberStyles.Number, CultureInfo.InvariantCulture, out var longitude))
+                    if (!double.TryParse(longitudeString, NumberStyles.Number, CultureInfo.InvariantCulture, out double longitude))
                     {
-                        _logger.LogWarning("Ignoring longitude value {Longitude} from segment point in {FileName}.", longitudeString, fileName);
+                        Log.IgnoringInvalidLongitude(_logger, longitudeString, fileName);
                         continue;
                     }
 
-                    if (!double.TryParse(latitudeString, NumberStyles.Number, CultureInfo.InvariantCulture, out var latitude))
+                    if (!double.TryParse(latitudeString, NumberStyles.Number, CultureInfo.InvariantCulture, out double latitude))
                     {
-                        _logger.LogWarning("Ignoring latitude value {Latitude} from segment point in {FileName}.", latitudeString, fileName);
+                        Log.IgnoringInvalidLatitude(_logger, latitudeString, fileName);
                         continue;
                     }
 
                     if (!TryParseTimestamp(pointNode.Descendants(XS + "time").FirstOrDefault(), out DateTimeOffset? timestamp))
                     {
-                        _logger.LogWarning("Ignoring invalid timestamp value from segment point in {FileName}.", fileName);
+                        Log.IgnoringInvalidTimestamp(_logger, fileName);
                         continue;
                     }
 
@@ -138,13 +138,37 @@ public sealed class TrackParser
 
         result.Timestamp = result.Points.First().Timestamp;
 
-        _logger.LogDebug(
-            "Added {Count} point(s) for track {Name} with timestamp {Timestamp:u} from {FileName}.",
+        Log.AddedTrackPointsFromFile(
+            _logger,
             result.Points.Count,
             result.Name,
             result.Timestamp,
             fileName);
 
         return result;
+    }
+
+    private static partial class Log
+    {
+        [LoggerMessage(1, LogLevel.Information, "Parsing track data from {Path}.")]
+        public static partial void ParsingTrackData(ILogger logger, string path);
+
+        [LoggerMessage(2, LogLevel.Information, "Parsed {Count} tracks from {Path}.")]
+        public static partial void ParsedTrackData(ILogger logger, int count, string path);
+
+        [LoggerMessage(3, LogLevel.Error, "Failed to load track XML from {FileName}.")]
+        public static partial void TrackXmlLoadFailed(ILogger logger, Exception exception, string fileName);
+
+        [LoggerMessage(4, LogLevel.Warning, "Ignoring longitude value {Longitude} from segment point in {FileName}.")]
+        public static partial void IgnoringInvalidLongitude(ILogger logger, string? longitude, string fileName);
+
+        [LoggerMessage(5, LogLevel.Warning, "Ignoring longitude value {Latitude} from segment point in {FileName}.")]
+        public static partial void IgnoringInvalidLatitude(ILogger logger, string? latitude, string fileName);
+
+        [LoggerMessage(6, LogLevel.Warning, "Ignoring invalid timestamp value from segment point in {FileName}.")]
+        public static partial void IgnoringInvalidTimestamp(ILogger logger, string fileName);
+
+        [LoggerMessage(7, LogLevel.Debug, "Added {Count} point(s) for track {Name} with timestamp {Timestamp:u} from {FileName}.")]
+        public static partial void AddedTrackPointsFromFile(ILogger logger, int count, string name, DateTimeOffset timestamp, string fileName);
     }
 }

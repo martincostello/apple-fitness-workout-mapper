@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper.Services;
 
-public sealed class TrackImporter
+public sealed partial class TrackImporter
 {
     private readonly TracksContext _context;
     private readonly ILogger _logger;
@@ -27,18 +27,18 @@ public sealed class TrackImporter
     {
         var tracks = await _parser.GetTracksAsync(cancellationToken);
 
-        _logger.LogInformation("Deleting existing database.");
+        Log.DeletingDatabase(_logger);
 
         await _context.Database.EnsureDeletedAsync(cancellationToken);
 
-        _logger.LogInformation("Existing database deleted.");
-        _logger.LogInformation("Creating new database.");
+        Log.DeletedDatabase(_logger);
+        Log.CreatingDatabase(_logger);
 
         await _context.Database.EnsureCreatedAsync(cancellationToken);
         await _context.Database.MigrateAsync(cancellationToken);
 
-        _logger.LogInformation("Created new database.");
-        _logger.LogInformation("Importing {Count} track(s) to database.", tracks.Count);
+        Log.CreatedDatabase(_logger);
+        Log.ImportingTracks(_logger, tracks.Count);
 
         var stopwatch = Stopwatch.StartNew();
 
@@ -74,8 +74,29 @@ public sealed class TrackImporter
 
         stopwatch.Stop();
 
-        _logger.LogInformation("Imported {Count} track(s) to database in {Elapsed}.", tracks.Count, stopwatch.Elapsed);
+        Log.ImportedTracks(_logger, tracks.Count, stopwatch.Elapsed);
 
         return tracks.Count;
+    }
+
+    private static partial class Log
+    {
+        [LoggerMessage(8, LogLevel.Information, "Deleting existing database.")]
+        public static partial void DeletingDatabase(ILogger logger);
+
+        [LoggerMessage(9, LogLevel.Information, "Existing database deleted.")]
+        public static partial void DeletedDatabase(ILogger logger);
+
+        [LoggerMessage(10, LogLevel.Information, "Creating new database.")]
+        public static partial void CreatingDatabase(ILogger logger);
+
+        [LoggerMessage(11, LogLevel.Information, "Created new database.")]
+        public static partial void CreatedDatabase(ILogger logger);
+
+        [LoggerMessage(12, LogLevel.Information, "Importing {Count} track(s) to database.")]
+        public static partial void ImportingTracks(ILogger logger, int count);
+
+        [LoggerMessage(13, LogLevel.Information, "Imported {Count} track(s) to database in {Elapsed}.")]
+        public static partial void ImportedTracks(ILogger logger, int count, TimeSpan elapsed);
     }
 }

@@ -12,7 +12,7 @@ export class TrackerUI {
     readonly hideAllButton: Element;
     readonly importButton: Element;
     readonly importContainer: Element;
-    readonly map: Element;
+    readonly map: HTMLElement;
     readonly showAllButton: Element;
     readonly showPolygon: HTMLInputElement;
     readonly tracksLoader: Element;
@@ -32,7 +32,7 @@ export class TrackerUI {
         this.importButton = document.getElementById('import');
         this.importContainer = document.getElementById('import-container');
         this.importLoader = document.getElementById('import-loader');
-        this.map = document.getElementById('map');
+        this.map = <HTMLElement>document.getElementById('map');
         this.notAfterDate = <HTMLInputElement>document.getElementById('not-after');
         this.notBeforeDate = <HTMLInputElement>document.getElementById('not-before');
         this.showAllButton = document.getElementById('show-all');

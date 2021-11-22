@@ -9,7 +9,7 @@ export class TrackMap {
     private paths: TrackPath[];
     private polygon: google.maps.Polygon;
 
-    constructor(element: Element) {
+    constructor(element: HTMLElement) {
 
         const options: google.maps.MapOptions = {
             center: { lat: 0.0, lng: 0.0 },

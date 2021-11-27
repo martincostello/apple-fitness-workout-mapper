@@ -96,6 +96,9 @@ static void RunApplication(string[] args)
     app.UseRouting();
     app.MapRazorPages();
 
+    var options = app.Services.GetRequiredService<IOptions<Microsoft.AspNetCore.Http.Json.JsonOptions>>().Value;
+    var context = new ApplicationJsonSerializerContext(options.SerializerOptions);
+
     app.MapGet("/api/tracks", async (
         TrackService service,
         DateTimeOffset? notBefore,
@@ -103,19 +106,19 @@ static void RunApplication(string[] args)
         CancellationToken cancellationToken) =>
     {
         var tracks = await service.GetTracksAsync(notBefore, notAfter, cancellationToken);
-        return Results.Extensions.Json(tracks, ApplicationJsonSerializerContext.Default.IListTrack);
+        return Results.Extensions.Json(tracks, context.IListTrack);
     });
 
     app.MapGet("/api/tracks/count", async (TrackService service, CancellationToken cancellationToken) =>
     {
         int count = await service.GetTrackCountAsync(cancellationToken);
-        return Results.Extensions.Json(new TrackCount { Count = count }, ApplicationJsonSerializerContext.Default.TrackCount);
+        return Results.Extensions.Json(new TrackCount { Count = count }, context.TrackCount);
     });
 
     app.MapPost("/api/tracks/import", async (TrackImporter importer, CancellationToken cancellationToken) =>
     {
         int count = await importer.ImportTracksAsync(cancellationToken);
-        return Results.Extensions.Json(new TrackCount { Count = count }, ApplicationJsonSerializerContext.Default.TrackCount, statusCode: StatusCodes.Status201Created);
+        return Results.Extensions.Json(new TrackCount { Count = count }, context.TrackCount, statusCode: StatusCodes.Status201Created);
     });
 
     app.Run();

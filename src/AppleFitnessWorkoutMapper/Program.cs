@@ -4,7 +4,6 @@
 using System.IO.Compression;
 using MartinCostello.AppleFitnessWorkoutMapper;
 using MartinCostello.AppleFitnessWorkoutMapper.Data;
-using MartinCostello.AppleFitnessWorkoutMapper.Models;
 using MartinCostello.AppleFitnessWorkoutMapper.Services;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
@@ -112,13 +111,13 @@ static void RunApplication(string[] args)
     app.MapGet("/api/tracks/count", async (TrackService service, CancellationToken cancellationToken) =>
     {
         int count = await service.GetTrackCountAsync(cancellationToken);
-        return Results.Extensions.Json(new TrackCount { Count = count }, context.TrackCount);
+        return Results.Extensions.Json(new() { Count = count }, context.TrackCount);
     });
 
     app.MapPost("/api/tracks/import", async (TrackImporter importer, CancellationToken cancellationToken) =>
     {
         int count = await importer.ImportTracksAsync(cancellationToken);
-        return Results.Extensions.Json(new TrackCount { Count = count }, context.TrackCount, statusCode: StatusCodes.Status201Created);
+        return Results.Extensions.Json(new() { Count = count }, context.TrackCount, statusCode: StatusCodes.Status201Created);
     });
 
     app.Run();

@@ -4,6 +4,7 @@
 using System.IO.Compression;
 using MartinCostello.AppleFitnessWorkoutMapper;
 using MartinCostello.AppleFitnessWorkoutMapper.Data;
+using MartinCostello.AppleFitnessWorkoutMapper.Models;
 using MartinCostello.AppleFitnessWorkoutMapper.Services;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
@@ -65,6 +66,11 @@ static void RunApplication(string[] args)
             }
         });
 
+    builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>((options) =>
+    {
+        options.SerializerOptions.AddContext<ApplicationJsonSerializerContext>();
+    });
+
     builder.Services.AddDbContext<TracksContext>((serviceProvider, builder) =>
     {
         var options = serviceProvider.GetRequiredService<IOptions<ApplicationOptions>>();
@@ -95,9 +101,6 @@ static void RunApplication(string[] args)
     app.UseRouting();
     app.MapRazorPages();
 
-    var options = app.Services.GetRequiredService<IOptions<Microsoft.AspNetCore.Http.Json.JsonOptions>>().Value;
-    var context = new ApplicationJsonSerializerContext(options.SerializerOptions);
-
     app.MapGet("/api/tracks", async (
         TrackService service,
         DateTimeOffset? notBefore,
@@ -105,19 +108,19 @@ static void RunApplication(string[] args)
         CancellationToken cancellationToken) =>
     {
         var tracks = await service.GetTracksAsync(notBefore, notAfter, cancellationToken);
-        return Results.Extensions.Json(tracks, context.IListTrack);
+        return Results.Json(tracks);
     });
 
     app.MapGet("/api/tracks/count", async (TrackService service, CancellationToken cancellationToken) =>
     {
         int count = await service.GetTrackCountAsync(cancellationToken);
-        return Results.Extensions.Json(new() { Count = count }, context.TrackCount);
+        return Results.Json(new TrackCount() { Count = count });
     });
 
     app.MapPost("/api/tracks/import", async (TrackImporter importer, CancellationToken cancellationToken) =>
     {
         int count = await importer.ImportTracksAsync(cancellationToken);
-        return Results.Extensions.Json(new() { Count = count }, context.TrackCount, statusCode: StatusCodes.Status201Created);
+        return Results.Json(new TrackCount() { Count = count }, statusCode: StatusCodes.Status201Created);
     });
 
     app.Run();

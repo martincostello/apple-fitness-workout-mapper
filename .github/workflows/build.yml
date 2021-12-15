@@ -17,7 +17,6 @@ env:
   DOTNET_GENERATE_ASPNET_CERTIFICATE: false
   DOTNET_MULTILEVEL_LOOKUP: 0
   DOTNET_NOLOGO: true
-  DOTNET_ROLL_FORWARD: Major # HACK Remove once Playwright supports .NET 6
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   MACOS_APP_NAME: AppleFitnessWorkoutMapper.app
   MACOS_APP_PATH: ./artifacts/AppleFitnessWorkoutMapper.app
@@ -52,7 +51,7 @@ jobs:
     - name: Install Playwright CLI
       shell: pwsh
       run: |
-        dotnet tool install --global Microsoft.Playwright.CLI --version 1.2.0
+        dotnet tool install --global Microsoft.Playwright.CLI
 
     - name: Build, test and publish
       shell: pwsh

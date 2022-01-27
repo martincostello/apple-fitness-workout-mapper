@@ -5,7 +5,7 @@ using MartinCostello.AppleFitnessWorkoutMapper.Pages;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper;
 
-public class UITests
+public class UITests : IAsyncLifetime
 {
     public UITests(ITestOutputHelper outputHelper)
     {
@@ -132,5 +132,23 @@ public class UITests
             await track.LinkTextAsync().ShouldBe("Route 2");
             await track.NameAsync().ShouldBe("Route 2");
         });
+    }
+
+    public Task InitializeAsync()
+    {
+        InstallPlaywright();
+        return Task.CompletedTask;
+    }
+
+    public Task DisposeAsync() => Task.CompletedTask;
+
+    private static void InstallPlaywright()
+    {
+        int exitCode = Microsoft.Playwright.Program.Main(new[] { "install" });
+
+        if (exitCode != 0)
+        {
+            throw new InvalidOperationException($"Playwright exited with code {exitCode}");
+        }
     }
 }

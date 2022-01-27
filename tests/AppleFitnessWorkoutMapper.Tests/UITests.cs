@@ -2,6 +2,7 @@
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
 using MartinCostello.AppleFitnessWorkoutMapper.Pages;
+using Microsoft.Playwright;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper;
 
@@ -14,33 +15,43 @@ public class UITests : IAsyncLifetime
 
     public ITestOutputHelper OutputHelper { get; set; }
 
-    public static IEnumerable<object[]> Browsers()
+    public static IEnumerable<object?[]> Browsers()
     {
-        yield return new object[] { "chromium" };
-        yield return new object[] { "chromium:chrome" };
+        yield return new[] { BrowserType.Chromium, null };
+
+        if (!OperatingSystem.IsWindows())
+        {
+            yield return new[] { BrowserType.Chromium, "chrome" };
+        }
 
         if (!OperatingSystem.IsLinux())
         {
-            yield return new object[] { "chromium:msedge" };
+            yield return new[] { BrowserType.Chromium, "msedge" };
         }
 
-        yield return new object[] { "firefox" };
+        yield return new[] { BrowserType.Firefox, null };
 
         if (OperatingSystem.IsMacOS())
         {
-            yield return new object[] { "webkit" };
+            yield return new[] { BrowserType.Webkit, null };
         }
     }
 
     [Theory]
     [MemberData(nameof(Browsers))]
-    public async Task Can_Import_Data_And_View_Workouts(string browserType)
+    public async Task Can_Import_Data_And_View_Workouts(string browserType, string browserChannel)
     {
         // Arrange
+        var options = new BrowserFixtureOptions()
+        {
+            BrowserType = browserType,
+            BrowserChannel = browserChannel,
+        };
+
         using var fixture = new HttpWebApplicationFactory(OutputHelper);
 
-        var browser = new BrowserFixture(OutputHelper);
-        await browser.WithPageAsync(browserType, async (page) =>
+        var browser = new BrowserFixture(options, OutputHelper);
+        await browser.WithPageAsync(async (page) =>
         {
             await page.GotoAsync(fixture.ServerAddress);
             await page.WaitForLoadStateAsync();

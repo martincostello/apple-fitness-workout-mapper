@@ -1,4 +1,8 @@
 #! /usr/bin/env pwsh
+
+#Requires -PSEdition Core
+#Requires -Version 7
+
 param(
     [Parameter(Mandatory = $false)][string] $OutputPath = "",
     [Parameter(Mandatory = $false)][switch] $SkipTests
@@ -19,7 +23,7 @@ if ($OutputPath -eq "") {
 $installDotNetSdk = $false;
 
 if (($null -eq (Get-Command "dotnet" -ErrorAction SilentlyContinue)) -and ($null -eq (Get-Command "dotnet.exe" -ErrorAction SilentlyContinue))) {
-    Write-Host "The .NET Core SDK is not installed."
+    Write-Host "The .NET SDK is not installed."
     $installDotNetSdk = $true
 }
 else {
@@ -31,7 +35,7 @@ else {
     }
 
     if ($installedDotNetVersion -ne $dotnetVersion) {
-        Write-Host "The required version of the .NET Core SDK is not installed. Expected $dotnetVersion."
+        Write-Host "The required version of the .NET SDK is not installed. Expected $dotnetVersion."
         $installDotNetSdk = $true
     }
 }
@@ -39,7 +43,7 @@ else {
 if ($installDotNetSdk -eq $true) {
 
     $env:DOTNET_INSTALL_DIR = Join-Path "$(Convert-Path "$PSScriptRoot")" ".dotnetcli"
-    $sdkPath = Join-Path $env:DOTNET_INSTALL_DIR "sdk\$dotnetVersion"
+    $sdkPath = Join-Path $env:DOTNET_INSTALL_DIR "sdk" $dotnetVersion
 
     if (!(Test-Path $sdkPath)) {
         if (!(Test-Path $env:DOTNET_INSTALL_DIR)) {
@@ -73,10 +77,10 @@ if ($installDotNetSdk -eq $true) {
 function DotNetTest {
     param([string]$Project)
 
-    $nugetPath = $env:NUGET_PACKAGES ?? (Join-Path ($env:USERPROFILE ?? "~") ".nuget\packages")
+    $nugetPath = $env:NUGET_PACKAGES ?? (Join-Path ($env:USERPROFILE ?? "~") ".nuget" "packages")
     $propsFile = Join-Path $solutionPath "Directory.Packages.props"
     $reportGeneratorVersion = (Select-Xml -Path $propsFile -XPath "//PackageVersion[@Include='ReportGenerator']/@Version").Node.'#text'
-    $reportGeneratorPath = Join-Path $nugetPath "reportgenerator\$reportGeneratorVersion\tools\net6.0\ReportGenerator.dll"
+    $reportGeneratorPath = Join-Path $nugetPath "reportgenerator" $reportGeneratorVersion "tools" "net6.0" "ReportGenerator.dll"
 
     $coverageOutput = Join-Path $OutputPath "coverage.cobertura.xml"
     $reportOutput = Join-Path $OutputPath "coverage"
@@ -88,7 +92,7 @@ function DotNetTest {
         $additionalArgs += "GitHubActions;report-warnings=false"
     }
 
-    & $dotnet test $Project --output $OutputPath -- RunConfiguration.TestSessionTimeout=1200000 $additionalArgs
+    & $dotnet test $Project --configuration "Release" --output $OutputPath -- RunConfiguration.TestSessionTimeout=1200000 $additionalArgs
 
     $dotNetTestExitCode = $LASTEXITCODE
 
@@ -125,11 +129,11 @@ function DotNetPublish {
 }
 
 $testProjects = @(
-    (Join-Path $solutionPath "tests\AppleFitnessWorkoutMapper.Tests\AppleFitnessWorkoutMapper.Tests.csproj")
+    (Join-Path $solutionPath "tests" "AppleFitnessWorkoutMapper.Tests" "AppleFitnessWorkoutMapper.Tests.csproj")
 )
 
 $publishProjects = @(
-    (Join-Path $solutionPath "src\AppleFitnessWorkoutMapper\AppleFitnessWorkoutMapper.csproj")
+    (Join-Path $solutionPath "src" "AppleFitnessWorkoutMapper" "AppleFitnessWorkoutMapper.csproj")
 )
 
 Write-Host "Publishing solution..." -ForegroundColor Green

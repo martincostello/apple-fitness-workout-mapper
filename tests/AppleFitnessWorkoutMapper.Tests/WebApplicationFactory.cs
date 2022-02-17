@@ -30,8 +30,8 @@ internal class WebApplicationFactory : WebApplicationFactory<ApplicationOptions>
     {
         var config = new[]
         {
-            KeyValuePair.Create("DatabaseFileName", DatabaseFileName),
-            KeyValuePair.Create("DataDirectory", AppDataDirectory),
+            KeyValuePair.Create<string, string?>("DatabaseFileName", DatabaseFileName),
+            KeyValuePair.Create<string, string?>("DataDirectory", AppDataDirectory),
         };
 
         var utcNow = Instant.FromUtc(2021, 06, 01, 12, 34, 56);

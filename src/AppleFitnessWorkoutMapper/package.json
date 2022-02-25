@@ -14,7 +14,7 @@
   "author": "martincostello",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@types/google.maps": "3.48.0",
+    "@types/google.maps": "3.48.1",
     "@types/jquery": "^3.5.13",
     "@types/moment": "2.13.0",
     "@typescript-eslint/eslint-plugin": "^4.33.0",

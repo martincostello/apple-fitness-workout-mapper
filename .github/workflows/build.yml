@@ -54,7 +54,7 @@ jobs:
       env:
         GoogleMapsApiKey: ${{ secrets.GOOGLE_MAPS_API_KEY }}
 
-    - uses: codecov/codecov-action@v2.1.0
+    - uses: codecov/codecov-action@v3
       name: Upload coverage to Codecov
       with:
         file: ./artifacts/coverage.cobertura.xml

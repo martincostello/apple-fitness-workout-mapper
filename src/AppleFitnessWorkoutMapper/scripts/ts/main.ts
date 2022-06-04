@@ -5,6 +5,6 @@ import { Tracker } from './view/Tracker';
 
 const tracker = new Tracker();
 
-google.maps.event.addDomListener(window, 'load', () => {
+window.addEventListener('load', () => {
     tracker.initialize();
 });

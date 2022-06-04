@@ -84,7 +84,8 @@ static void RunApplication(string[] args)
                 // These files are served with a content hash in the URL so can be cached for longer
                 bool isScriptOrStyle =
                     string.Equals(extension, ".css", StringComparison.OrdinalIgnoreCase) ||
-                    string.Equals(extension, ".js", StringComparison.OrdinalIgnoreCase);
+                    string.Equals(extension, ".js", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(extension, ".svg", StringComparison.OrdinalIgnoreCase);
 
                 if (isScriptOrStyle)
                 {

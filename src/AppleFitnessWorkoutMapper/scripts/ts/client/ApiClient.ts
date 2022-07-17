@@ -1,13 +1,11 @@
 // Copyright (c) Martin Costello, 2021. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
-import { Moment } from '../../../node_modules/moment/moment';
+import { Moment } from 'moment';
 import { Track } from '../models/Track';
 
 export class ApiClient {
-
     async getCount(): Promise<number> {
-
         const response = await fetch('/api/tracks/count');
         const content = await response.json();
 
@@ -15,7 +13,6 @@ export class ApiClient {
     }
 
     async getTracks(notBefore: Moment = null, notAfter: Moment = null): Promise<Track[]> {
-
         let requestUri = '/api/tracks';
         const query: {
             key: string;
@@ -25,14 +22,14 @@ export class ApiClient {
         if (notBefore !== null) {
             query.push({
                 key: 'notBefore',
-                value: notBefore.toISOString()
+                value: notBefore.toISOString(),
             });
         }
 
         if (notAfter !== null) {
             query.push({
                 key: 'notAfter',
-                value: notAfter.toISOString()
+                value: notAfter.toISOString(),
             });
         }
 
@@ -52,12 +49,11 @@ export class ApiClient {
     }
 
     async importTracks(): Promise<number> {
-
         let requestUri = '/api/tracks/import';
 
         const init = {
             method: 'POST',
-            body: '{}'
+            body: '{}',
         };
 
         const response = await fetch(requestUri, init);

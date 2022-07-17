@@ -1,12 +1,11 @@
 // Copyright (c) Martin Costello, 2021. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
-import * as moment from '../../../node_modules/moment/moment';
-import { Moment } from '../../../node_modules/moment/moment';
+import moment from 'moment';
+import { Moment } from 'moment';
 import { Track } from '../models/Track';
 
 export class TrackerUI {
-
     readonly distanceUnits: HTMLInputElement;
     readonly filterButton: Element;
     readonly hideAllButton: Element;
@@ -79,7 +78,6 @@ export class TrackerUI {
     }
 
     clearSidebar() {
-
         let sibling = this.trackItemTemplate.nextElementSibling;
 
         while (sibling !== null) {
@@ -90,7 +88,6 @@ export class TrackerUI {
     }
 
     createTrackElement(track: Track): Element {
-
         // Clone the template
         const newNode = this.trackItemTemplate.cloneNode(true);
         this.tracksList.appendChild(newNode);
@@ -175,7 +172,6 @@ export class TrackerUI {
     }
 
     private getMoment(element: HTMLInputElement): Moment {
-
         let result: Moment = null;
 
         if (element.value) {

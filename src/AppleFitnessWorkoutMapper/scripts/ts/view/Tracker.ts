@@ -7,7 +7,6 @@ import { TrackMap } from './TrackMap';
 import { TrackPath } from './TrackPath';
 
 export class Tracker {
-
     private readonly ui: TrackerUI;
 
     private client: ApiClient;
@@ -18,7 +17,6 @@ export class Tracker {
     }
 
     async initialize() {
-
         this.map = new TrackMap(this.ui.map);
         this.client = new ApiClient();
 
@@ -59,14 +57,13 @@ export class Tracker {
             const showPolygon = this.ui.showPolygon.checked;
             try {
                 localStorage.setItem(polygonKey, showPolygon.toString());
-            } catch { }
+            } catch {}
             this.map.fitBounds(showPolygon);
         });
 
         const count = await this.client.getCount();
 
         if (count < 1) {
-
             this.ui.disableFilters();
 
             this.ui.show(this.ui.importContainer);
@@ -83,7 +80,6 @@ export class Tracker {
     }
 
     private async importTracks() {
-
         this.ui.showImportInProgress();
 
         const count = await this.client.importTracks();
@@ -97,7 +93,6 @@ export class Tracker {
     }
 
     private async loadTracks(): Promise<number> {
-
         this.ui.disableFilters();
 
         // Clear any existing map paths and the tracks in the sidebar
@@ -126,7 +121,6 @@ export class Tracker {
         });
 
         if (tracks.length > 0) {
-
             totalDistance = Math.ceil(totalDistance);
 
             const emissionsPerMile = (280 + 310 + 410) / 3; // Taken from https://www.carbonindependent.org/17.html for gCO2/mile

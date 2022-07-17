@@ -1,12 +1,11 @@
 // Copyright (c) Martin Costello, 2021. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
-import * as moment from '../../../node_modules/moment/moment';
+import moment from 'moment';
 import { Track } from '../models/Track';
 import { TrackMap } from './TrackMap';
 
 export class TrackPath {
-
     private static blue: string = '#0000FF';
     private static red: string = '#FF0000';
 
@@ -25,7 +24,6 @@ export class TrackPath {
     private visible: boolean;
 
     constructor(container: Element, track: Track, map: TrackMap, useMiles: boolean) {
-
         this.map = map;
         this.track = track;
         this.route = this.createRoute();
@@ -112,7 +110,6 @@ export class TrackPath {
     }
 
     getPoints(): google.maps.LatLng[] {
-
         const result: google.maps.LatLng[] = [];
 
         this.track.points.forEach((point) => {
@@ -142,25 +139,22 @@ export class TrackPath {
         this.highlighted = !this.highlighted;
         this.route.setOptions({
             strokeColor: this.highlighted ? TrackPath.blue : TrackPath.red,
-            zIndex: this.highlighted ? 1 : 0
+            zIndex: this.highlighted ? 1 : 0,
         });
     }
 
     private createRoute(): google.maps.Polyline {
-
         const route = new google.maps.Polyline({
             geodesic: true,
-            icons: ['10%', '20%', '30%', '40%', '50%', '60%', '70%', '80%', '90%'].map((percent) => (
-                {
-                    icon: { path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW },
-                    offset: percent
-                }
-            )),
+            icons: ['10%', '20%', '30%', '40%', '50%', '60%', '70%', '80%', '90%'].map((percent) => ({
+                icon: { path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW },
+                offset: percent,
+            })),
             path: [],
             strokeColor: TrackPath.red,
             strokeOpacity: 1.0,
             strokeWeight: 1,
-            zIndex: 0
+            zIndex: 0,
         });
 
         const path = route.getPath();
@@ -177,7 +171,6 @@ export class TrackPath {
             infoWindow.close();
         });
         google.maps.event.addListener(route, 'mouseover', (e: any) => {
-
             this.highlightIfNotAlready();
 
             const content = `

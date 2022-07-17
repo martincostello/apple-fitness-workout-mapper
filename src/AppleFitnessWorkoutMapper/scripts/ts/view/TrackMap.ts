@@ -4,13 +4,11 @@
 import { TrackPath } from './TrackPath';
 
 export class TrackMap {
-
     private readonly map: google.maps.Map;
     private paths: TrackPath[];
     private polygon: google.maps.Polygon;
 
     constructor(element: HTMLElement) {
-
         const options: google.maps.MapOptions = {
             center: { lat: 0.0, lng: 0.0 },
             clickableIcons: false,
@@ -27,13 +25,11 @@ export class TrackMap {
                 {
                     featureType: 'poi',
                     elementType: 'labels',
-                    stylers: [
-                        { visibility: 'off' }
-                    ]
-                }
+                    stylers: [{ visibility: 'off' }],
+                },
             ],
             zoom: 2,
-            zoomControl: true
+            zoomControl: true,
         };
 
         this.map = new google.maps.Map(element, options);
@@ -46,7 +42,6 @@ export class TrackMap {
     }
 
     clearPaths() {
-
         this.paths.forEach((path) => {
             path.removeFromMap();
         });
@@ -59,7 +54,6 @@ export class TrackMap {
     }
 
     fitBounds(showPolygon: boolean = false) {
-
         if (this.polygon !== null) {
             this.hidePolygon();
             this.polygon = null;
@@ -87,7 +81,7 @@ export class TrackMap {
                 strokeColor: red,
                 strokeOpacity: 0.8,
                 strokeWeight: 3,
-                zIndex: -1
+                zIndex: -1,
             });
             this.polygon.setMap(this.map);
         }

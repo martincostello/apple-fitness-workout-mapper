@@ -9,6 +9,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper;
 
 [ExcludeFromCodeCoverage]
 [JsonSerializable(typeof(IList<Track>))]
+[JsonSerializable(typeof(List<Track>))] // TODO A change in behaviour means that it now wants the concrete type
 [JsonSerializable(typeof(TrackCount))]
 internal sealed partial class ApplicationJsonSerializerContext : JsonSerializerContext
 {

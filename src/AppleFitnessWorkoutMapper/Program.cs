@@ -2,6 +2,7 @@
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
 using System.IO.Compression;
+using System.Text.Json.Serialization.Metadata;
 using MartinCostello.AppleFitnessWorkoutMapper;
 using MartinCostello.AppleFitnessWorkoutMapper.Data;
 using MartinCostello.AppleFitnessWorkoutMapper.Models;
@@ -68,7 +69,9 @@ static void RunApplication(string[] args)
 
     builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>((options) =>
     {
-        options.SerializerOptions.AddContext<ApplicationJsonSerializerContext>();
+        options.SerializerOptions.TypeInfoResolver = JsonTypeInfoResolver.Combine(
+            ApplicationJsonSerializerContext.Default,
+            new DefaultJsonTypeInfoResolver());
     });
 
     builder.Services.Configure<StaticFileOptions>((options) =>

@@ -16,7 +16,7 @@
   "devDependencies": {
     "@babel/core": "^7.19.3",
     "@babel/preset-env": "^7.19.3",
-    "@types/google.maps": "^3.50.2",
+    "@types/google.maps": "^3.50.3",
     "@types/jquery": "^3.5.14",
     "@typescript-eslint/eslint-plugin": "^5.39.0",
     "@typescript-eslint/parser": "^5.39.0",

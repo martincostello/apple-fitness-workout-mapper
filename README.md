@@ -34,7 +34,7 @@ only need the following things:
 1. An Apple device that stores Health Data
 1. At least one workout with GPS data recorded by the Apple Fitness app
 (such as from a workout recorded on an Apple Watch)
-1. A Linux, macOS or Linux computer capable of running [.NET 5.0](https://github.com/dotnet/core/blob/main/release-notes/5.0/5.0-supported-os.md#net-5---supported-os-versions)
+1. A Linux, macOS or Windows computer capable of running [.NET 6.0](https://github.com/dotnet/core/blob/main/release-notes/5.0/5.0-supported-os.md#net-5---supported-os-versions)
 (running this application is not supported on mobile devices such as iOS or
   Android)
 

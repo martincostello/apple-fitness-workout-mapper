@@ -32,7 +32,7 @@
     <RepositoryUrl>$(PackageProjectUrl).git</RepositoryUrl>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <TypeScriptToolsVersion>latest</TypeScriptToolsVersion>
-    <VersionPrefix>1.1.0</VersionPrefix>
+    <VersionPrefix>1.2.0</VersionPrefix>
     <VersionSuffix></VersionSuffix>
   </PropertyGroup>
   <ItemGroup>

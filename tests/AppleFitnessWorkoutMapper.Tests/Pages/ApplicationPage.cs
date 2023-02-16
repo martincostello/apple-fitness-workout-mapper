@@ -104,6 +104,9 @@ public sealed class ApplicationPage
         return this;
     }
 
+    public async Task WaitForTracksAsync()
+        => await _page.WaitUntilVisibleAsync("css=.track-item");
+
     private async Task WaitForLoaderToBeHiddenAsync()
         => await _page.WaitUntilHiddenAsync("id=tracks-loader");
 }

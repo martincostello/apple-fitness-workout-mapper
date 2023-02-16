@@ -37,4 +37,13 @@ internal static class IPageExtensions
 
         return element;
     }
+
+    public static async Task<IElementHandle> WaitUntilVisibleAsync(this IPage page, string selector)
+    {
+        IElementHandle? element = await page.QuerySelectorAsync(selector);
+
+        await element!.WaitForElementStateAsync(ElementState.Stable);
+
+        return element;
+    }
 }

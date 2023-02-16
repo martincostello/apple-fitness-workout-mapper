@@ -62,6 +62,8 @@ public class UITests : IAsyncLifetime
             await app.ImportDataAsync();
 
             // Assert
+            await app.WaitForTracksAsync();
+
             await app.IsMapDisplayedAsync().ShouldBeTrue();
 
             IReadOnlyList<TrackItem> tracks = await app.TracksAsync();
@@ -81,6 +83,8 @@ public class UITests : IAsyncLifetime
             await app.ShowPolygonAsync();
 
             // Assert
+            await app.WaitForTracksAsync();
+
             await track.StartedAtAsync().ShouldBeOneOf("May 4, 2021 11:25 AM", "May 4, 2021 12:25 PM");
             await track.EndedAtAsync().ShouldBeOneOf("May 4, 2021 11:45 AM", "May 4, 2021 12:45 PM");
             await track.DurationAsync().ShouldBe("20 minutes");
@@ -107,6 +111,8 @@ public class UITests : IAsyncLifetime
             await track.ExpandAsync();
 
             // Assert
+            await app.WaitForTracksAsync();
+
             await track.DistanceAsync().ShouldBe("0.81 miles");
             await track.AveragePaceAsync().ShouldBe(@"24'8""/mile");
 
@@ -117,6 +123,8 @@ public class UITests : IAsyncLifetime
             await app.UseKilometersAsync();
 
             // Assert
+            await app.WaitForTracksAsync();
+
             tracks = await app.TracksAsync();
             tracks.ShouldNotBeEmpty();
 
@@ -125,6 +133,8 @@ public class UITests : IAsyncLifetime
             await track.ExpandAsync();
 
             // Assert
+            await app.WaitForTracksAsync();
+
             await track.DistanceAsync().ShouldBe("1.31 km");
             await track.AveragePaceAsync().ShouldBe(@"14'59""/km");
 
@@ -137,6 +147,8 @@ public class UITests : IAsyncLifetime
                      .ThenAsync((p) => p.FilterAsync());
 
             // Assert
+            await app.WaitForTracksAsync();
+
             tracks = await app.TracksAsync();
             track = tracks.ShouldHaveSingleItem();
 

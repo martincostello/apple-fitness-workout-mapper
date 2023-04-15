@@ -26,6 +26,9 @@ env:
   NUGET_XMLDOC_MODE: skip
   TERM: xterm
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: ${{ matrix.os }}
@@ -46,10 +49,10 @@ jobs:
     steps:
 
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
 
     - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@607fce577a46308457984d59e4954e075820f10a # v3.0.3
 
     - name: Build, test and publish
       shell: pwsh
@@ -57,28 +60,28 @@ jobs:
       env:
         GoogleMapsApiKey: ${{ secrets.GOOGLE_MAPS_API_KEY }}
 
-    - uses: codecov/codecov-action@v3
+    - uses: codecov/codecov-action@40a12dcee2df644d47232dde008099a3e9e4f865 # v3.1.2
       name: Upload coverage to Codecov
       with:
         files: ./artifacts/coverage.cobertura.xml,./src/AppleFitnessWorkoutMapper/coverage/lcov.info
         flags: ${{ matrix.codecov_os }}
 
     - name: Publish ZIP artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
       if: ${{ runner.os == 'Linux' }}
       with:
         name: app-zips
         path: ./artifacts/publish/*.zip
 
     - name: Publish macOS artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
       if: ${{ runner.os == 'Linux' }}
       with:
         name: app-macos
         path: ./artifacts/publish/osx-x64
 
     - name: Publish screenshots
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
       if: ${{ always() }}
       with:
         name: screenshots
@@ -86,7 +89,7 @@ jobs:
         if-no-files-found: ignore
 
     - name: Publish traces
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
       if: ${{ always() }}
       with:
         name: traces
@@ -94,7 +97,7 @@ jobs:
         if-no-files-found: ignore
 
     - name: Publish videos
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
       if: ${{ always() }}
       with:
         name: videos
@@ -110,10 +113,10 @@ jobs:
     steps:
 
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
 
     - name: Download artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3.0.2
       with:
         name: app-macos
         path: ${{ env.MACOS_ARTIFACTS_PATH }}/publish
@@ -133,12 +136,12 @@ jobs:
         Copy-Item -Path ./src/AppleFitnessWorkoutMapper/Info.plist -Destination ${ContentsPath} | Out-Null
 
     - name: Configure Xcode
-      uses: devbotsxyz/xcode-select@v1
+      uses: devbotsxyz/xcode-select@05f94658217eb8575f0aabd3b95e702a47995d21 # v1.1.0
       with:
         version: "12.4"
 
     - name: Import Distribution Certificate
-      uses: devbotsxyz/import-signing-certificate@v1
+      uses: devbotsxyz/import-signing-certificate@ab25a47abdb4f12b687fa4ea05d42942fe62961e # v1.0.0
       with:
         certificate-data: ${{ secrets.DISTRIBUTION_CERTIFICATE_DATA }}
         certificate-passphrase: ${{ secrets.DISTRIBUTION_CERTIFICATE_PASSPHRASE }}
@@ -162,7 +165,7 @@ jobs:
         codesign --force --timestamp --options=runtime --entitlements "$ENTITLEMENTS" --sign "$SIGNING_IDENTITY" "$APP_PATH"
 
     - name: Notarize app
-      uses: devbotsxyz/xcode-notarize@v1
+      uses: devbotsxyz/xcode-notarize@d7219e1c390b47db8bab0f6b4fc1e3b7943e4b3b # v1.0.0
       with:
         primary-bundle-id: com.martincostello.applefitnessworkoutmapper
         product-path: ${{ env.MACOS_APP_PATH }}
@@ -170,7 +173,7 @@ jobs:
         appstore-connect-password: ${{ secrets.NOTARIZATION_PASSWORD }}
 
     - name: Staple app
-      uses: devbotsxyz/xcode-staple@v1
+      uses: devbotsxyz/xcode-staple@ae68b22ca35d15864b7f7923e1a166533b2944bf # v1.0.0
       with:
         product-path: ${{ env.MACOS_APP_PATH }}
 
@@ -178,13 +181,13 @@ jobs:
       run: ditto -V -c -k --keepParent ${{ env.MACOS_APP_PATH }} ./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip
 
     - name: Publish signed app
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
       with:
         name: app-macos-signed
         path: ./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip
 
     - name: Update macOS ZIP artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
       with:
         name: app-zips
         path: ./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip
@@ -193,16 +196,19 @@ jobs:
     name: release
     needs: notarize
     runs-on: windows-latest
+    
+    permissions:
+      contents: write
 
     steps:
 
     - name: Download artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3.0.2
       with:
         name: app-zips
 
     - name: Create GitHub release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v1
       with:
         draft: true
         files: '*.zip'

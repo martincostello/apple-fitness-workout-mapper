@@ -21,8 +21,8 @@ env:
   DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION: 1
   FORCE_COLOR: 1
   MACOS_APP_NAME: AppleFitnessWorkoutMapper.app
-  MACOS_APP_PATH: ./artifacts/AppleFitnessWorkoutMapper.app
-  MACOS_ARTIFACTS_PATH: ./artifacts
+  MACOS_APP_PATH: ./.artifacts/AppleFitnessWorkoutMapper.app
+  MACOS_ARTIFACTS_PATH: ./.artifacts
   NUGET_XMLDOC_MODE: skip
   TERM: xterm
 
@@ -63,7 +63,7 @@ jobs:
     - uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
       name: Upload coverage to Codecov
       with:
-        files: ./artifacts/coverage.cobertura.xml,./src/AppleFitnessWorkoutMapper/coverage/lcov.info
+        files: ./.artifacts/coverage.cobertura.xml,./src/AppleFitnessWorkoutMapper/coverage/lcov.info
         flags: ${{ matrix.codecov_os }}
 
     - name: Publish ZIP artifacts
@@ -71,21 +71,21 @@ jobs:
       if: ${{ runner.os == 'Linux' }}
       with:
         name: app-zips
-        path: ./artifacts/publish/*.zip
+        path: ./.artifacts/publish/AppleFitnessWorkoutMapper/*.zip
 
     - name: Publish macOS artifacts
       uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
       if: ${{ runner.os == 'Linux' }}
       with:
         name: app-macos
-        path: ./artifacts/publish/osx-x64
+        path: ./.artifacts/publish/release_osx-x64
 
     - name: Publish screenshots
       uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
       if: ${{ always() }}
       with:
         name: screenshots
-        path: ./artifacts/screenshots/*.png
+        path: ./.artifacts/screenshots/*.png
         if-no-files-found: ignore
 
     - name: Publish traces
@@ -93,7 +93,7 @@ jobs:
       if: ${{ always() }}
       with:
         name: traces
-        path: ./artifacts/traces/*
+        path: ./.artifacts/traces/*
         if-no-files-found: ignore
 
     - name: Publish videos
@@ -101,7 +101,7 @@ jobs:
       if: ${{ always() }}
       with:
         name: videos
-        path: ./artifacts/videos/*
+        path: ./.artifacts/videos/*
         if-no-files-found: ignore
 
   notarize:
@@ -179,19 +179,19 @@ jobs:
         product-path: ${{ env.MACOS_APP_PATH }}
 
     - name: Package signed app
-      run: ditto -V -c -k --keepParent ${{ env.MACOS_APP_PATH }} ./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip
+      run: ditto -V -c -k --keepParent ${{ env.MACOS_APP_PATH }} ./.artifacts/AppleFitnessWorkoutMapper-osx-x64.zip
 
     - name: Publish signed app
       uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
       with:
         name: app-macos-signed
-        path: ./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip
+        path: ./.artifacts/AppleFitnessWorkoutMapper-osx-x64.zip
 
     - name: Update macOS ZIP artifact
       uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
       with:
         name: app-zips
-        path: ./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip
+        path: ./.artifacts/AppleFitnessWorkoutMapper-osx-x64.zip
 
   release:
     name: release

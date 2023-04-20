@@ -84,7 +84,7 @@ function DotNetTest {
         $additionalArgs += "GitHubActions;report-warnings=false"
     }
 
-    & $dotnet test $Project --configuration "Release" --output $OutputPath -- RunConfiguration.TestSessionTimeout=1200000 $additionalArgs
+    & $dotnet test $Project --configuration "Release" --output $OutputPath $additionalArgs -- RunConfiguration.TestSessionTimeout=1200000
 
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet test failed with exit code $LASTEXITCODE"

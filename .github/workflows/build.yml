@@ -145,6 +145,7 @@ jobs:
       with:
         certificate-data: ${{ secrets.DISTRIBUTION_CERTIFICATE_DATA }}
         certificate-passphrase: ${{ secrets.DISTRIBUTION_CERTIFICATE_PASSPHRASE }}
+        keychain-name: ''
         keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
 
     - name: Sign app
@@ -196,7 +197,7 @@ jobs:
     name: release
     needs: notarize
     runs-on: windows-latest
-    
+
     permissions:
       contents: write
 

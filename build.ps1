@@ -121,7 +121,7 @@ ForEach ($project in $publishProjects) {
         "win-x64"
     )
 
-    $publishRootPath = (Join-Path $PSScriptRoot ".artifacts" "publish" "AppleFitnessWorkoutMapper")
+    $publishRootPath = (Join-Path $PSScriptRoot "artifacts" "publish" "AppleFitnessWorkoutMapper")
 
     ForEach ($runtime in $runtimes) {
 

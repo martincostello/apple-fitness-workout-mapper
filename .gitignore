@@ -5,6 +5,7 @@
 .vs
 _ReSharper*
 _UpgradeReport_Files/
+artifacts/
 Backup*/
 BenchmarkDotNet.Artifacts/
 bin

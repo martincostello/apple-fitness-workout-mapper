@@ -1,7 +1,4 @@
 <Project>
-  <PropertyGroup>
-    <NodaTimeVersion>3.1.9</NodaTimeVersion>
-  </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="coverlet.msbuild" Version="6.0.0" />
     <PackageVersion Include="GitHubActionsTestLogger" Version="2.3.2" />
@@ -13,8 +10,6 @@
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     <PackageVersion Include="Microsoft.TypeScript.MSBuild" Version="5.1.5" />
     <PackageVersion Include="Moq" Version="4.18.4" />
-    <PackageVersion Include="NodaTime" Version="$(NodaTimeVersion)" />
-    <PackageVersion Include="NodaTime.Testing" Version="$(NodaTimeVersion)" />
     <PackageVersion Include="ReportGenerator" Version="5.1.23" />
     <PackageVersion Include="Shouldly" Version="4.2.1" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.507" />

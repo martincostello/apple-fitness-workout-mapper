@@ -5,7 +5,7 @@
 @addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @model IndexModel
 @{
-    var today = Model.Clock.GetCurrentInstant().ToDateTimeUtc().Date;
+    var today = Model.TimeProvider.GetUtcNow().UtcDateTime.Date;
     string startDate = today.AddDays(-28).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
     string endDate = today.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 }

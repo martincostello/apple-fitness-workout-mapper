@@ -10,7 +10,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" PrivateAssets="all" />
-    <PackageReference Include="NodaTime" />
   </ItemGroup>
   <ItemGroup>
     <Content Update=".prettierrc.json;coverage\**;package.json;package-lock.json;tsconfig.json" CopyToPublishDirectory="Never" />

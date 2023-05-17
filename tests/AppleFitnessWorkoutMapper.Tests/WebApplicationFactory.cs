@@ -41,7 +41,7 @@ internal class WebApplicationFactory : WebApplicationFactory<ApplicationOptions>
 
         builder.ConfigureAppConfiguration((p) => p.AddInMemoryCollection(config))
                .ConfigureLogging((p) => p.AddXUnit(this))
-               .ConfigureServices((p) => p.AddSingleton<TimeProvider>(mock.Object))
+               .ConfigureServices((p) => p.AddSingleton(mock.Object))
                .UseSolutionRelativeContentRoot(Path.Combine("src", "AppleFitnessWorkoutMapper"));
     }
 

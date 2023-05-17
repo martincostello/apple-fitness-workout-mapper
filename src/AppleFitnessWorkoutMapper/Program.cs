@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-using NodaTime;
 
 try
 {
@@ -108,7 +107,7 @@ static void RunApplication(string[] args)
         builder.UseSqlite("Data Source=" + options.Value.DatabaseFile);
     });
 
-    builder.Services.TryAddSingleton<IClock>((_) => SystemClock.Instance);
+    builder.Services.TryAddSingleton<TimeProvider>((_) => TimeProvider.System);
     builder.Services.AddSingleton<TrackParser>();
     builder.Services.AddScoped<TrackImporter>();
     builder.Services.AddScoped<TrackService>();

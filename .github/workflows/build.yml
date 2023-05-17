@@ -79,6 +79,7 @@ jobs:
       with:
         name: app-macos
         path: ./artifacts/publish/osx-x64
+        if-no-files-found: error
 
     - name: Publish screenshots
       uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2

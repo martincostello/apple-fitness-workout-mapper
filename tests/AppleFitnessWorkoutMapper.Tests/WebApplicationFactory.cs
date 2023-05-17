@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NodaTime;
+using Moq;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper;
 
@@ -34,11 +34,14 @@ internal class WebApplicationFactory : WebApplicationFactory<ApplicationOptions>
             KeyValuePair.Create<string, string?>("DataDirectory", AppDataDirectory),
         };
 
-        var utcNow = Instant.FromUtc(2021, 06, 01, 12, 34, 56);
+        var utcNow = new DateTimeOffset(2021, 06, 01, 12, 34, 56, TimeSpan.Zero);
+
+        var mock = new Mock<TimeProvider>();
+        mock.Setup((p) => p.GetUtcNow()).Returns(utcNow);
 
         builder.ConfigureAppConfiguration((p) => p.AddInMemoryCollection(config))
                .ConfigureLogging((p) => p.AddXUnit(this))
-               .ConfigureServices((p) => p.AddSingleton<IClock>((_) => new NodaTime.Testing.FakeClock(utcNow)))
+               .ConfigureServices((p) => p.AddSingleton<TimeProvider>(mock.Object))
                .UseSolutionRelativeContentRoot(Path.Combine("src", "AppleFitnessWorkoutMapper"));
     }
 

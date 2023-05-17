@@ -102,7 +102,7 @@ static void RunApplication(string[] args)
         builder.UseSqlite("Data Source=" + options.Value.DatabaseFile);
     });
 
-    builder.Services.TryAddSingleton<TimeProvider>((_) => TimeProvider.System);
+    builder.Services.TryAddSingleton(TimeProvider.System);
     builder.Services.AddSingleton<TrackParser>();
     builder.Services.AddScoped<TrackImporter>();
     builder.Services.AddScoped<TrackService>();

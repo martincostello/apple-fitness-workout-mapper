@@ -3,19 +3,18 @@
 
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
-using NodaTime;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper.Pages;
 
 public class IndexModel : PageModel
 {
-    public IndexModel(IClock clock, IOptions<ApplicationOptions> options)
+    public IndexModel(TimeProvider timeProvider, IOptions<ApplicationOptions> options)
     {
-        Clock = clock;
+        TimeProvider = timeProvider;
         GoogleMapsApiKey = options.Value.GoogleMapsApiKey;
     }
 
-    public IClock Clock { get; }
+    public TimeProvider TimeProvider { get; }
 
     public string GoogleMapsApiKey { get; }
 

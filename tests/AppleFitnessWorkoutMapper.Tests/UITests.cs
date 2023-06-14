@@ -70,6 +70,8 @@ public class UITests : IAsyncLifetime
 
             tracks.Count.ShouldBe(2);
 
+            await Task.Delay(250);
+
             await tracks[0].LinkTextAsync().ShouldBe("Route 1");
             await tracks[0].NameAsync().ShouldBe("Route 1");
 

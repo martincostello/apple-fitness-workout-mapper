@@ -53,7 +53,8 @@ public sealed class TrackItem
     {
         IElementHandle? child = await _element.QuerySelectorAsync(selector);
 
-        string text = await child!.InnerTextAsync();
+        child.ShouldNotBeNull();
+        string text = await child.InnerTextAsync();
 
         return text.Trim();
     }

@@ -59,17 +59,10 @@ public sealed class ApplicationPage
     {
         IReadOnlyList<IElementHandle> children = await _page.QuerySelectorAllAsync("css=.track-item");
 
-        var tracks = children
+        return children
             .Skip(1)
             .Select((p) => new TrackItem(p))
             .ToList();
-
-        foreach (var track in tracks)
-        {
-            await track.WaitUntilVisibleAsync();
-        }
-
-        return tracks;
     }
 
     public async Task HidePolygonAsync()

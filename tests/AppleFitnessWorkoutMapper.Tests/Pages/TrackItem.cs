@@ -52,9 +52,6 @@ public sealed class TrackItem
     public async Task<string> AveragePaceAsync()
         => await InnerTextTrimmedAsync("[data-js-pace]");
 
-    internal async Task WaitUntilVisibleAsync()
-        => await _element.WaitForElementStateAsync(ElementState.Visible);
-
     private async Task<string> InnerTextTrimmedAsync(string selector)
     {
         IElementHandle? child = await _element.QuerySelectorAsync(selector);

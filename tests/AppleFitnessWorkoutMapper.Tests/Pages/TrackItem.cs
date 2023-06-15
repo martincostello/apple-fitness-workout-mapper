@@ -19,7 +19,9 @@ public sealed class TrackItem
         await _element.ClickAsync();
 
         IElementHandle? child = await _element.QuerySelectorAsync("[data-js-visible]");
-        await child!.WaitForElementStateAsync(ElementState.Visible);
+
+        child.ShouldNotBeNull();
+        await child.WaitForElementStateAsync(ElementState.Visible);
     }
 
     public async Task CollapseAsync()
@@ -31,7 +33,8 @@ public sealed class TrackItem
     public async Task<string> NameAsync()
     {
         IElementHandle? child = await _element.QuerySelectorAsync("[data-track-name]");
-        return await child!.GetAttributeAsync("data-track-name") ?? string.Empty;
+        child.ShouldNotBeNull();
+        return await child.GetAttributeAsync("data-track-name") ?? string.Empty;
     }
 
     public async Task<string> StartedAtAsync()
@@ -53,7 +56,8 @@ public sealed class TrackItem
     {
         IElementHandle? child = await _element.QuerySelectorAsync(selector);
 
-        string text = await child!.InnerTextAsync();
+        child.ShouldNotBeNull();
+        string text = await child.InnerTextAsync();
 
         return text.Trim();
     }

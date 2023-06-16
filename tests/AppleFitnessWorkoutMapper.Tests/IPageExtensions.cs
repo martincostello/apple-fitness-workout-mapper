@@ -24,7 +24,8 @@ internal static class IPageExtensions
     {
         IElementHandle? element = await page.QuerySelectorAsync(selector);
 
-        await element!.WaitForElementStateAsync(ElementState.Enabled);
+        element.ShouldNotBeNull();
+        await element.WaitForElementStateAsync(ElementState.Enabled);
 
         return element;
     }
@@ -33,7 +34,8 @@ internal static class IPageExtensions
     {
         IElementHandle? element = await page.QuerySelectorAsync(selector);
 
-        await element!.WaitForElementStateAsync(ElementState.Hidden);
+        element.ShouldNotBeNull();
+        await element.WaitForElementStateAsync(ElementState.Hidden);
 
         return element;
     }
@@ -42,7 +44,8 @@ internal static class IPageExtensions
     {
         IElementHandle? element = await page.QuerySelectorAsync(selector);
 
-        await element!.WaitForElementStateAsync(ElementState.Stable);
+        element.ShouldNotBeNull();
+        await element.WaitForElementStateAsync(ElementState.Stable);
 
         return element;
     }

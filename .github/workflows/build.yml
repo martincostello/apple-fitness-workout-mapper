@@ -139,12 +139,12 @@ jobs:
         Copy-Item -Path ./src/AppleFitnessWorkoutMapper/Info.plist -Destination ${ContentsPath} | Out-Null
 
     - name: Configure Xcode
-      uses: devbotsxyz/xcode-select@05f94658217eb8575f0aabd3b95e702a47995d21 # v1.1.0
+      uses: martincostello/xcode-select@2c7e8ae51ac21728cac6ee4aba629fd3cfd3aee8 # node16
       with:
         version: "12.4"
 
     - name: Import Distribution Certificate
-      uses: devbotsxyz/import-signing-certificate@ab25a47abdb4f12b687fa4ea05d42942fe62961e # v1.0.0
+      uses: martincostello/import-signing-certificate@d12c9f7efbd059fec79524ada59637fd4e24d8b2 # node16
       with:
         certificate-data: ${{ secrets.DISTRIBUTION_CERTIFICATE_DATA }}
         certificate-passphrase: ${{ secrets.DISTRIBUTION_CERTIFICATE_PASSPHRASE }}
@@ -169,7 +169,7 @@ jobs:
         codesign --force --timestamp --options=runtime --entitlements "${ENTITLEMENTS}" --sign "${SIGNING_IDENTITY}" "$APP_PATH"
 
     - name: Notarize app
-      uses: devbotsxyz/xcode-notarize@d7219e1c390b47db8bab0f6b4fc1e3b7943e4b3b # v1.0.0
+      uses: martincostello/xcode-notarize@70f4ffac30b01124246ca0b38b4ffe57d22bed84 # node16
       with:
         primary-bundle-id: com.martincostello.applefitnessworkoutmapper
         product-path: ${{ env.MACOS_APP_PATH }}
@@ -177,7 +177,7 @@ jobs:
         appstore-connect-password: ${{ secrets.NOTARIZATION_PASSWORD }}
 
     - name: Staple app
-      uses: devbotsxyz/xcode-staple@ae68b22ca35d15864b7f7923e1a166533b2944bf # v1.0.0
+      uses: martincostello/xcode-staple@f233525043d349381c62b2b2ddce6ad0fce2076a # node16
       with:
         product-path: ${{ env.MACOS_APP_PATH }}
 

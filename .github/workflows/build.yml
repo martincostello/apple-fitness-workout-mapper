@@ -158,15 +158,15 @@ jobs:
         ENTITLEMENTS: ./src/AppleFitnessWorkoutMapper/AppleFitnessWorkoutMapper.entitlements
         SIGNING_IDENTITY: ${{ secrets.SIGNING_IDENTITY }}
       run: |
-        chmod +x $APP_PATH/Contents/MacOS/AppleFitnessWorkoutMapper
-        find "$APP_PATH/Contents/MacOS/"|while read fname; do
-            if [[ -f $fname ]]; then
-                echo "Signing $fname"
-                codesign --force --timestamp --options=runtime --entitlements "$ENTITLEMENTS" --sign "$SIGNING_IDENTITY" "$fname" || true
+        chmod +x "${APP_PATH}/Contents/MacOS/AppleFitnessWorkoutMapper"
+        find "${APP_PATH}/Contents/MacOS/" | while read fname -r; do
+            if [[ -f "${fname}" ]]; then
+                echo "Signing ${fname}"
+                codesign --force --timestamp --options=runtime --entitlements "${ENTITLEMENTS}" --sign "${SIGNING_IDENTITY}" "${fname}" || true
             fi
         done
         echo "Signing app file"
-        codesign --force --timestamp --options=runtime --entitlements "$ENTITLEMENTS" --sign "$SIGNING_IDENTITY" "$APP_PATH"
+        codesign --force --timestamp --options=runtime --entitlements "${ENTITLEMENTS}" --sign "${SIGNING_IDENTITY}" "$APP_PATH"
 
     - name: Notarize app
       uses: devbotsxyz/xcode-notarize@d7219e1c390b47db8bab0f6b4fc1e3b7943e4b3b # v1.0.0

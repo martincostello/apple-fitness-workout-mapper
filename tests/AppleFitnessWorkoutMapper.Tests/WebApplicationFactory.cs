@@ -34,10 +34,10 @@ internal class WebApplicationFactory : WebApplicationFactory<ApplicationOptions>
             KeyValuePair.Create<string, string?>("DataDirectory", AppDataDirectory),
         };
 
-#pragma warning disable EXTEXP0004
+#pragma warning disable TBD
         var utcNow = new DateTimeOffset(2021, 06, 01, 12, 34, 56, TimeSpan.Zero);
         var timeProvider = new FakeTimeProvider(utcNow);
-#pragma warning restore EXTEXP0004
+#pragma warning restore TBD
 
         builder.ConfigureAppConfiguration((p) => p.AddInMemoryCollection(config))
                .ConfigureLogging((p) => p.AddXUnit(this))

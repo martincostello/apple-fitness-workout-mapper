@@ -4,7 +4,6 @@
 #pragma warning disable CA1852
 
 using System.IO.Compression;
-using System.Text.Json.Serialization.Metadata;
 using MartinCostello.AppleFitnessWorkoutMapper;
 using MartinCostello.AppleFitnessWorkoutMapper.Data;
 using MartinCostello.AppleFitnessWorkoutMapper.Models;
@@ -13,7 +12,6 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-using NodaTime;
 
 try
 {
@@ -69,12 +67,8 @@ static void RunApplication(string[] args)
             }
         });
 
-    builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>((options) =>
-    {
-        options.SerializerOptions.TypeInfoResolver = JsonTypeInfoResolver.Combine(
-            ApplicationJsonSerializerContext.Default,
-            new DefaultJsonTypeInfoResolver());
-    });
+    builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(
+        (options) => options.SerializerOptions.TypeInfoResolverChain.Add(ApplicationJsonSerializerContext.Default));
 
     builder.Services.Configure<StaticFileOptions>((options) =>
     {
@@ -108,7 +102,7 @@ static void RunApplication(string[] args)
         builder.UseSqlite("Data Source=" + options.Value.DatabaseFile);
     });
 
-    builder.Services.TryAddSingleton<IClock>((_) => SystemClock.Instance);
+    builder.Services.TryAddSingleton(TimeProvider.System);
     builder.Services.AddSingleton<TrackParser>();
     builder.Services.AddScoped<TrackImporter>();
     builder.Services.AddScoped<TrackService>();

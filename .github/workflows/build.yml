@@ -70,14 +70,14 @@ jobs:
 
     - name: Publish ZIP artifacts
       uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
-      if: ${{ runner.os == 'Linux' }}
+      if: runner.os == 'Linux'
       with:
         name: app-zips
         path: ./artifacts/publish/*.zip
 
     - name: Publish macOS artifacts
       uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
-      if: ${{ runner.os == 'Linux' }}
+      if: runner.os == 'Linux'
       with:
         name: app-macos
         path: ./artifacts/publish/osx-x64
@@ -85,7 +85,7 @@ jobs:
 
     - name: Publish screenshots
       uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
-      if: ${{ always() }}
+      if: ${{ !cancelled() }}
       with:
         name: screenshots
         path: ./artifacts/screenshots/*.png
@@ -93,7 +93,7 @@ jobs:
 
     - name: Publish traces
       uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
-      if: ${{ always() }}
+      if: ${{ !cancelled() }}
       with:
         name: traces
         path: ./artifacts/traces/*
@@ -101,14 +101,14 @@ jobs:
 
     - name: Publish videos
       uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
-      if: ${{ always() }}
+      if: ${{ !cancelled() }}
       with:
         name: videos
         path: ./artifacts/videos/*
         if-no-files-found: ignore
 
   notarize:
-    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    if: startsWith(github.ref, 'refs/tags/v')
     name: notarize
     needs: build
     runs-on: macos-latest
@@ -128,11 +128,10 @@ jobs:
       shell: pwsh
       run: |
         $Artifacts = "${{ env.MACOS_ARTIFACTS_PATH }}"
-        $AppName = "${{ env.MACOS_APP_NAME }}"
         $AppPath = "${{ env.MACOS_APP_PATH }}"
         $ContentsPath = (Join-Path ${AppPath} "Contents")
         $PublishPath = (Join-Path ${Artifacts} "publish")
-        New-Item -Path ${Artifacts} -Name ${AppName} -ItemType "Directory" | Out-Null
+        New-Item -Path ${Artifacts} -Name ${env:MACOS_APP_NAME} -ItemType "Directory" | Out-Null
         New-Item -Path ${AppPath} -Name "Contents" -ItemType "Directory" | Out-Null
         New-Item -Path ${ContentsPath} -Name "Resources" -ItemType "Directory" | Out-Null
         Copy-Item -Path ${PublishPath} -Destination (Join-Path ${ContentsPath} "MacOS") -Recurse | Out-Null
@@ -141,7 +140,7 @@ jobs:
     - name: Configure Xcode
       uses: martincostello/xcode-select@2c7e8ae51ac21728cac6ee4aba629fd3cfd3aee8 # node16
       with:
-        version: "12.4"
+        version: "13.1"
 
     - name: Import Distribution Certificate
       uses: martincostello/import-signing-certificate@d12c9f7efbd059fec79524ada59637fd4e24d8b2 # node16
@@ -166,7 +165,7 @@ jobs:
             fi
         done
         echo "Signing app file"
-        codesign --force --timestamp --options=runtime --entitlements "${ENTITLEMENTS}" --sign "${SIGNING_IDENTITY}" "$APP_PATH"
+        codesign --force --timestamp --options=runtime --entitlements "${ENTITLEMENTS}" --sign "${SIGNING_IDENTITY}" "${APP_PATH}"
 
     - name: Notarize app
       uses: martincostello/xcode-notarize@70f4ffac30b01124246ca0b38b4ffe57d22bed84 # node16
@@ -182,7 +181,7 @@ jobs:
         product-path: ${{ env.MACOS_APP_PATH }}
 
     - name: Package signed app
-      run: ditto -V -c -k --keepParent ${{ env.MACOS_APP_PATH }} ./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip
+      run: ditto -V -c -k --keepParent ${MACOS_APP_PATH} ./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip
 
     - name: Publish signed app
       uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3

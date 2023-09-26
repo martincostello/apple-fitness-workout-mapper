@@ -19,7 +19,7 @@
   "author": "martincostello",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@babel/core": "^7.22.20",
+    "@babel/core": "^7.23.0",
     "@babel/preset-env": "^7.22.20",
     "@types/google.maps": "^3.54.1",
     "@types/jquery": "^3.5.19",

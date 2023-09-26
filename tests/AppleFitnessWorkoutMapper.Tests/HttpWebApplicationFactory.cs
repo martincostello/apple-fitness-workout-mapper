@@ -67,8 +67,6 @@ internal sealed class HttpWebApplicationFactory : WebApplicationFactory
             .Select((p) => new Uri(p))
             .Last();
 
-        testHost.Start();
-
         return testHost;
     }
 

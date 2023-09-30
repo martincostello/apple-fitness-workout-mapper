@@ -5,15 +5,8 @@ using MartinCostello.AppleFitnessWorkoutMapper.Models;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper.Services;
 
-public class TrackParserTests
+public class TrackParserTests(ITestOutputHelper outputHelper)
 {
-    private readonly ITestOutputHelper _outputHelper;
-
-    public TrackParserTests(ITestOutputHelper outputHelper)
-    {
-        _outputHelper = outputHelper;
-    }
-
     [Fact]
     public async Task Can_Parse_Track_Points_From_Disk()
     {
@@ -87,7 +80,7 @@ public class TrackParserTests
         };
 
         var options = Microsoft.Extensions.Options.Options.Create(application);
-        var logger = _outputHelper.ToLogger<TrackParser>();
+        var logger = outputHelper.ToLogger<TrackParser>();
 
         return new TrackParser(options, logger);
     }

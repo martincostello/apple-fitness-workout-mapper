@@ -7,14 +7,9 @@ using MartinCostello.AppleFitnessWorkoutMapper.Models;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper;
 
-public class AppTests
+public class AppTests(ITestOutputHelper outputHelper)
 {
-    public AppTests(ITestOutputHelper outputHelper)
-    {
-        OutputHelper = outputHelper;
-    }
-
-    public ITestOutputHelper OutputHelper { get; set; }
+    public ITestOutputHelper OutputHelper { get; set; } = outputHelper;
 
     [Fact]
     public async Task Can_Load_Homepage()

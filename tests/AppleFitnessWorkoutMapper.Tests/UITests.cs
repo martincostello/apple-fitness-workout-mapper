@@ -6,14 +6,9 @@ using Microsoft.Playwright;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper;
 
-public class UITests : IAsyncLifetime
+public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
 {
-    public UITests(ITestOutputHelper outputHelper)
-    {
-        OutputHelper = outputHelper;
-    }
-
-    public ITestOutputHelper OutputHelper { get; set; }
+    public ITestOutputHelper OutputHelper { get; set; } = outputHelper;
 
     public static IEnumerable<object?[]> Browsers()
     {

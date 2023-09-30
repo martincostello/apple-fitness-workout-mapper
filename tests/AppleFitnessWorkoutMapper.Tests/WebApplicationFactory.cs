@@ -12,17 +12,11 @@ using Microsoft.Extensions.Time.Testing;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper;
 
-internal class WebApplicationFactory : WebApplicationFactory<ApplicationOptions>, ITestOutputHelperAccessor
+internal class WebApplicationFactory(ITestOutputHelper outputHelper) : WebApplicationFactory<ApplicationOptions>, ITestOutputHelperAccessor
 {
-    public WebApplicationFactory(ITestOutputHelper outputHelper)
-    {
-        OutputHelper = outputHelper;
-        AppDataDirectory = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location)!, "App_Data");
-    }
+    public string AppDataDirectory { get; } = Path.Combine(Path.GetDirectoryName(typeof(WebApplicationFactory).Assembly.Location)!, "App_Data");
 
-    public string AppDataDirectory { get; }
-
-    public ITestOutputHelper? OutputHelper { get; set; }
+    public ITestOutputHelper? OutputHelper { get; set; } = outputHelper;
 
     private string DatabaseFileName { get; } = Guid.NewGuid().ToString() + ".db";
 

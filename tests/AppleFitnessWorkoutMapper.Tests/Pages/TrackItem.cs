@@ -5,34 +5,27 @@ using Microsoft.Playwright;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper.Pages;
 
-public sealed class TrackItem
+public sealed class TrackItem(IElementHandle element)
 {
-    private readonly IElementHandle _element;
-
-    public TrackItem(IElementHandle element)
-    {
-        _element = element;
-    }
-
     public async Task ExpandAsync()
     {
-        await _element.ClickAsync();
+        await element.ClickAsync();
 
-        IElementHandle? child = await _element.QuerySelectorAsync("[data-js-visible]");
+        IElementHandle? child = await element.QuerySelectorAsync("[data-js-visible]");
 
         child.ShouldNotBeNull();
         await child.WaitForElementStateAsync(ElementState.Visible);
     }
 
     public async Task CollapseAsync()
-        => await _element.ClickAsync();
+        => await element.ClickAsync();
 
     public async Task<string> LinkTextAsync()
         => await InnerTextTrimmedAsync("a");
 
     public async Task<string> NameAsync()
     {
-        IElementHandle? child = await _element.QuerySelectorAsync("[data-track-name]");
+        IElementHandle? child = await element.QuerySelectorAsync("[data-track-name]");
         child.ShouldNotBeNull();
         return await child.GetAttributeAsync("data-track-name") ?? string.Empty;
     }
@@ -54,7 +47,7 @@ public sealed class TrackItem
 
     private async Task<string> InnerTextTrimmedAsync(string selector)
     {
-        IElementHandle? child = await _element.QuerySelectorAsync(selector);
+        IElementHandle? child = await element.QuerySelectorAsync(selector);
 
         child.ShouldNotBeNull();
         string text = await child.InnerTextAsync();

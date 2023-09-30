@@ -6,17 +6,11 @@ using Microsoft.Extensions.Options;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper.Pages;
 
-public class IndexModel : PageModel
+public class IndexModel(TimeProvider timeProvider, IOptions<ApplicationOptions> options) : PageModel
 {
-    public IndexModel(TimeProvider timeProvider, IOptions<ApplicationOptions> options)
-    {
-        TimeProvider = timeProvider;
-        GoogleMapsApiKey = options.Value.GoogleMapsApiKey;
-    }
+    public TimeProvider TimeProvider { get; } = timeProvider;
 
-    public TimeProvider TimeProvider { get; }
-
-    public string GoogleMapsApiKey { get; }
+    public string GoogleMapsApiKey { get; } = options.Value.GoogleMapsApiKey;
 
     public void OnGet()
     {

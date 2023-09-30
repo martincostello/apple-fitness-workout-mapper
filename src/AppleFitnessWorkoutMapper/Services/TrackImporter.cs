@@ -7,38 +7,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper.Services;
 
-public sealed partial class TrackImporter
+public sealed partial class TrackImporter(
+    TrackParser parser,
+    TracksContext context,
+    ILogger<TrackImporter> logger)
 {
-    private readonly TracksContext _context;
-    private readonly ILogger _logger;
-    private readonly TrackParser _parser;
-
-    public TrackImporter(
-        TrackParser parser,
-        TracksContext context,
-        ILogger<TrackImporter> logger)
-    {
-        _parser = parser;
-        _context = context;
-        _logger = logger;
-    }
-
     public async Task<int> ImportTracksAsync(CancellationToken cancellationToken = default)
     {
-        var tracks = await _parser.GetTracksAsync(cancellationToken);
+        var tracks = await parser.GetTracksAsync(cancellationToken);
 
-        Log.DeletingDatabase(_logger);
+        Log.DeletingDatabase(logger);
 
-        await _context.Database.EnsureDeletedAsync(cancellationToken);
+        await context.Database.EnsureDeletedAsync(cancellationToken);
 
-        Log.DeletedDatabase(_logger);
-        Log.CreatingDatabase(_logger);
+        Log.DeletedDatabase(logger);
+        Log.CreatingDatabase(logger);
 
-        await _context.Database.EnsureCreatedAsync(cancellationToken);
-        await _context.Database.MigrateAsync(cancellationToken);
+        await context.Database.EnsureCreatedAsync(cancellationToken);
+        await context.Database.MigrateAsync(cancellationToken);
 
-        Log.CreatedDatabase(_logger);
-        Log.ImportingTracks(_logger, tracks.Count);
+        Log.CreatedDatabase(logger);
+        Log.ImportingTracks(logger, tracks.Count);
 
         var stopwatch = Stopwatch.StartNew();
 
@@ -50,7 +39,7 @@ public sealed partial class TrackImporter
                 Timestamp = track.Timestamp.UtcDateTime,
             };
 
-            trackDB = (await _context.Tracks.AddAsync(trackDB, cancellationToken)).Entity;
+            trackDB = (await context.Tracks.AddAsync(trackDB, cancellationToken)).Entity;
 
             var points = new List<Data.TrackPoint>(track.Points.Count);
 
@@ -67,14 +56,14 @@ public sealed partial class TrackImporter
                 points.Add(pointDB);
             }
 
-            await _context.TrackPoints.AddRangeAsync(points, cancellationToken);
+            await context.TrackPoints.AddRangeAsync(points, cancellationToken);
         }
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
         stopwatch.Stop();
 
-        Log.ImportedTracks(_logger, tracks.Count, stopwatch.Elapsed);
+        Log.ImportedTracks(logger, tracks.Count, stopwatch.Elapsed);
 
         return tracks.Count;
     }

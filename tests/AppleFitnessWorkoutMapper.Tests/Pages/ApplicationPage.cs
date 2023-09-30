@@ -97,9 +97,11 @@ public sealed class ApplicationPage
 
     public async Task<ApplicationPage> EnterDateAsync(string selector, string value)
     {
-        await _page.ClearTextAsync(selector);
-        await _page.FillAsync(selector, value);
-        await _page.Keyboard.PressAsync("Escape");
+        var locator = _page.Locator(selector);
+
+        await locator.ClearAsync();
+        await locator.PressSequentiallyAsync(value);
+        await locator.PressAsync("Escape");
 
         return this;
     }

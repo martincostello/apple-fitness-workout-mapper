@@ -8,26 +8,19 @@ using Microsoft.Extensions.Options;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper.Services;
 
-public sealed partial class TrackParser
+public sealed partial class TrackParser(
+    IOptions<ApplicationOptions> options,
+    ILogger<TrackParser> logger)
 {
     private static readonly XNamespace XS = "http://www.topografix.com/GPX/1/1";
 
-    private readonly ApplicationOptions _options;
-    private readonly ILogger _logger;
-
-    public TrackParser(
-        IOptions<ApplicationOptions> options,
-        ILogger<TrackParser> logger)
-    {
-        _options = options.Value;
-        _logger = logger;
-    }
+    private readonly ApplicationOptions _options = options.Value;
 
     public async Task<IList<Track>> GetTracksAsync(CancellationToken cancellationToken = default)
     {
         string path = _options.DataDirectory;
 
-        Log.ParsingTrackData(_logger, path);
+        Log.ParsingTrackData(logger, path);
 
         var result = new List<Track>();
 
@@ -47,7 +40,7 @@ public sealed partial class TrackParser
 
         result.Sort((x, y) => comparer.Compare(x.Timestamp, y.Timestamp));
 
-        Log.ParsedTrackData(_logger, result.Count, path);
+        Log.ParsedTrackData(logger, result.Count, path);
 
         return result;
     }
@@ -84,7 +77,7 @@ public sealed partial class TrackParser
         }
         catch (Exception ex)
         {
-            Log.TrackXmlLoadFailed(_logger, ex, fileName);
+            Log.TrackXmlLoadFailed(logger, ex, fileName);
             return null;
         }
 
@@ -103,19 +96,19 @@ public sealed partial class TrackParser
 
                     if (!double.TryParse(longitudeString, NumberStyles.Number, CultureInfo.InvariantCulture, out double longitude))
                     {
-                        Log.IgnoringInvalidLongitude(_logger, longitudeString, fileName);
+                        Log.IgnoringInvalidLongitude(logger, longitudeString, fileName);
                         continue;
                     }
 
                     if (!double.TryParse(latitudeString, NumberStyles.Number, CultureInfo.InvariantCulture, out double latitude))
                     {
-                        Log.IgnoringInvalidLatitude(_logger, latitudeString, fileName);
+                        Log.IgnoringInvalidLatitude(logger, latitudeString, fileName);
                         continue;
                     }
 
                     if (!TryParseTimestamp(pointNode.Descendants(XS + "time").FirstOrDefault(), out DateTimeOffset? timestamp))
                     {
-                        Log.IgnoringInvalidTimestamp(_logger, fileName);
+                        Log.IgnoringInvalidTimestamp(logger, fileName);
                         continue;
                     }
 
@@ -139,7 +132,7 @@ public sealed partial class TrackParser
         result.Timestamp = result.Points.First().Timestamp;
 
         Log.AddedTrackPointsFromFile(
-            _logger,
+            logger,
             result.Points.Count,
             result.Name,
             result.Timestamp,

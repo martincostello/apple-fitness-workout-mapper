@@ -6,14 +6,10 @@ namespace MartinCostello.AppleFitnessWorkoutMapper;
 internal static class TaskExtensions
 {
     public static async Task<T> ThenAsync<T>(this Task<T> value, Func<T, Task<T>> continuation)
-    {
-        return await continuation(await value);
-    }
+        => await continuation(await value);
 
     public static async Task ThenAsync<T>(this Task<T> value, Func<T, Task> continuation)
-    {
-        await continuation(await value);
-    }
+        => await continuation(await value);
 
     public static async Task ShouldBe(this Task<string> task, string expected)
     {

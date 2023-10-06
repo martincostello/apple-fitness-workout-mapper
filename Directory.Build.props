@@ -6,6 +6,7 @@
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <Authors>Martin Costello</Authors>
+    <ChecksumAlgorithm>SHA256</ChecksumAlgorithm>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)AppleFitnessWorkoutMapper.ruleset</CodeAnalysisRuleSet>
     <Company>https://github.com/martincostello/apple-fitness-workout-mapper</Company>
     <ContinuousIntegrationBuild Condition=" '$(CI)' != '' ">true</ContinuousIntegrationBuild>

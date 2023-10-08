@@ -75,6 +75,7 @@ jobs:
         GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
       shell: bash
       run: |
+        export GPG_TTY=${tty}
         echo "${GPG_PRIVATE_KEY}" | gpg --import --batch --yes --passphrase "${GPG_PASSPHRASE}"
         find ./artifacts/publish -type f -name '*.zip' | while read -r fname; do
           echo "Signing ${fname}"

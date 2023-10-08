@@ -1,7 +1,7 @@
 {
   "name": "applefitnessworkoutmapper",
   "private": true,
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Visualise multiple journeys from Apple Fitness on a map",
   "scripts": {
     "build": "npm run compile && npm run format && npm run lint && npm test",

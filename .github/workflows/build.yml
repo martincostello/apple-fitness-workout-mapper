@@ -77,7 +77,9 @@ jobs:
         GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
       shell: bash
       run: |
-        curl "https://keybase.io/${GITHUB_REPOSITORY_OWNER}/pgp_keys.asc" | gpg --import
+        curl "https://api.github.com/users/${GITHUB_REPOSITORY_OWNER}/gpg_keys" | jq -r '.[].raw_key' | gpg --import
+        echo "09E60E06CD38314B9F251C6274A5B223F73B2AF3:4:" | gpg --import-ownertrust
+        echo "11722FCC63074103E26F5DC667583CCCFBFA7911:4:" | gpg --import-ownertrust
         echo "${GPG_PRIVATE_KEY}" | gpg --import --batch --yes --passphrase "${GPG_PASSPHRASE}"
         find ./artifacts/publish -type f -name '*.zip' | while read -r fname; do
           echo "Signing ${fname}"
@@ -215,7 +217,9 @@ jobs:
         GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
       shell: bash
       run: |
-        curl "https://keybase.io/${GITHUB_REPOSITORY_OWNER}/pgp_keys.asc" | gpg --import
+        curl "https://api.github.com/users/${GITHUB_REPOSITORY_OWNER}/gpg_keys" | jq -r '.[].raw_key' | gpg --import
+        echo "09E60E06CD38314B9F251C6274A5B223F73B2AF3:4:" | gpg --import-ownertrust
+        echo "11722FCC63074103E26F5DC667583CCCFBFA7911:4:" | gpg --import-ownertrust
         echo "${GPG_PRIVATE_KEY}" | gpg --import --batch --yes --passphrase "${GPG_PASSPHRASE}"
         gpg --batch --yes --pinentry-mode loopback --passphrase "${GPG_PASSPHRASE}" --detach-sig "./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip"
         gpg --verify "./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip.sig" "./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip"

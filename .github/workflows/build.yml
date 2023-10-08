@@ -77,6 +77,7 @@ jobs:
       run: |
         echo "${GPG_PRIVATE_KEY}" | gpg --import --batch --yes --passphrase "${GPG_PASSPHRASE}"
         find ./artifacts/publish -type f -name '*.zip' | while read -r fname; do
+          echo "Signing ${fname}"
           gpg --batch --yes --pinentry-mode loopback --passphrase "${GPG_PASSPHRASE}" --detach-sig "${fname}"
           gpg --verify "${fname}.sig" "${fname}"
         done

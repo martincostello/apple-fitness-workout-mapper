@@ -248,6 +248,6 @@ jobs:
         draft: true
         files: |
           *.zip
-          *.zip.asc
+          *.zip.sig
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

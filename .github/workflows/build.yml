@@ -78,7 +78,7 @@ jobs:
         echo "${GPG_PRIVATE_KEY}" | gpg --import --batch --yes --passphrase "${GPG_PASSPHRASE}"
         find ./artifacts/publish -type f -name '*.zip' | while read -r fname; do
           echo "Signing ${fname}"
-          gpg --batch --yes --passphrase "${GPG_PASSPHRASE}" --detach-sig "${fname}" --pinentry-mode loopback
+          gpg --batch --yes --pinentry-mode loopback --passphrase "${GPG_PASSPHRASE}" --detach-sig "${fname}"
         done
 
     - name: Publish ZIP artifacts
@@ -212,7 +212,7 @@ jobs:
       shell: bash
       run: |
         echo "${GPG_PRIVATE_KEY}" | gpg --import --batch --yes --passphrase "${GPG_PASSPHRASE}"
-        gpg --batch --yes --passphrase "${GPG_PASSPHRASE}" --detach-sig "./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip" --pinentry-mode loopback
+        gpg --batch --yes --pinentry-mode loopback --passphrase "${GPG_PASSPHRASE}" --detach-sig "./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip"
 
     - name: Update macOS ZIP artifacts
       uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3

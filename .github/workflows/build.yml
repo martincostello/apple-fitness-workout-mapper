@@ -71,7 +71,9 @@ jobs:
     - name: GPG sign ZIP artifacts
       if: |
         runner.os == 'Linux' &&
-        github.event.repository.fork == false
+        github.event.repository.fork == false &&
+        (github.ref_name == github.event.repository.default_branch ||
+         startsWith(github.ref, 'refs/tags/v'))
       env:
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}

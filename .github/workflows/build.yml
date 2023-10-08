@@ -78,7 +78,7 @@ jobs:
         echo "${GPG_PRIVATE_KEY}" | gpg --import --batch --yes --passphrase "${GPG_PASSPHRASE}"
         find ./artifacts/publish -type f -name '*.zip' | while read -r fname; do
           echo "Signing ${fname}"
-          gpg --batch --yes --passphrase "${GPG_PASSPHRASE}" --detach-sig "${fname}" --output "${fname}.asc"
+          gpg --batch --yes --passphrase "${GPG_PASSPHRASE}" --detach-sig "${fname}"
         done
 
     - name: Publish ZIP artifacts
@@ -89,7 +89,7 @@ jobs:
         name: app-zips
         path: |
           ./artifacts/publish/*.zip
-          ./artifacts/publish/*.zip.asc
+          ./artifacts/publish/*.zip.sig
 
     - name: Publish macOS artifacts
       uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
@@ -205,13 +205,22 @@ jobs:
         name: app-macos-signed
         path: ./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip
 
+    - name: GPG sign signed app
+      env:
+        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+      shell: bash
+      run: |
+        echo "${GPG_PRIVATE_KEY}" | gpg --import --batch --yes --passphrase "${GPG_PASSPHRASE}"
+        gpg --batch --yes --passphrase "${GPG_PASSPHRASE}" --detach-sig "./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip"
+
     - name: Update macOS ZIP artifacts
       uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
       with:
         name: app-zips
         path: |
           ./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip
-          ./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip.asc
+          ./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip.sig
 
   release:
     name: release

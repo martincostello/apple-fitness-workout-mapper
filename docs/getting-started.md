@@ -16,7 +16,7 @@ system of the computer you wish to run Apple Fitness Workout Mapper on.
 
 For example, if you have an Apple Mac M2 computer download the
 `AppleFitnessWorkoutMapper-osx-arm64.zip` file, or if you have a Windows 10
-computer you would download the `AppleFitnessWorkoutMapper-win-x64.zip` file.
+Intel computer you would download the `AppleFitnessWorkoutMapper-win-x64.zip` file.
 
 If you do not see a specific download for your operating system, then download
 the portable version of the application, which is the ZIP file named

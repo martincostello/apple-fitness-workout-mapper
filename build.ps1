@@ -120,6 +120,7 @@ ForEach ($project in $publishProjects) {
         "linux-x64",
         "osx-arm64",
         "osx-x64",
+        "win-arm64",
         "win-x64"
     )
 

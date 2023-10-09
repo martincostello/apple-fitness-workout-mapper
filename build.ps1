@@ -116,7 +116,9 @@ Write-Host "Publishing solution..." -ForegroundColor Green
 ForEach ($project in $publishProjects) {
 
     $runtimes = @(
+        "linux-arm64",
         "linux-x64",
+        "osx-arm64",
         "osx-x64",
         "win-x64"
     )

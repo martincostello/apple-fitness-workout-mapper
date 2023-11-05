@@ -79,7 +79,7 @@ function DotNetTest {
         $additionalArgs += "GitHubActions;report-warnings=false"
     }
 
-    & $dotnet test $Project --configuration "Release" $additionalArgs -- RunConfiguration.TestSessionTimeout=1200000
+    & $dotnet test $Project --configuration "Release" $additionalArgs --tl -- RunConfiguration.TestSessionTimeout=1200000
 
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet test failed with exit code $LASTEXITCODE"
@@ -97,7 +97,7 @@ function DotNetPublish {
         $additionalArgs += $Runtime
     }
 
-    & $dotnet publish $Project $additionalArgs
+    & $dotnet publish $Project --tl $additionalArgs
 
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet publish failed with exit code $LASTEXITCODE"

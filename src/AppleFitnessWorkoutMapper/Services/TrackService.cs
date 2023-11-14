@@ -6,20 +6,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper.Services;
 
-public class TrackService
+public class TrackService(TracksContext context)
 {
-    private readonly TracksContext _context;
-
-    public TrackService(TracksContext context)
-    {
-        _context = context;
-    }
-
     public async Task<int> GetTrackCountAsync(CancellationToken cancellationToken = default)
     {
         await EnsureDatabaseAsync(cancellationToken);
 
-        return await _context.Tracks.CountAsync(cancellationToken);
+        return await context.Tracks.CountAsync(cancellationToken);
     }
 
     public async Task<IList<Models.Track>> GetTracksAsync(
@@ -32,7 +25,7 @@ public class TrackService
         DateTime notBefore = (since ?? DateTimeOffset.MinValue).UtcDateTime;
         DateTime notAfter = (until ?? DateTimeOffset.MaxValue).UtcDateTime;
 
-        var tracks = await _context.Tracks
+        var tracks = await context.Tracks
             .Where((p) => p.Timestamp > notBefore)
             .Where((p) => p.Timestamp < notAfter)
             .OrderBy((p) => p.Timestamp)
@@ -48,7 +41,7 @@ public class TrackService
                 Timestamp = new DateTimeOffset(track.Timestamp, TimeSpan.Zero),
             };
 
-            var points = _context.TrackPoints
+            var points = context.TrackPoints
                 .Where((p) => p.TrackId == track.Id)
                 .OrderBy((p) => p.Timestamp)
                 .AsAsyncEnumerable()
@@ -74,6 +67,6 @@ public class TrackService
 
     private async Task EnsureDatabaseAsync(CancellationToken cancellationToken)
     {
-        await _context.Database.EnsureCreatedAsync(cancellationToken);
+        await context.Database.EnsureCreatedAsync(cancellationToken);
     }
 }

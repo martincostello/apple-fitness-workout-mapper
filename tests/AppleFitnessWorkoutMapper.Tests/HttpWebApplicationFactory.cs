@@ -10,15 +10,10 @@ using Microsoft.Extensions.Hosting;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper;
 
-internal sealed class HttpWebApplicationFactory : WebApplicationFactory
+internal sealed class HttpWebApplicationFactory(ITestOutputHelper outputHelper) : WebApplicationFactory(outputHelper)
 {
     private IHost? _host;
     private bool _disposed;
-
-    public HttpWebApplicationFactory(ITestOutputHelper outputHelper)
-        : base(outputHelper)
-    {
-    }
 
     public string ServerAddress
     {

@@ -8,21 +8,15 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NodaTime;
+using Microsoft.Extensions.Time.Testing;
 
 namespace MartinCostello.AppleFitnessWorkoutMapper;
 
-internal class WebApplicationFactory : WebApplicationFactory<ApplicationOptions>, ITestOutputHelperAccessor
+internal class WebApplicationFactory(ITestOutputHelper outputHelper) : WebApplicationFactory<ApplicationOptions>, ITestOutputHelperAccessor
 {
-    public WebApplicationFactory(ITestOutputHelper outputHelper)
-    {
-        OutputHelper = outputHelper;
-        AppDataDirectory = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location)!, "App_Data");
-    }
+    public string AppDataDirectory { get; } = Path.Combine(Path.GetDirectoryName(typeof(WebApplicationFactory).Assembly.Location)!, "App_Data");
 
-    public string AppDataDirectory { get; }
-
-    public ITestOutputHelper? OutputHelper { get; set; }
+    public ITestOutputHelper? OutputHelper { get; set; } = outputHelper;
 
     private string DatabaseFileName { get; } = Guid.NewGuid().ToString() + ".db";
 
@@ -34,11 +28,12 @@ internal class WebApplicationFactory : WebApplicationFactory<ApplicationOptions>
             KeyValuePair.Create<string, string?>("DataDirectory", AppDataDirectory),
         };
 
-        var utcNow = Instant.FromUtc(2021, 06, 01, 12, 34, 56);
+        var utcNow = new DateTimeOffset(2021, 06, 01, 12, 34, 56, TimeSpan.Zero);
+        var timeProvider = new FakeTimeProvider(utcNow);
 
         builder.ConfigureAppConfiguration((p) => p.AddInMemoryCollection(config))
                .ConfigureLogging((p) => p.AddXUnit(this))
-               .ConfigureServices((p) => p.AddSingleton<IClock>((_) => new NodaTime.Testing.FakeClock(utcNow)))
+               .ConfigureServices((p) => p.AddSingleton<TimeProvider>(timeProvider))
                .UseSolutionRelativeContentRoot(Path.Combine("src", "AppleFitnessWorkoutMapper"));
     }
 

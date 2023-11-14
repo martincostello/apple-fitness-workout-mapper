@@ -4,7 +4,6 @@
 #Requires -Version 7
 
 param(
-    [Parameter(Mandatory = $false)][string] $OutputPath = "",
     [Parameter(Mandatory = $false)][switch] $SkipTests
 )
 
@@ -15,10 +14,6 @@ $solutionPath = $PSScriptRoot
 $sdkFile = Join-Path $solutionPath "global.json"
 
 $dotnetVersion = (Get-Content $sdkFile | Out-String | ConvertFrom-Json).sdk.version
-
-if ($OutputPath -eq "") {
-    $OutputPath = Join-Path $PSScriptRoot "artifacts"
-}
 
 $installDotNetSdk = $false;
 
@@ -84,7 +79,7 @@ function DotNetTest {
         $additionalArgs += "GitHubActions;report-warnings=false"
     }
 
-    & $dotnet test $Project --configuration "Release" --output $OutputPath $additionalArgs -- RunConfiguration.TestSessionTimeout=1200000
+    & $dotnet test $Project --configuration "Release" $additionalArgs --tl -- RunConfiguration.TestSessionTimeout=1200000
 
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet test failed with exit code $LASTEXITCODE"
@@ -102,7 +97,7 @@ function DotNetPublish {
         $additionalArgs += $Runtime
     }
 
-    & $dotnet publish $Project --output $PublishPath --configuration "Release" $additionalArgs
+    & $dotnet publish $Project --tl $additionalArgs
 
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet publish failed with exit code $LASTEXITCODE"
@@ -121,17 +116,20 @@ Write-Host "Publishing solution..." -ForegroundColor Green
 ForEach ($project in $publishProjects) {
 
     $runtimes = @(
+        "linux-arm64",
         "linux-x64",
+        "osx-arm64",
         "osx-x64",
+        "win-arm64",
         "win-x64"
     )
 
-    $publishRootPath = (Join-Path $OutputPath "publish")
+    $publishRootPath = (Join-Path $PSScriptRoot "artifacts" "publish" "AppleFitnessWorkoutMapper")
 
     ForEach ($runtime in $runtimes) {
 
-        $publishPath = (Join-Path $publishRootPath $runtime)
-        DotNetPublish $project $runtime $publishPath
+        $publishPath = (Join-Path $publishRootPath "release_$runtime")
+        DotNetPublish $project $runtime
 
         if ($null -ne $env:GITHUB_ACTIONS) {
             $zipPath = (Join-Path $publishRootPath ("AppleFitnessWorkoutMapper-" + $runtime + ".zip"))
@@ -139,8 +137,8 @@ ForEach ($project in $publishProjects) {
         }
     }
 
-    $publishPath = (Join-Path $publishRootPath "portable")
-    DotNetPublish $project "" $publishPath
+    $publishPath = (Join-Path $publishRootPath "release")
+    DotNetPublish $project ""
 
     if ($null -ne $env:GITHUB_ACTIONS) {
         $zipPath = (Join-Path $publishRootPath ("AppleFitnessWorkoutMapper.zip"))

@@ -23,9 +23,6 @@ env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION: 1
   FORCE_COLOR: 1
-  MACOS_APP_NAME: AppleFitnessWorkoutMapper.app
-  MACOS_APP_PATH: ./artifacts/AppleFitnessWorkoutMapper.app
-  MACOS_ARTIFACTS_PATH: ./artifacts
   NUGET_XMLDOC_MODE: skip
   TERM: xterm
 
@@ -113,7 +110,7 @@ jobs:
         GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
       shell: bash
       run: |
-        curl "https://api.github.com/users/${GITHUB_REPOSITORY_OWNER}/gpg_keys" | jq -r '.[].raw_key' | gpg --import
+        curl -s "https://api.github.com/users/${GITHUB_REPOSITORY_OWNER}/gpg_keys" | jq -r '.[].raw_key' | gpg --import
         gpg --list-keys --with-colons | awk -F: '/^fpr:/ { print $10 }' | while read -r key; do
           echo "${key}:6:" | gpg --import-ownertrust
         done
@@ -131,15 +128,23 @@ jobs:
         if-no-files-found: error
         name: app-zips
         path: |
-          ./artifacts/publish/*.zip
-          ./artifacts/publish/*.zip.sig
+          ./artifacts/publish/AppleFitnessWorkoutMapper/*.zip
+          ./artifacts/publish/AppleFitnessWorkoutMapper/*.zip.sig
 
-    - name: Publish macOS artifacts
+    - name: Publish macOS arm64 artifacts
       uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
       if: runner.os == 'Linux'
       with:
-        name: app-macos
-        path: ./artifacts/publish/osx-x64
+        name: app-macos-arm64
+        path: ./artifacts/publish/AppleFitnessWorkoutMapper/release_osx-arm64
+        if-no-files-found: error
+
+    - name: Publish macOS x64 artifacts
+      uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
+      if: runner.os == 'Linux'
+      with:
+        name: app-macos-x64
+        path: ./artifacts/publish/AppleFitnessWorkoutMapper/release_osx-x64
         if-no-files-found: error
 
     - name: Publish screenshots
@@ -168,9 +173,19 @@ jobs:
 
   notarize:
     if: github.event.repository.fork == false && startsWith(github.ref, 'refs/tags/v')
-    name: notarize
-    needs: build
+    needs: [ build ]
     runs-on: macos-latest
+
+    env:
+      MACOS_APP_NAME: AppleFitnessWorkoutMapper.app
+      MACOS_APP_PATH: ./artifacts/AppleFitnessWorkoutMapper.app
+      MACOS_ARTIFACTS_PATH: ./artifacts
+
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ arm64, x64 ]
+      max-parallel: 1
 
     steps:
 
@@ -180,14 +195,14 @@ jobs:
     - name: Download artifacts
       uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3.0.2
       with:
-        name: app-macos
+        name: app-macos-${{ matrix.platform }}
         path: ${{ env.MACOS_ARTIFACTS_PATH }}/publish
 
     - name: Generate macOS app
       shell: pwsh
       run: |
-        $Artifacts = "${{ env.MACOS_ARTIFACTS_PATH }}"
-        $AppPath = "${{ env.MACOS_APP_PATH }}"
+        $Artifacts = ${env:MACOS_ARTIFACTS_PATH}
+        $AppPath = ${env:MACOS_APP_PATH}
         $ContentsPath = (Join-Path ${AppPath} "Contents")
         $PublishPath = (Join-Path ${Artifacts} "publish")
         New-Item -Path ${Artifacts} -Name ${env:MACOS_APP_NAME} -ItemType "Directory" | Out-Null
@@ -240,40 +255,40 @@ jobs:
         product-path: ${{ env.MACOS_APP_PATH }}
 
     - name: Package signed app
-      run: ditto -V -c -k --keepParent "${MACOS_APP_PATH}" ./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip
+      run: ditto -V -c -k --keepParent "${MACOS_APP_PATH}" ./artifacts/AppleFitnessWorkoutMapper-osx-${{ matrix.platform }}.zip
 
     - name: Publish signed app
       uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
       with:
         name: app-macos-signed
-        path: ./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip
+        path: ./artifacts/AppleFitnessWorkoutMapper-osx-${{ matrix.platform }}.zip
 
     - name: GPG sign signed app
       env:
+        APP_PLATFORM: ${{ matrix.platform }}
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
       shell: bash
       run: |
-        curl "https://api.github.com/users/${GITHUB_REPOSITORY_OWNER}/gpg_keys" | jq -r '.[].raw_key' | gpg --import
+        curl -s "https://api.github.com/users/${GITHUB_REPOSITORY_OWNER}/gpg_keys" | jq -r '.[].raw_key' | gpg --import
         gpg --list-keys --with-colons | awk -F: '/^fpr:/ { print $10 }' | while read -r key; do
           echo "${key}:6:" | gpg --import-ownertrust
         done
         echo "${GPG_PRIVATE_KEY}" | gpg --import --batch --yes --passphrase "${GPG_PASSPHRASE}"
-        gpg --batch --yes --pinentry-mode loopback --passphrase "${GPG_PASSPHRASE}" --detach-sig "./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip"
-        gpg --verify "./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip.sig" "./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip"
+        gpg --batch --yes --pinentry-mode loopback --passphrase "${GPG_PASSPHRASE}" --detach-sig "./artifacts/AppleFitnessWorkoutMapper-osx-${APP_PLATFORM}.zip"
+        gpg --verify "./artifacts/AppleFitnessWorkoutMapper-osx-${APP_PLATFORM}.zip.sig" "./artifacts/AppleFitnessWorkoutMapper-osx-${APP_PLATFORM}.zip"
 
     - name: Update macOS ZIP artifacts
       uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
       with:
         name: app-zips
         path: |
-          ./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip
-          ./artifacts/AppleFitnessWorkoutMapper-osx-x64.zip.sig
+          ./artifacts/AppleFitnessWorkoutMapper-osx-${{ matrix.platform }}.zip
+          ./artifacts/AppleFitnessWorkoutMapper-osx-${{ matrix.platform }}.zip.sig
 
   release:
-    name: release
-    needs: notarize
-    runs-on: windows-latest
+    needs: [ notarize ]
+    runs-on: ubuntu-latest
 
     permissions:
       contents: write

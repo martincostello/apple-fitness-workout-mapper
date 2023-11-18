@@ -107,19 +107,26 @@ static void RunApplication(string[] args)
 
     builder.Services.AddRazorPages();
 
-    builder.Services.Configure<BrotliCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
-    builder.Services.Configure<GzipCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
-
-    builder.Services.AddResponseCompression((p) =>
+    if (!builder.Environment.IsDevelopment())
     {
-        p.EnableForHttps = true;
-        p.Providers.Add<BrotliCompressionProvider>();
-        p.Providers.Add<GzipCompressionProvider>();
-    });
+        builder.Services.Configure<BrotliCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
+        builder.Services.Configure<GzipCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
+
+        builder.Services.AddResponseCompression((p) =>
+        {
+            p.EnableForHttps = true;
+            p.Providers.Add<BrotliCompressionProvider>();
+            p.Providers.Add<GzipCompressionProvider>();
+        });
+    }
 
     var app = builder.Build();
 
-    app.UseResponseCompression();
+    if (!builder.Environment.IsDevelopment())
+    {
+        app.UseResponseCompression();
+    }
+
     app.UseStaticFiles();
     app.UseRouting();
     app.MapRazorPages();

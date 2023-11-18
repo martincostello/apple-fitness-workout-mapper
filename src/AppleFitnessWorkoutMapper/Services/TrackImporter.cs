@@ -33,7 +33,7 @@ public sealed partial class TrackImporter(
 
         foreach (var track in tracks)
         {
-            var trackDB = new Data.Track()
+            var trackDB = new Track()
             {
                 Name = track.Name,
                 Timestamp = track.Timestamp.UtcDateTime,
@@ -41,11 +41,11 @@ public sealed partial class TrackImporter(
 
             trackDB = (await context.Tracks.AddAsync(trackDB, cancellationToken)).Entity;
 
-            var points = new List<Data.TrackPoint>(track.Points.Count);
+            var points = new List<TrackPoint>(track.Points.Count);
 
             foreach (var point in track.Points)
             {
-                var pointDB = new Data.TrackPoint()
+                var pointDB = new TrackPoint()
                 {
                     Latitude = point.Latitude,
                     Longitude = point.Longitude,

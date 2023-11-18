@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Martin Costello, 2021. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
+using System.Data.Common;
+using System.Diagnostics;
 using System.IO.Compression;
 using MartinCostello.AppleFitnessWorkoutMapper;
 using MartinCostello.AppleFitnessWorkoutMapper.Data;
@@ -10,6 +12,8 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using Polly;
+using Polly.Registry;
 
 try
 {
@@ -94,10 +98,27 @@ static void RunApplication(string[] args)
         };
     });
 
+    const string Key = "Database";
+
+    builder.Services.AddResiliencePipeline(Key, (builder) =>
+    {
+        builder.AddRetry(new()
+        {
+            ShouldHandle = new PredicateBuilder().Handle<Exception>(
+                (ex) => ex is DbException or InvalidOperationException or TimeoutException),
+        });
+    });
+
     builder.Services.AddDbContext<TracksContext>((serviceProvider, builder) =>
     {
         var options = serviceProvider.GetRequiredService<IOptions<ApplicationOptions>>();
-        builder.UseSqlite("Data Source=" + options.Value.DatabaseFile);
+        var provider = serviceProvider.GetRequiredService<ResiliencePipelineProvider<string>>();
+
+        builder.UseSqlite("Data Source=" + options.Value.DatabaseFile, (builder) =>
+        {
+            builder.ExecutionStrategy(
+                (dependencies) => new ResilientExecutionStrategy(dependencies, provider.GetPipeline(Key)));
+        });
     });
 
     builder.Services.TryAddSingleton(TimeProvider.System);
@@ -107,7 +128,7 @@ static void RunApplication(string[] args)
 
     builder.Services.AddRazorPages();
 
-    if (!builder.Environment.IsDevelopment())
+    if (!Debugger.IsAttached)
     {
         builder.Services.Configure<BrotliCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
         builder.Services.Configure<GzipCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
@@ -122,7 +143,7 @@ static void RunApplication(string[] args)
 
     var app = builder.Build();
 
-    if (!builder.Environment.IsDevelopment())
+    if (!Debugger.IsAttached)
     {
         app.UseResponseCompression();
     }

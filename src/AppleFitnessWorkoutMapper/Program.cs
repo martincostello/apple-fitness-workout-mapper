@@ -131,7 +131,9 @@ static void RunApplication(string[] args)
     app.UseRouting();
     app.MapRazorPages();
 
-    app.MapGet("/api/tracks", async (
+    var api = app.MapGroup("/api/tracks");
+
+    api.MapGet(string.Empty, static async (
         TrackService service,
         DateTimeOffset? notBefore,
         DateTimeOffset? notAfter,
@@ -141,13 +143,13 @@ static void RunApplication(string[] args)
         return Results.Json(tracks, ApplicationJsonSerializerContext.Default.ListTrack);
     });
 
-    app.MapGet("/api/tracks/count", async (TrackService service, CancellationToken cancellationToken) =>
+    api.MapGet("/count", static async (TrackService service, CancellationToken cancellationToken) =>
     {
         int count = await service.GetTrackCountAsync(cancellationToken);
         return Results.Json(new TrackCount() { Count = count }, ApplicationJsonSerializerContext.Default.TrackCount);
     });
 
-    app.MapPost("/api/tracks/import", async (TrackImporter importer, CancellationToken cancellationToken) =>
+    api.MapPost("/import", static async (TrackImporter importer, CancellationToken cancellationToken) =>
     {
         int count = await importer.ImportTracksAsync(cancellationToken);
         return Results.Json(

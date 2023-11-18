@@ -8,6 +8,12 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Services;
 
 public class TrackService(TracksContext context)
 {
+    public async Task<DateTime?> GetLatestTrackAsync(CancellationToken cancellationToken = default)
+    {
+        await EnsureDatabaseAsync(cancellationToken);
+        return await context.Tracks.MaxAsync((p) => (DateTime?)p.Timestamp, cancellationToken);
+    }
+
     public async Task<int> GetTrackCountAsync(CancellationToken cancellationToken = default)
     {
         await EnsureDatabaseAsync(cancellationToken);

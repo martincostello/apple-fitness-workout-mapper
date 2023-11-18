@@ -1,14 +1,8 @@
 @page
-@using System.Globalization;
 @using MartinCostello.AppleFitnessWorkoutMapper;
 @using MartinCostello.AppleFitnessWorkoutMapper.Pages;
 @addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @model IndexModel
-@{
-    var today = Model.TimeProvider.GetUtcNow().UtcDateTime.Date;
-    string startDate = today.AddDays(-28).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
-    string endDate = today.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
-}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -89,7 +83,7 @@
                                     <i class="bi-calendar-event" aria-hidden="true"></i>
                                 </span>
                             </div>
-                            <input type="text" autocomplete="off" class="form-control calendar" placeholder="Start date" value="@startDate" aria-label="Start date" id="not-before" disabled>
+                            <input type="text" autocomplete="off" class="form-control calendar" placeholder="Start date" value="@(Model.StartDate)" aria-label="Start date" id="not-before" disabled>
                         </div>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend" aria-hidden="true">
@@ -97,7 +91,7 @@
                                     <i class="bi-calendar-event" aria-hidden="true"></i>
                                 </span>
                             </div>
-                            <input type="text" autocomplete="off" class="form-control calendar" placeholder="End date" value="@endDate" aria-label="End date" id="not-after" disabled>
+                            <input type="text" autocomplete="off" class="form-control calendar" placeholder="End date" value="@(Model.EndDate)" aria-label="End date" id="not-after" disabled>
                         </div>
                         <div class="input-group mb-3">
                             <div class="btn-toolbar" role="toolbar">

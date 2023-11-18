@@ -66,7 +66,7 @@ static void RunApplication(string[] args)
         });
 
     builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(
-        (options) => options.SerializerOptions.TypeInfoResolverChain.Add(ApplicationJsonSerializerContext.Default));
+        (options) => options.SerializerOptions.TypeInfoResolverChain.Insert(0, ApplicationJsonSerializerContext.Default));
 
     builder.Services.Configure<StaticFileOptions>((options) =>
     {
@@ -131,19 +131,22 @@ static void RunApplication(string[] args)
         CancellationToken cancellationToken) =>
     {
         var tracks = await service.GetTracksAsync(notBefore, notAfter, cancellationToken);
-        return Results.Json(tracks);
+        return Results.Json(tracks, ApplicationJsonSerializerContext.Default.ListTrack);
     });
 
     app.MapGet("/api/tracks/count", async (TrackService service, CancellationToken cancellationToken) =>
     {
         int count = await service.GetTrackCountAsync(cancellationToken);
-        return Results.Json(new TrackCount() { Count = count });
+        return Results.Json(new TrackCount() { Count = count }, ApplicationJsonSerializerContext.Default.TrackCount);
     });
 
     app.MapPost("/api/tracks/import", async (TrackImporter importer, CancellationToken cancellationToken) =>
     {
         int count = await importer.ImportTracksAsync(cancellationToken);
-        return Results.Json(new TrackCount() { Count = count }, statusCode: StatusCodes.Status201Created);
+        return Results.Json(
+            new TrackCount() { Count = count },
+            ApplicationJsonSerializerContext.Default.TrackCount,
+            statusCode: StatusCodes.Status201Created);
     });
 
     app.Run();

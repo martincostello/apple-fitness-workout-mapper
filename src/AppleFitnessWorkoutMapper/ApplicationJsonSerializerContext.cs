@@ -10,6 +10,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper;
 [ExcludeFromCodeCoverage]
 [JsonSerializable(typeof(List<Track>))]
 [JsonSerializable(typeof(TrackCount))]
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
 internal sealed partial class ApplicationJsonSerializerContext : JsonSerializerContext
 {
 }

@@ -100,6 +100,7 @@ static void RunApplication(string[] args)
 
     const string Key = "Database";
 
+    builder.Services.AddResilienceEnricher();
     builder.Services.AddResiliencePipeline(Key, (builder) =>
     {
         builder.AddRetry(new()

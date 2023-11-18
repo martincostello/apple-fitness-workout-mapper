@@ -2,6 +2,7 @@
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
 using System.Data.Common;
+using System.Diagnostics;
 using System.IO.Compression;
 using MartinCostello.AppleFitnessWorkoutMapper;
 using MartinCostello.AppleFitnessWorkoutMapper.Data;
@@ -127,7 +128,7 @@ static void RunApplication(string[] args)
 
     builder.Services.AddRazorPages();
 
-    if (!builder.Environment.IsDevelopment())
+    if (!Debugger.IsAttached)
     {
         builder.Services.Configure<BrotliCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
         builder.Services.Configure<GzipCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
@@ -142,7 +143,7 @@ static void RunApplication(string[] args)
 
     var app = builder.Build();
 
-    if (!builder.Environment.IsDevelopment())
+    if (!Debugger.IsAttached)
     {
         app.UseResponseCompression();
     }

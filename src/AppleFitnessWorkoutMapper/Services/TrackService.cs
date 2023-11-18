@@ -66,7 +66,5 @@ public class TrackService(TracksContext context)
     }
 
     private async Task EnsureDatabaseAsync(CancellationToken cancellationToken)
-    {
-        await context.Database.EnsureCreatedAsync(cancellationToken);
-    }
+        => await context.Database.EnsureCreatedAsync(cancellationToken);
 }

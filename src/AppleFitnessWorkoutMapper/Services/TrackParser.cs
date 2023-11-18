@@ -36,9 +36,7 @@ public sealed partial class TrackParser(
             }
         }
 
-        var comparer = Comparer<DateTimeOffset>.Default;
-
-        result.Sort((x, y) => comparer.Compare(x.Timestamp, y.Timestamp));
+        result.Sort((x, y) => x.Timestamp.CompareTo(y.Timestamp));
 
         Log.ParsedTrackData(logger, result.Count, path);
 
@@ -67,7 +65,7 @@ public sealed partial class TrackParser(
         string fileName,
         CancellationToken cancellationToken)
     {
-        using Stream stream = File.OpenRead(fileName);
+        using var stream = File.OpenRead(fileName);
 
         XElement root;
 
@@ -129,7 +127,7 @@ public sealed partial class TrackParser(
             return null;
         }
 
-        result.Timestamp = result.Points.First().Timestamp;
+        result.Timestamp = result.Points[0].Timestamp;
 
         Log.AddedTrackPointsFromFile(
             logger,

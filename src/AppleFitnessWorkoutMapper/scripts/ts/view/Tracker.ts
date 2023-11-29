@@ -152,7 +152,7 @@ export class Tracker {
         const apiKey = this.ui.map.getAttribute('data-google-api-key');
         const loader = new Loader({
             apiKey: apiKey,
-            version: 'weekly',
+            version: 'quarterly',
             libraries: ['geometry'],
         });
         await loader.importLibrary('maps');

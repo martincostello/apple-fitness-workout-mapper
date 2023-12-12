@@ -19,8 +19,8 @@
   "author": "martincostello",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@babel/core": "^7.23.5",
-    "@babel/preset-env": "^7.23.5",
+    "@babel/core": "^7.23.6",
+    "@babel/preset-env": "^7.23.6",
     "@googlemaps/js-api-loader": "^1.16.2",
     "@types/google.maps": "^3.54.10",
     "@types/jquery": "^3.5.29",

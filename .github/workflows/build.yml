@@ -39,11 +39,11 @@ jobs:
       matrix:
         include:
           - os: macos-latest
-            codecov_os: macos
+            os-name: macos
           - os: ubuntu-latest
-            codecov_os: linux
+            os-name: linux
           - os: windows-latest
-            codecov_os: windows
+            os-name: windows
 
     steps:
 
@@ -97,7 +97,7 @@ jobs:
       name: Upload coverage to Codecov
       with:
         files: ./artifacts/coverage/coverage.cobertura.xml,./src/AppleFitnessWorkoutMapper/coverage/lcov.info
-        flags: ${{ matrix.codecov_os }}
+        flags: ${{ matrix.os-name }}
 
     - name: GPG sign ZIP artifacts
       if: |
@@ -151,7 +151,7 @@ jobs:
       uses: actions/upload-artifact@c7d193f32edcb7bfad88892161225aeda64e9392 # v4.0.0
       if: ${{ !cancelled() }}
       with:
-        name: screenshots
+        name: screenshots-${{ matrix.os-name }}
         path: ./artifacts/screenshots/*.png
         if-no-files-found: ignore
 
@@ -159,7 +159,7 @@ jobs:
       uses: actions/upload-artifact@c7d193f32edcb7bfad88892161225aeda64e9392 # v4.0.0
       if: ${{ !cancelled() }}
       with:
-        name: traces
+        name: traces-${{ matrix.os-name }}
         path: ./artifacts/traces/*
         if-no-files-found: ignore
 
@@ -167,7 +167,7 @@ jobs:
       uses: actions/upload-artifact@c7d193f32edcb7bfad88892161225aeda64e9392 # v4.0.0
       if: ${{ !cancelled() }}
       with:
-        name: videos
+        name: videos-${{ matrix.os-name }}
         path: ./artifacts/videos/*
         if-no-files-found: ignore
 
@@ -278,10 +278,10 @@ jobs:
         gpg --batch --yes --pinentry-mode loopback --passphrase "${GPG_PASSPHRASE}" --detach-sig "./artifacts/AppleFitnessWorkoutMapper-osx-${APP_PLATFORM}.zip"
         gpg --verify "./artifacts/AppleFitnessWorkoutMapper-osx-${APP_PLATFORM}.zip.sig" "./artifacts/AppleFitnessWorkoutMapper-osx-${APP_PLATFORM}.zip"
 
-    - name: Update macOS ZIP artifacts
+    - name: Publish notarized ZIP artifacts
       uses: actions/upload-artifact@c7d193f32edcb7bfad88892161225aeda64e9392 # v4.0.0
       with:
-        name: app-zips
+        name: app-zips-notarized
         path: |
           ./artifacts/AppleFitnessWorkoutMapper-osx-${{ matrix.platform }}.zip
           ./artifacts/AppleFitnessWorkoutMapper-osx-${{ matrix.platform }}.zip.sig
@@ -298,7 +298,7 @@ jobs:
     - name: Download artifacts
       uses: actions/download-artifact@7a1cd3216ca9260cd8022db641d960b1db4d1be4 # v4.0.0
       with:
-        name: app-zips
+        name: app-zips-notarized
 
     - name: Create GitHub release
       uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v1

@@ -10,31 +10,35 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
 {
     public ITestOutputHelper OutputHelper { get; set; } = outputHelper;
 
-    public static IEnumerable<object?[]> Browsers()
+    public static TheoryData<string, string?> Browsers()
     {
-        yield return new[] { BrowserType.Chromium, null };
+        var browsers = new TheoryData<string, string?>()
+        {
+            { BrowserType.Chromium, null },
+            { BrowserType.Firefox, null },
+        };
 
         if (!OperatingSystem.IsWindows())
         {
-            yield return new[] { BrowserType.Chromium, "chrome" };
+            browsers.Add(BrowserType.Chromium, "chrome");
         }
 
         if (!OperatingSystem.IsLinux())
         {
-            yield return new[] { BrowserType.Chromium, "msedge" };
+            browsers.Add(BrowserType.Chromium, "msedge");
         }
-
-        yield return new[] { BrowserType.Firefox, null };
 
         if (OperatingSystem.IsMacOS())
         {
-            yield return new[] { BrowserType.Webkit, null };
+            browsers.Add(BrowserType.Webkit, null);
         }
+
+        return browsers;
     }
 
     [Theory]
     [MemberData(nameof(Browsers))]
-    public async Task Can_Import_Data_And_View_Workouts(string browserType, string browserChannel)
+    public async Task Can_Import_Data_And_View_Workouts(string browserType, string? browserChannel)
     {
         // Arrange
         var options = new BrowserFixtureOptions()

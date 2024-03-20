@@ -22,7 +22,7 @@
     "@babel/core": "^7.24.0",
     "@babel/preset-env": "^7.24.0",
     "@googlemaps/js-api-loader": "^1.16.6",
-    "@types/google.maps": "^3.55.4",
+    "@types/google.maps": "^3.55.5",
     "@types/jquery": "^3.5.29",
     "@typescript-eslint/eslint-plugin": "^7.3.1",
     "@typescript-eslint/parser": "^7.3.1",

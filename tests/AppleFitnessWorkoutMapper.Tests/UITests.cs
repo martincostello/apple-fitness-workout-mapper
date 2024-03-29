@@ -166,7 +166,7 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
 
     private static void InstallPlaywright()
     {
-        int exitCode = Microsoft.Playwright.Program.Main(new[] { "install" });
+        int exitCode = Program.Main(["install"]);
 
         if (exitCode != 0)
         {

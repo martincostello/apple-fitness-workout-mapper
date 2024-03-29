@@ -35,7 +35,7 @@ jobs:
     - name: Start website
       shell: pwsh
       run: |
-        Start-Process nohup 'dotnet run --project ./src/AppleFitnessWorkoutMapper/AppleFitnessWorkoutMapper.csproj --configuration Release'
+        Start-Process nohup 'dotnet run --project ./src/AppleFitnessWorkoutMapper/AppleFitnessWorkoutMapper.csproj --configuration Release /p:EnableNETAnalyzers=false /p:EnforceCodeStyleInBuild=false'
         $StatusCode = 0
         $Attempts = 0
         While ($Attempts -lt 20) {

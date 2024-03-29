@@ -205,12 +205,15 @@ jobs:
         $Artifacts = ${env:MACOS_ARTIFACTS_PATH}
         $AppPath = ${env:MACOS_APP_PATH}
         $ContentsPath = (Join-Path ${AppPath} "Contents")
+        $ResourcesPath = (Join-Path ${ContentsPath} "Resources")
         $PublishPath = (Join-Path ${Artifacts} "publish")
+        $SourcePath = "./src/AppleFitnessWorkoutMapper"
         New-Item -Path ${Artifacts} -Name ${env:MACOS_APP_NAME} -ItemType "Directory" | Out-Null
         New-Item -Path ${AppPath} -Name "Contents" -ItemType "Directory" | Out-Null
         New-Item -Path ${ContentsPath} -Name "Resources" -ItemType "Directory" | Out-Null
         Copy-Item -Path ${PublishPath} -Destination (Join-Path ${ContentsPath} "MacOS") -Recurse | Out-Null
-        Copy-Item -Path ./src/AppleFitnessWorkoutMapper/Info.plist -Destination ${ContentsPath} | Out-Null
+        Copy-Item -Path (Join-Path ${SourcePath} "Info.plist") -Destination ${ContentsPath} | Out-Null
+        Copy-Item -Path (Join-Path ${SourcePath} "PrivacyInfo.xcprivacy") -Destination ${ResourcesPath} | Out-Null
 
     - name: Configure Xcode
       uses: martincostello/xcode-select@db3d404e6e20374a638c10a68e3d804977ec19cb # node20

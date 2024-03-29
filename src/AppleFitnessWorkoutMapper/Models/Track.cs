@@ -9,5 +9,5 @@ public sealed class Track
 
     public DateTimeOffset Timestamp { get; set; }
 
-    public IList<TrackPoint> Points { get; set; } = new List<TrackPoint>();
+    public IList<TrackPoint> Points { get; set; } = [];
 }

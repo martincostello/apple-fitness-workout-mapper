@@ -7,7 +7,7 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Data;
 
 public sealed class TracksContext(DbContextOptions options) : DbContext(options)
 {
-    public DbSet<Track> Tracks { get; init; }
+    public DbSet<Track> Tracks { get; init; } = default!;
 
-    public DbSet<TrackPoint> TrackPoints { get; init; }
+    public DbSet<TrackPoint> TrackPoints { get; init; } = default!;
 }

@@ -246,12 +246,12 @@ jobs:
         codesign --force --timestamp --options=runtime --entitlements "${ENTITLEMENTS}" --sign "${SIGNING_IDENTITY}" "${APP_PATH}"
 
     - name: Notarize app
-      uses: martincostello/xcode-notarize@17e84070b7b624f134b74a6e4afa3284db1040d1 # node20
+      uses: martincostello/xcode-notarize@b461d5783f3d2e7f94e71296e42804b1f81a9dc7 # notarytool
       with:
-        primary-bundle-id: com.martincostello.applefitnessworkoutmapper
         product-path: ${{ env.MACOS_APP_PATH }}
-        appstore-connect-username: ${{ secrets.NOTARIZATION_USERNAME }}
-        appstore-connect-password: ${{ secrets.NOTARIZATION_PASSWORD }}
+        apple-id: ${{ secrets.NOTARIZATION_USERNAME }}
+        app-password: ${{ secrets.NOTARIZATION_PASSWORD }}
+        team-id: ${{ secrets.NOTARIZATION_TEAM_ID }}
 
     - name: Staple app
       uses: martincostello/xcode-staple@6961e581904dea5b988186057568c92667fb03a1 # node20

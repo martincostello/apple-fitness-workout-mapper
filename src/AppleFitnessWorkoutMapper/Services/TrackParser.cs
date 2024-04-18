@@ -104,7 +104,8 @@ public sealed partial class TrackParser(
                         continue;
                     }
 
-                    if (!TryParseTimestamp(pointNode.Descendants(XS + "time").FirstOrDefault(), out DateTimeOffset? timestamp))
+                    if (!TryParseTimestamp(pointNode.Descendants(XS + "time").FirstOrDefault(), out DateTimeOffset? timestamp) ||
+                        timestamp is null)
                     {
                         Log.IgnoringInvalidTimestamp(logger, fileName);
                         continue;

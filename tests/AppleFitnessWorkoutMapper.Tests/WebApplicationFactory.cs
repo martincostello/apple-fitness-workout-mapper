@@ -18,7 +18,7 @@ internal class WebApplicationFactory(ITestOutputHelper outputHelper) : WebApplic
 
     public ITestOutputHelper? OutputHelper { get; set; } = outputHelper;
 
-    private string DatabaseFileName { get; } = Guid.NewGuid().ToString() + ".db";
+    private string DatabaseFileName { get; } = $"{Guid.NewGuid()}.db";
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {

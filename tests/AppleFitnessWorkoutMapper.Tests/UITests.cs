@@ -23,7 +23,8 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
             browsers.Add(BrowserType.Chromium, "chrome");
         }
 
-        if (!OperatingSystem.IsLinux())
+        // HACK Skip on macOS. See https://github.com/microsoft/playwright-dotnet/issues/2920.
+        if (!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS())
         {
             browsers.Add(BrowserType.Chromium, "msedge");
         }

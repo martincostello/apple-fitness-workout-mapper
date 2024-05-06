@@ -161,7 +161,7 @@ OneDrive.
 > the map on which the workouts are rendered.
 
 To configure a Google Maps API key, follow the [instructions that can be found
-here](https://developers.google.com/maps/gmp-get-started#quickstart) so that you
+here](https://developers.google.com/maps/get-started#quickstart) so that you
 can use the application without development-only overlays.
 
 Once you have generated an API key, put the value of the key that was generated

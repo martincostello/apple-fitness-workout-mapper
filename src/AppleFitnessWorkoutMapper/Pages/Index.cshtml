@@ -13,6 +13,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap4-toggle/3.6.1/bootstrap4-toggle.min.css" integrity="sha512-EzrsULyNzUc4xnMaqTrB4EpGvudqpetxG/WNjCpG6ZyyAGxeB6OBF9o246+mwx3l/9Cn838iLIcrxpPHTiygAA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="~/static/css/styles.css" asp-append-version="true">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://maps.googleapis.com">
+    <link rel="dns-prefetch" href="https://maps.gstatic.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://maps.googleapis.com">
+    <link rel="preconnect" href="https://maps.gstatic.com">
     <meta name="description" content="Visualise multiple journeys from Apple Fitness on a map">
     <meta name="author" content="Martin Costello">
     <title>Apple Fitness Workout Mapper</title>
@@ -147,8 +155,12 @@
                             No Google Maps API key is configured <i class="bi bi-exclamation-triangle" aria-hidden="true"></i>
                         </p>
                         <p>
-                            To generate an API key follow the instructions
-                            <a href="https://developers.google.com/maps/gmp-get-started#quickstart" rel="nofollow" target="_blank">here</a>.
+                            To generate an API key follow the instructions here:
+                            <em>
+                                <a href="https://developers.google.com/maps/get-started#quickstart" rel="nofollow" target="_blank" aria-description="A link to the Google Maps getting started documentation">
+                                    Getting started with Google Maps Platform
+                                </a>
+                            </em>.
                             <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
                         </p>
                         <p>

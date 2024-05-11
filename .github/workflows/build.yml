@@ -129,12 +129,14 @@ jobs:
 
     - name: Attest artifacts
       uses: actions/attest-build-provenance@951c0c5f8e375ad4efad33405ab77f7ded2358e4 # v1.1.1
-      if: |
-        runner.os == 'Linux' &&
-        github.event.repository.fork == false &&
-        (github.ref_name == github.event.repository.default_branch || startsWith(github.ref, 'refs/tags/v'))
+      if: runner.os == 'Linux'
+        #github.event.repository.fork == false &&
+        #(github.ref_name == github.event.repository.default_branch || startsWith(github.ref, 'refs/tags/v'))
       with:
-        subject-path: ./artifacts/publish/AppleFitnessWorkoutMapper/*.zip
+        subject-path: |
+          ./artifacts/publish/AppleFitnessWorkoutMapper/AppleFitnessWorkoutMapper.zip
+          ./artifacts/publish/AppleFitnessWorkoutMapper/AppleFitnessWorkoutMapper-linux-*.zip
+          ./artifacts/publish/AppleFitnessWorkoutMapper/AppleFitnessWorkoutMapper-win-*.zip
 
     - name: Publish ZIP artifacts
       uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
@@ -143,8 +145,12 @@ jobs:
         if-no-files-found: error
         name: app-zips
         path: |
-          ./artifacts/publish/AppleFitnessWorkoutMapper/*.zip
-          ./artifacts/publish/AppleFitnessWorkoutMapper/*.zip.sig
+          ./artifacts/publish/AppleFitnessWorkoutMapper/AppleFitnessWorkoutMapper.zip
+          ./artifacts/publish/AppleFitnessWorkoutMapper/AppleFitnessWorkoutMapper.zip.sig
+          ./artifacts/publish/AppleFitnessWorkoutMapper/AppleFitnessWorkoutMapper-linux-*.zip
+          ./artifacts/publish/AppleFitnessWorkoutMapper/AppleFitnessWorkoutMapper-linux-*.zip.sig
+          ./artifacts/publish/AppleFitnessWorkoutMapper/AppleFitnessWorkoutMapper-win-*.zip
+          ./artifacts/publish/AppleFitnessWorkoutMapper/AppleFitnessWorkoutMapper-win-*.zip.sig
 
     - name: Publish macOS arm64 artifacts
       uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
@@ -283,7 +289,7 @@ jobs:
     - name: Publish signed app
       uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
       with:
-        name: app-macos-signed
+        name: app-macos-signed-${{ matrix.platform }}
         path: ./artifacts/AppleFitnessWorkoutMapper-osx-${{ matrix.platform }}.zip
 
     - name: GPG sign signed app
@@ -309,13 +315,12 @@ jobs:
     - name: Publish notarized ZIP artifacts
       uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
       with:
-        name: app-zips-notarized
+        name: app-zips-notarized-${{ matrix.platform }}
         path: |
           ./artifacts/AppleFitnessWorkoutMapper-osx-${{ matrix.platform }}.zip
           ./artifacts/AppleFitnessWorkoutMapper-osx-${{ matrix.platform }}.zip.sig
 
   release:
-    if: false
     needs: [ notarize ]
     runs-on: ubuntu-latest
 
@@ -324,17 +329,35 @@ jobs:
 
     steps:
 
-    - name: Download artifacts
+    - name: Download Linux and Windows artifacts
       uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
       with:
-        name: app-zips-notarized
+        name: app-zips
+        path: .
 
-    - name: Create GitHub release
-      uses: softprops/action-gh-release@69320dbe05506a9a39fc8ae11030b214ec2d1f87 # v2.0.5
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Download macOS arm64 artifacts
+      uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
       with:
-        draft: true
-        files: |
-          *.zip
-          *.zip.sig
+        name: app-zips-notarized-arm64
+        path: .
+
+    - name: Download macOS x64 artifacts
+      uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
+      with:
+        name: app-zips-notarized-x64
+        path: .
+
+    - name: List files
+      shell: bash
+      run: |
+        ls -la .
+
+    #- name: Create GitHub release
+    #  uses: softprops/action-gh-release@69320dbe05506a9a39fc8ae11030b214ec2d1f87 # v2.0.5
+    #  env:
+    #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #  with:
+    #    draft: true
+    #    files: |
+    #      *.zip
+    #      *.zip.sig

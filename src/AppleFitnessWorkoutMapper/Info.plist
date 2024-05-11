@@ -18,10 +18,13 @@
 		<string>APPL</string>
 		<key>CFBundleShortVersionString</key>
 		<string>1.4.0</string>
+		<key>CFBundleSignature</key>
+		<string>????</string>
+		<key>CFBundleVersion</key>
 		<string>1.4.0</string>
 		<key>LSMinimumSystemVersion</key>
 		<string>12.0</string>
 		<key>NSHumanReadableCopyright</key>
-		<string>Martin Costello (c) 2021</string>
+		<string>Martin Costello (c) 2021-2024</string>
 	</dict>
 </plist>

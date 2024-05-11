@@ -34,6 +34,11 @@ jobs:
     name: ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
 
+    permissions:
+      attestations: write
+      contents: read
+      id-token: write
+
     strategy:
       fail-fast: false
       matrix:
@@ -122,6 +127,15 @@ jobs:
           gpg --verify "${fname}.sig" "${fname}"
         done
 
+    - name: Attest artifacts
+      uses: actions/attest-build-provenance@951c0c5f8e375ad4efad33405ab77f7ded2358e4 # v1.1.1
+      #if: |
+      #  runner.os == 'Linux' &&
+      #  github.event.repository.fork == false &&
+      #  (github.ref_name == github.event.repository.default_branch || startsWith(github.ref, 'refs/tags/v'))
+      with:
+        subject-path: ./artifacts/publish/AppleFitnessWorkoutMapper/*.zip
+
     - name: Publish ZIP artifacts
       uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
       if: runner.os == 'Linux'
@@ -173,7 +187,7 @@ jobs:
         if-no-files-found: ignore
 
   notarize:
-    if: github.event.repository.fork == false && startsWith(github.ref, 'refs/tags/v')
+    #if: github.event.repository.fork == false && startsWith(github.ref, 'refs/tags/v')
     needs: [ build ]
     runs-on: macos-latest
 
@@ -181,6 +195,11 @@ jobs:
       MACOS_APP_NAME: AppleFitnessWorkoutMapper.app
       MACOS_APP_PATH: ./artifacts/AppleFitnessWorkoutMapper.app
       MACOS_ARTIFACTS_PATH: ./artifacts
+
+    permissions:
+      attestations: write
+      contents: read
+      id-token: write
 
     strategy:
       fail-fast: false
@@ -218,7 +237,7 @@ jobs:
     - name: Configure Xcode
       uses: martincostello/xcode-select@db3d404e6e20374a638c10a68e3d804977ec19cb # node20
       with:
-        version: "15.3"
+        version: '15.3'
 
     - name: Import Distribution Certificate
       uses: martincostello/import-signing-certificate@a80a8cdd27ba2b00e0e80480fb66c4149de04061 # node20
@@ -282,6 +301,11 @@ jobs:
         gpg --batch --yes --pinentry-mode loopback --passphrase "${GPG_PASSPHRASE}" --detach-sig "./artifacts/AppleFitnessWorkoutMapper-osx-${APP_PLATFORM}.zip"
         gpg --verify "./artifacts/AppleFitnessWorkoutMapper-osx-${APP_PLATFORM}.zip.sig" "./artifacts/AppleFitnessWorkoutMapper-osx-${APP_PLATFORM}.zip"
 
+    - name: Attest artifacts
+      uses: actions/attest-build-provenance@951c0c5f8e375ad4efad33405ab77f7ded2358e4 # v1.1.1
+      with:
+        subject-path: ./artifacts/AppleFitnessWorkoutMapper-osx-${{ matrix.platform }}.zip
+
     - name: Publish notarized ZIP artifacts
       uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
       with:
@@ -291,6 +315,7 @@ jobs:
           ./artifacts/AppleFitnessWorkoutMapper-osx-${{ matrix.platform }}.zip.sig
 
   release:
+    if: false
     needs: [ notarize ]
     runs-on: ubuntu-latest
 
@@ -306,10 +331,10 @@ jobs:
 
     - name: Create GitHub release
       uses: softprops/action-gh-release@69320dbe05506a9a39fc8ae11030b214ec2d1f87 # v2.0.5
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         draft: true
         files: |
           *.zip
           *.zip.sig
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

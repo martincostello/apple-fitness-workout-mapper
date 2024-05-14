@@ -22,7 +22,7 @@ internal static class IPageExtensions
 
     public static async Task<IElementHandle> WaitUntilEnabledAsync(this IPage page, string selector)
     {
-        IElementHandle? element = await page.QuerySelectorAsync(selector);
+        var element = await page.QuerySelectorAsync(selector);
 
         element.ShouldNotBeNull();
         await element.WaitForElementStateAsync(ElementState.Enabled);
@@ -32,7 +32,7 @@ internal static class IPageExtensions
 
     public static async Task<IElementHandle> WaitUntilHiddenAsync(this IPage page, string selector)
     {
-        IElementHandle? element = await page.QuerySelectorAsync(selector);
+        var element = await page.QuerySelectorAsync(selector);
 
         element.ShouldNotBeNull();
         await element.WaitForElementStateAsync(ElementState.Hidden);
@@ -42,7 +42,7 @@ internal static class IPageExtensions
 
     public static async Task<IElementHandle> WaitUntilVisibleAsync(this IPage page, string selector)
     {
-        IElementHandle? element = await page.QuerySelectorAsync(selector);
+        var element = await page.QuerySelectorAsync(selector);
 
         element.ShouldNotBeNull();
         await element.WaitForElementStateAsync(ElementState.Stable);

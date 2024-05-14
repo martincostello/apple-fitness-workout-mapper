@@ -11,17 +11,17 @@ public class TrackParserTests(ITestOutputHelper outputHelper)
     public async Task Can_Parse_Track_Points_From_Disk()
     {
         // Arrange
-        TrackParser target = CreateTarget();
+        var target = CreateTarget();
 
         // Act
-        IList<Track>? actual = await target.GetTracksAsync();
+        var actual = await target.GetTracksAsync();
 
         // Assert
         actual.ShouldNotBeNull();
         actual.ShouldNotBeEmpty();
         actual.Count.ShouldBe(2);
 
-        Track track = actual[0];
+        var track = actual[0];
 
         track.ShouldNotBeNull();
         track.Name.ShouldBe("Route 1");
@@ -31,7 +31,7 @@ public class TrackParserTests(ITestOutputHelper outputHelper)
         track.Points.ShouldNotBeEmpty();
         track.Points.Count.ShouldBe(2);
 
-        TrackPoint point = track.Points[0];
+        var point = track.Points[0];
 
         point.ShouldNotBeNull();
         point.Latitude.ShouldBe(51.5080900);

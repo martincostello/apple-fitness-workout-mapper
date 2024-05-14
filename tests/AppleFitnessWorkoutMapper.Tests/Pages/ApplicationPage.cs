@@ -50,7 +50,7 @@ public sealed class ApplicationPage(IPage page)
 
     public async Task<IReadOnlyList<TrackItem>> TracksAsync()
     {
-        IReadOnlyList<IElementHandle> children = await page.QuerySelectorAllAsync("css=.track-item");
+        var children = await page.QuerySelectorAllAsync("css=.track-item");
 
         return children
             .Skip(1)

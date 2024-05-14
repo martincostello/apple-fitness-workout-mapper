@@ -28,7 +28,7 @@ public sealed partial class TrackParser(
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            Track? track = await TryLoadTrackAsync(fileName, cancellationToken);
+            var track = await TryLoadTrackAsync(fileName, cancellationToken);
 
             if (track is not null)
             {
@@ -81,13 +81,13 @@ public sealed partial class TrackParser(
 
         var result = new Track();
 
-        foreach (XElement track in root.Descendants(XS + "trk"))
+        foreach (var track in root.Descendants(XS + "trk"))
         {
             result.Name = track.Descendants(XS + "name").FirstOrDefault()?.Value ?? string.Empty;
 
-            foreach (XElement segmentNodes in track.Descendants(XS + "trkseg"))
+            foreach (var segmentNodes in track.Descendants(XS + "trkseg"))
             {
-                foreach (XElement pointNode in segmentNodes.Descendants(XS + "trkpt"))
+                foreach (var pointNode in segmentNodes.Descendants(XS + "trkpt"))
                 {
                     string? longitudeString = pointNode.Attribute("lon")?.Value;
                     string? latitudeString = pointNode.Attribute("lat")?.Value;
@@ -104,7 +104,7 @@ public sealed partial class TrackParser(
                         continue;
                     }
 
-                    if (!TryParseTimestamp(pointNode.Descendants(XS + "time").FirstOrDefault(), out DateTimeOffset? timestamp) ||
+                    if (!TryParseTimestamp(pointNode.Descendants(XS + "time").FirstOrDefault(), out var timestamp) ||
                         timestamp is null)
                     {
                         Log.IgnoringInvalidTimestamp(logger, fileName);

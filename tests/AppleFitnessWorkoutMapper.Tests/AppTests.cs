@@ -54,14 +54,14 @@ public class AppTests(ITestOutputHelper outputHelper)
         result.Count.ShouldBe(2);
 
         // Act
-        IList<Track>? actual = await client.GetFromJsonAsync<IList<Track>>("api/tracks");
+        var actual = await client.GetFromJsonAsync<IList<Track>>("api/tracks");
 
         // Assert
         actual.ShouldNotBeNull();
         actual.ShouldNotBeEmpty();
         actual.Count.ShouldBe(2);
 
-        Track item = actual[0];
+        var item = actual[0];
         item.Timestamp.ShouldBe(new DateTimeOffset(2021, 05, 04, 11, 25, 35, TimeSpan.Zero));
 
         // Act

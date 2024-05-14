@@ -28,8 +28,8 @@ public class TrackService(TracksContext context)
     {
         await EnsureDatabaseAsync(cancellationToken);
 
-        DateTime notBefore = (since ?? DateTimeOffset.MinValue).UtcDateTime;
-        DateTime notAfter = (until ?? DateTimeOffset.MaxValue).UtcDateTime;
+        var notBefore = (since ?? DateTimeOffset.MinValue).UtcDateTime;
+        var notAfter = (until ?? DateTimeOffset.MaxValue).UtcDateTime;
 
         var tracks = await context.Tracks
             .Where((p) => p.Timestamp > notBefore)

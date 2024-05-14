@@ -66,7 +66,7 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
 
             await app.IsMapDisplayedAsync().ShouldBeTrue();
 
-            IReadOnlyList<TrackItem> tracks = await app.TracksAsync();
+            var tracks = await app.TracksAsync();
 
             tracks.Count.ShouldBe(2);
 
@@ -76,7 +76,7 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
             await tracks[1].LinkTextAsync().ShouldBe("Route 2");
             await tracks[1].NameAsync().ShouldBe("Route 2");
 
-            TrackItem track = tracks[0];
+            var track = tracks[0];
 
             // Act
             await track.ExpandAsync();

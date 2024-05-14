@@ -19,7 +19,7 @@ internal static class TaskExtensions
 
     public static async Task ShouldBeOneOf<T>(this Task<T> task, params T[] expected)
     {
-        T actual = await task;
+        var actual = await task;
         actual.ShouldBeOneOf(expected);
     }
 

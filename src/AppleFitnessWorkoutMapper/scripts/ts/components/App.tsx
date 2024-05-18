@@ -2,20 +2,21 @@
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
 import { Component } from 'react';
+import { NoGoogleMapsKey } from './NoGoogleMapsKey';
 import { Tracker } from '../view/Tracker';
 
-interface ContainerProps {
+interface AppProperties {
     startDate: string;
     endDate: string;
     googleMapsApiKeyName: string;
     googleMapsApiKeyValue: string;
 };
 
-interface ContainerState {
+interface AppState {
 };
 
-export class Container extends Component<ContainerProps, ContainerState> {
-    constructor(props: ContainerProps) {
+export class App extends Component<AppProperties, AppState> {
+    constructor(props: AppProperties) {
         super(props);
         this.state = {};
     }
@@ -129,25 +130,10 @@ export class Container extends Component<ContainerProps, ContainerState> {
                         </div>
                         {
                             !this.props.googleMapsApiKeyValue &&
-                            <div className="alert alert-warning" role="alert">
-                                <p className="lead">
-                                    No Google Maps API key is configured <i className="bi bi-exclamation-triangle" aria-hidden="true"></i>
-                                </p>
-                                <p>
-                                    To generate an API key follow the instructions here:
-                                    <em>
-                                        <a href="https://developers.google.com/maps/get-started#quickstart" rel="nofollow" target="_blank" aria-description="A link to the Google Maps getting started documentation">
-                                            Getting started with Google Maps Platform
-                                        </a>
-                                    </em>.
-                                    <i className="bi bi-box-arrow-up-right" aria-hidden="true"></i>
-                                </p>
-                                <p>
-                                    Once you have generated an API key, add it to the <code>{this.props.googleMapsApiKeyName}</code>
-                                    setting in the <code>appsettings.json</code> file in the directory containing this application&#39;s
-                                    files, restart the application and then reload this page.
-                                </p>
-                            </div>
+                            <NoGoogleMapsKey
+                                googleMapsApiKeyName={this.props.googleMapsApiKeyName}
+                                googleMapsApiKeyValue={this.props.googleMapsApiKeyValue}
+                            />
                         }
                         <div className="alert alert-primary d-none" role="alert" id="total-distance-container">
                             You have travelled <span data-js-total-distance></span> <i className="bi bi-stars text-warning" aria-hidden="true"></i> &mdash;

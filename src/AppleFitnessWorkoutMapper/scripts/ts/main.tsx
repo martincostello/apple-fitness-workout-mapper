@@ -2,7 +2,7 @@
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
 import { createRoot } from 'react-dom/client';
-import { Container } from './components/Container';
+import { App } from './components/App';
 
 window.addEventListener('load', () => {
     const container = document.getElementById('container');
@@ -14,14 +14,12 @@ window.addEventListener('load', () => {
 
         const root = createRoot(container);
         root.render(
-            <>
-                <Container
-                    startDate={startDate}
-                    endDate={endDate}
-                    googleMapsApiKeyName={googleMapsApiKeyName}
-                    googleMapsApiKeyValue={googleMapsApiKeyValue}
-                />
-            </>
+            <App
+                startDate={startDate}
+                endDate={endDate}
+                googleMapsApiKeyName={googleMapsApiKeyName}
+                googleMapsApiKeyValue={googleMapsApiKeyValue}
+            />
         );
     }
 });

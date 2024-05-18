@@ -70,7 +70,7 @@ export class Container extends Component<ContainerProps, ContainerState> {
                                             <i className="bi-calendar-event" aria-hidden="true"></i>
                                         </span>
                                     </div>
-                                    <input type="text" autoComplete="off" className="form-control calendar" placeholder="Start date" value={this.props.startDate} aria-label="Start date" id="not-before" disabled />
+                                    <input type="text" autoComplete="off" className="form-control calendar" placeholder="Start date" defaultValue={this.props.startDate} aria-label="Start date" id="not-before" disabled />
                                 </div>
                                 <div className="input-group mb-3">
                                     <div className="input-group-prepend" aria-hidden="true">
@@ -78,7 +78,7 @@ export class Container extends Component<ContainerProps, ContainerState> {
                                             <i className="bi-calendar-event" aria-hidden="true"></i>
                                         </span>
                                     </div>
-                                    <input type="text" autoComplete="off" className="form-control calendar" placeholder="End date" value={this.props.endDate} aria-label="End date" id="not-after" disabled />
+                                    <input type="text" autoComplete="off" className="form-control calendar" placeholder="End date" defaultValue={this.props.endDate} aria-label="End date" id="not-after" disabled />
                                 </div>
                                 <div className="input-group mb-3">
                                     <div className="btn-toolbar" role="toolbar">

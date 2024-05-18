@@ -56,7 +56,7 @@ ul.track-item-metadata {
 }
 
 .track-item-visibility {
-  width: 25%;
+  min-width: 35%;
 }
 
 [role="main"] {

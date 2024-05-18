@@ -43,10 +43,10 @@ public sealed class ApplicationPage(IPage page)
     }
 
     public async Task<string> EmissionsAsync()
-        => await page.InnerTextTrimmedAsync("[js-data-emissions]");
+        => await page.InnerTextTrimmedAsync("[data-js-emissions]");
 
     public async Task<string> TotalDistanceAsync()
-        => await page.InnerTextTrimmedAsync("[js-data-total-distance]");
+        => await page.InnerTextTrimmedAsync("[data-js-total-distance]");
 
     public async Task<IReadOnlyList<TrackItem>> TracksAsync()
     {

@@ -27,6 +27,11 @@ updates:
     babel:
       patterns:
         - "@babel/*"
+    react:
+      patterns:
+        - "@types/react*"
+        - "eslint-plugin-react"
+        - "react*"
     typescript-eslint:
       patterns:
         - "@typescript-eslint/*"

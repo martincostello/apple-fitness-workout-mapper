@@ -2,6 +2,7 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "inlineSources": true,
+    "jsx": "react-jsx",
     "moduleResolution": "Node",
     "noEmitOnError": true,
     "noImplicitAny": true,

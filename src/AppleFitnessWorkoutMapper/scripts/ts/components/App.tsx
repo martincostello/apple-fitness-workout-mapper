@@ -2,6 +2,7 @@
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
 import { Component } from 'react';
+import { DatePicker } from './DatePicker';
 import { NoGoogleMapsKey } from './NoGoogleMapsKey';
 import { Tracker } from '../view/Tracker';
 
@@ -66,20 +67,18 @@ export class App extends Component<AppProperties, AppState> {
                             <hr />
                             <div className="sidebar-controls ml-2 mr-2">
                                 <div className="input-group mb-3">
-                                    <div className="input-group-prepend" aria-hidden="true">
-                                        <span className="input-group-text">
-                                            <i className="bi-calendar-event" aria-hidden="true"></i>
-                                        </span>
-                                    </div>
-                                    <input type="text" autoComplete="off" className="form-control calendar" placeholder="Start date" defaultValue={this.props.startDate} aria-label="Start date" id="not-before" disabled />
+                                    <DatePicker
+                                        id="not-before"
+                                        label="Start date"
+                                        value={this.props.startDate}
+                                    />
                                 </div>
                                 <div className="input-group mb-3">
-                                    <div className="input-group-prepend" aria-hidden="true">
-                                        <span className="input-group-text">
-                                            <i className="bi-calendar-event" aria-hidden="true"></i>
-                                        </span>
-                                    </div>
-                                    <input type="text" autoComplete="off" className="form-control calendar" placeholder="End date" defaultValue={this.props.endDate} aria-label="End date" id="not-after" disabled />
+                                    <DatePicker
+                                        id="not-after"
+                                        label="End date"
+                                        value={this.props.endDate}
+                                    />
                                 </div>
                                 <div className="input-group mb-3">
                                     <div className="btn-toolbar" role="toolbar">

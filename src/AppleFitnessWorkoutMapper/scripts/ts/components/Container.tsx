@@ -156,8 +156,8 @@ export class Container extends Component<ContainerProps, ContainerState> {
                         <div id="map" data-google-api-key={this.props.googleMapsApiKeyValue}></div>
                         <footer className="mt-2 text-muted">
                             Designed with <i className="bi bi-heart-fill" aria-label="love" role="img"></i> by <a href="https://martincostello.com/home/about/" rel="nofollow" target="_blank">Martin Costello</a>, &copy; {new Date().getFullYear()} |
-                            <i className="bi bi-github" aria-hidden="true"></i> <a href="https://github.com/martincostello" rel="nofollow" target="_blank">GitHub</a> |
-                            <i className="bi bi-twitter" aria-hidden="true"></i> <a href="https://twitter.com/martin_costello" rel="nofollow" target="_blank">Twitter</a>
+                            &nbsp;<i className="bi bi-github" aria-hidden="true"></i> <a href="https://github.com/martincostello" rel="nofollow" target="_blank">GitHub</a> |
+                            &nbsp;<i className="bi bi-twitter" aria-hidden="true"></i> <a href="https://twitter.com/martin_costello" rel="nofollow" target="_blank">Twitter</a>
                         </footer>
                     </main>
                 </div>

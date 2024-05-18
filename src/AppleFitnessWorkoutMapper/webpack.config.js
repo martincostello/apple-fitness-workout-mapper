@@ -19,7 +19,7 @@ module.exports = {
         path: path.resolve(__dirname, 'wwwroot', 'static', 'js'),
     },
     plugins: [
-      new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en-gb/),
+        new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en-gb/),
     ],
     resolve: {
         extensions: ['.ts', '.js'],

@@ -31,7 +31,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppleFitnessWorkoutMapper.T
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{BA896693-21BA-47AD-A03D-1CFB83CDCA4A}"
 	ProjectSection(SolutionItems) = preProject
+		.github\actionlint-matcher.json = .github\actionlint-matcher.json
+		.github\CODEOWNERS = .github\CODEOWNERS
+		.github\CONTRIBUTING.md = .github\CONTRIBUTING.md
 		.github\dependabot.yml = .github\dependabot.yml
+		.github\FUNDING.yml = .github\FUNDING.yml
+		.github\ISSUE_TEMPLATE.md = .github\ISSUE_TEMPLATE.md
+		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{5A4E9F2C-E71B-4EE8-9980-5DA8AEFA822D}"

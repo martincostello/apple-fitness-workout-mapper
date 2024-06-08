@@ -8,6 +8,7 @@ using MartinCostello.AppleFitnessWorkoutMapper;
 using MartinCostello.AppleFitnessWorkoutMapper.Data;
 using MartinCostello.AppleFitnessWorkoutMapper.Models;
 using MartinCostello.AppleFitnessWorkoutMapper.Services;
+using MartinCostello.AppleFitnessWorkoutMapper.Slices;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -127,8 +128,6 @@ static void RunApplication(string[] args)
     builder.Services.AddScoped<TrackImporter>();
     builder.Services.AddScoped<TrackService>();
 
-    builder.Services.AddRazorPages();
-
     if (!Debugger.IsAttached)
     {
         builder.Services.Configure<BrotliCompressionProviderOptions>((p) => p.Level = CompressionLevel.Fastest);
@@ -151,7 +150,34 @@ static void RunApplication(string[] args)
 
     app.UseStaticFiles();
     app.UseRouting();
-    app.MapRazorPages();
+
+    app.MapGet("/", async (
+        TrackService service,
+        TimeProvider timeProvider,
+        IOptions<ApplicationOptions> options,
+        CancellationToken cancellationToken) =>
+    {
+        var today = timeProvider.GetUtcNow().UtcDateTime.Date;
+        var timestamp = await service.GetLatestTrackAsync(cancellationToken);
+
+        timestamp ??= today;
+
+        var endDate = timestamp.GetValueOrDefault().Date;
+
+        if (endDate < today)
+        {
+            endDate = endDate.AddDays(1);
+        }
+
+        var model = new AppModel()
+        {
+            GoogleMapsApiKey = options.Value.GoogleMapsApiKey,
+            StartDate = endDate.AddDays(-28).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+            EndDate = endDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+        };
+
+        return Results.Extensions.RazorSlice<App, AppModel>(model);
+    });
 
     var api = app.MapGroup("/api/tracks");
 

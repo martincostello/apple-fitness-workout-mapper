@@ -149,7 +149,6 @@ static void RunApplication(string[] args)
     }
 
     app.UseStaticFiles();
-    app.UseRouting();
 
     app.MapGet("/", async (
         TrackService service,

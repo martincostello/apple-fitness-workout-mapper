@@ -19,7 +19,7 @@
   "author": "martincostello",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@babel/core": "^7.24.8",
+    "@babel/core": "^7.24.9",
     "@babel/preset-env": "^7.24.8",
     "@googlemaps/js-api-loader": "^1.16.6",
     "@stylistic/eslint-plugin-js": "^2.3.0",

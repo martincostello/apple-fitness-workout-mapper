@@ -20,7 +20,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@babel/core": "^7.24.9",
-    "@babel/preset-env": "^7.24.8",
+    "@babel/preset-env": "^7.25.0",
     "@googlemaps/js-api-loader": "^1.16.6",
     "@stylistic/eslint-plugin-js": "^2.4.0",
     "@types/google.maps": "^3.55.12",

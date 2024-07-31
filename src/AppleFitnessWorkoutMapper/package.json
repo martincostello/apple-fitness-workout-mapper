@@ -21,7 +21,7 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.2",
-    "@googlemaps/js-api-loader": "^1.16.6",
+    "@googlemaps/js-api-loader": "^1.16.8",
     "@stylistic/eslint-plugin-js": "^2.4.0",
     "@types/google.maps": "^3.55.12",
     "@types/jquery": "^3.5.30",

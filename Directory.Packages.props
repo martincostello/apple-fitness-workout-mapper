@@ -7,8 +7,8 @@
     <PackageVersion Include="coverlet.msbuild" Version="6.0.2" />
     <PackageVersion Include="GitHubActionsTestLogger" Version="2.4.1" />
     <PackageVersion Include="MartinCostello.Logging.XUnit" Version="0.4.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.0-rc.1.24416.6" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0-rc.1.24418.2" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.0-rc.1.24420.6" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0-rc.1.24419.7" />
     <PackageVersion Include="Microsoft.Extensions.Resilience" Version="9.0.0-preview.7.24412.10" />
     <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="9.0.0-preview.7.24412.10" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />

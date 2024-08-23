@@ -142,7 +142,7 @@ jobs:
         done
 
     - name: Attest artifacts
-      uses: actions/attest-build-provenance@310b0a4a3b0b78ef57ecda988ee04b132db73ef8 # v1.4.1
+      uses: actions/attest-build-provenance@6149ea5740be74af77f260b9db67e633f6b0a9a1 # v1.4.2
       if: |
         runner.os == 'Linux' &&
         github.event.repository.fork == false &&
@@ -367,7 +367,7 @@ jobs:
         gpg --verify "./artifacts/AppleFitnessWorkoutMapper-osx-${APP_PLATFORM}.zip.sig" "./artifacts/AppleFitnessWorkoutMapper-osx-${APP_PLATFORM}.zip"
 
     - name: Attest artifacts
-      uses: actions/attest-build-provenance@310b0a4a3b0b78ef57ecda988ee04b132db73ef8 # v1.4.1
+      uses: actions/attest-build-provenance@6149ea5740be74af77f260b9db67e633f6b0a9a1 # v1.4.2
       with:
         subject-path: ./artifacts/AppleFitnessWorkoutMapper-osx-${{ matrix.platform }}.zip
 

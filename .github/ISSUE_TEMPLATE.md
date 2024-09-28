@@ -4,6 +4,7 @@ The more information you can provide, the easier it will be to help resolve your
 
 -->
 
+<!-- markdownlint-disable MD041 -->
 ### Expected behaviour
 
 _Explain what you expected to happen._

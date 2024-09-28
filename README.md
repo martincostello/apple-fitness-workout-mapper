@@ -26,7 +26,7 @@ to answer that question.
 
 It is made available here for free as an open source software application so
 that other people who are similarly curious about where they've been over time
-can see the same information from their own Health Data for free ([donations are nice though](https://www.buymeacoffee.com/martincostello) 😉).
+can see the same information from their own Health Data for free ([donations are nice though](https://github.com/sponsors/martincostello) 😉).
 
 ### Requirements
 

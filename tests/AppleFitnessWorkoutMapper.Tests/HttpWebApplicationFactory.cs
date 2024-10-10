@@ -39,7 +39,7 @@ internal sealed class HttpWebApplicationFactory(ITestOutputHelper outputHelper) 
 
         builder.ConfigureKestrel(
             (p) => p.ConfigureHttpsDefaults(
-                (r) => r.ServerCertificate = new X509Certificate2("localhost-dev.pfx", "Pa55w0rd!")));
+                (r) => r.ServerCertificate = X509CertificateLoader.LoadPkcs12FromFile("localhost-dev.pfx", "Pa55w0rd!")));
 
         // Configure the server address for the server to
         // listen on for HTTPS requests on a dynamic port.

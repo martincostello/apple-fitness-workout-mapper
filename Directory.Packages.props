@@ -14,7 +14,7 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageVersion Include="Microsoft.Playwright" Version="1.49.0" />
     <PackageVersion Include="Microsoft.TypeScript.MSBuild" Version="5.7.1" />
-    <PackageVersion Include="RazorSlices" Version="0.8.1" />
+    <PackageVersion Include="RazorSlices" Version="0.9.0" />
     <PackageVersion Include="ReportGenerator" Version="5.4.1" />
     <PackageVersion Include="Shouldly" Version="4.2.1" />
     <PackageVersion Include="xunit" Version="2.9.2" />

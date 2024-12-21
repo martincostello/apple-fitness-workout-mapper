@@ -14,7 +14,7 @@ public class TrackParserTests(ITestOutputHelper outputHelper)
         var target = CreateTarget();
 
         // Act
-        var actual = await target.GetTracksAsync();
+        var actual = await target.GetTracksAsync(TestContext.Current.CancellationToken);
 
         // Assert
         actual.ShouldNotBeNull();

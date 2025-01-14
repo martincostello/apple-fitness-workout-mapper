@@ -1,6 +1,6 @@
 # Apple Fitness Workout Mapper
 
-[![Build status](https://github.com/martincostello/apple-fitness-workout-mapper/workflows/build/badge.svg?branch=main&event=push)](https://github.com/martincostello/apple-fitness-workout-mapper/actions?query=workflow%3Abuild+branch%3Amain+event%3Apush)
+[![Build status](https://github.com/martincostello/apple-fitness-workout-mapper/actions/workflows/build.yml/badge.svg?branch=main&event=push)](https://github.com/martincostello/apple-fitness-workout-mapper/actions/workflows/build.yml?query=branch%3Amain+event%3Apush)
 [![codecov](https://codecov.io/gh/martincostello/apple-fitness-workout-mapper/branch/main/graph/badge.svg)](https://codecov.io/gh/martincostello/apple-fitness-workout-mapper)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/martincostello/apple-fitness-workout-mapper/badge)](https://securityscorecards.dev/viewer/?uri=github.com/martincostello/apple-fitness-workout-mapper)
 

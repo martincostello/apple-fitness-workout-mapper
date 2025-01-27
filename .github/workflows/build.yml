@@ -35,8 +35,9 @@ permissions:
 
 jobs:
   build:
-    name: ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.os-name }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
 
     permissions:
       attestations: write
@@ -47,12 +48,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: macos-latest
-            os-name: macos
-          - os: ubuntu-latest
-            os-name: linux
-          - os: windows-latest
-            os-name: windows
+          - os-name: macos
+            runner: macos-latest
+          - os-name: linux
+            runner: ubuntu-latest
+          - os-name: windows
+            runner: windows-latest
 
     steps:
 

@@ -157,7 +157,7 @@ jobs:
           ./artifacts/publish/AppleFitnessWorkoutMapper/AppleFitnessWorkoutMapper-win-*.zip
 
     - name: Publish ZIP artifacts
-      uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
+      uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
       if: runner.os == 'Linux'
       with:
         if-no-files-found: error
@@ -171,7 +171,7 @@ jobs:
           ./artifacts/publish/AppleFitnessWorkoutMapper/AppleFitnessWorkoutMapper-win-*.zip.sig
 
     - name: Publish macOS arm64 artifacts
-      uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
+      uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
       if: runner.os == 'Linux'
       with:
         name: app-macos-arm64
@@ -179,7 +179,7 @@ jobs:
         if-no-files-found: error
 
     - name: Publish macOS x64 artifacts
-      uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
+      uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
       if: runner.os == 'Linux'
       with:
         name: app-macos-x64
@@ -187,7 +187,7 @@ jobs:
         if-no-files-found: error
 
     - name: Publish screenshots
-      uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
+      uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
       if: ${{ !cancelled() }}
       with:
         name: screenshots-${{ matrix.os-name }}
@@ -195,7 +195,7 @@ jobs:
         if-no-files-found: ignore
 
     - name: Publish traces
-      uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
+      uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
       if: ${{ !cancelled() }}
       with:
         name: traces-${{ matrix.os-name }}
@@ -203,7 +203,7 @@ jobs:
         if-no-files-found: ignore
 
     - name: Publish videos
-      uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
+      uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
       if: ${{ !cancelled() }}
       with:
         name: videos-${{ matrix.os-name }}
@@ -347,7 +347,7 @@ jobs:
       run: ditto -V -c -k --keepParent "${MACOS_APP_PATH}" ./artifacts/AppleFitnessWorkoutMapper-osx-${{ matrix.platform }}.zip
 
     - name: Publish signed app
-      uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
+      uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
       with:
         name: app-macos-signed-${{ matrix.platform }}
         path: ./artifacts/AppleFitnessWorkoutMapper-osx-${{ matrix.platform }}.zip
@@ -373,7 +373,7 @@ jobs:
         subject-path: ./artifacts/AppleFitnessWorkoutMapper-osx-${{ matrix.platform }}.zip
 
     - name: Publish notarized ZIP artifacts
-      uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
+      uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
       with:
         name: app-zips-notarized-${{ matrix.platform }}
         path: |

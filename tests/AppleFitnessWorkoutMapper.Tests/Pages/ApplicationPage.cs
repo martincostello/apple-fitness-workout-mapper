@@ -52,10 +52,7 @@ public sealed class ApplicationPage(IPage page)
     {
         var children = await page.QuerySelectorAllAsync("css=.track-item");
 
-        return children
-            .Skip(1)
-            .Select((p) => new TrackItem(p))
-            .ToList();
+        return [.. children.Skip(1).Select((p) => new TrackItem(p))];
     }
 
     public async Task HidePolygonAsync()

@@ -74,11 +74,11 @@ jobs:
       uses: foo-software/lighthouse-check-status-action@2b9d5101f7a0de86ddb153a0d77ad7046aac1052 # v3.0.1
       with:
         lighthouseCheckResults: ${{ steps.lighthouse.outputs.lighthouseCheckResults }}
-        minAccessibilityScore: "85"
-        minBestPracticesScore: "83"
-        minPerformanceScore: "70"
+        minAccessibilityScore: "90"
+        minBestPracticesScore: "95"
+        minPerformanceScore: "80"
         minProgressiveWebAppScore: "20"
-        minSeoScore: "95"
+        minSeoScore: "100"
 
     - name: Publish artifacts
       uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1

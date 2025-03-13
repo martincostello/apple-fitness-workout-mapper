@@ -47,6 +47,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\dependency-review.yml = .github\workflows\dependency-review.yml
 		.github\workflows\lighthouse.yml = .github\workflows\lighthouse.yml
 		.github\workflows\lint.yml = .github\workflows\lint.yml
+		.github\workflows\npm-audit-fix.yml = .github\workflows\npm-audit-fix.yml
 		.github\workflows\ossf-scorecard.yml = .github\workflows\ossf-scorecard.yml
 		.github\workflows\release.yml = .github\workflows\release.yml
 	EndProjectSection

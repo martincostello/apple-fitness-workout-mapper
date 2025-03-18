@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <NoWarn>$(NoWarn);CA2234</NoWarn>
     <OutputType>Exe</OutputType>
     <RootNamespace>MartinCostello.AppleFitnessWorkoutMapper</RootNamespace>
     <TargetFramework>net10.0</TargetFramework>
+    <UseDefaultCodeAnalysisRuleSet>true</UseDefaultCodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="coverlet.msbuild" PrivateAssets="All" />
@@ -22,7 +22,6 @@
     <ProjectReference Include="..\..\src\AppleFitnessWorkoutMapper\AppleFitnessWorkoutMapper.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
     <None Update="App_Data\*.gpx;localhost-dev.pfx" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <PropertyGroup>

@@ -34,7 +34,7 @@ internal class WebApplicationFactory(ITestOutputHelper outputHelper) : WebApplic
         builder.ConfigureAppConfiguration((p) => p.AddInMemoryCollection(config))
                .ConfigureLogging((p) => p.AddXUnit(this))
                .ConfigureServices((p) => p.AddSingleton<TimeProvider>(timeProvider))
-               .UseSolutionRelativeContentRoot(Path.Combine("src", "AppleFitnessWorkoutMapper"));
+               .UseSolutionRelativeContentRoot(Path.Combine("src", "AppleFitnessWorkoutMapper"), "*.slnx");
     }
 
     protected override void Dispose(bool disposing)

@@ -13,6 +13,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
     <PackageReference Include="Microsoft.Extensions.Resilience" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" PrivateAssets="all" />
+    <PackageReference Include="Polly.Core" />
     <PackageReference Include="RazorSlices" />
   </ItemGroup>
   <ItemGroup>

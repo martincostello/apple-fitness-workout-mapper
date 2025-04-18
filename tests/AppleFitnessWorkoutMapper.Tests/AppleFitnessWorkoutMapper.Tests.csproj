@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="coverlet.msbuild" PrivateAssets="All" />
     <PackageReference Include="GitHubActionsTestLogger" NoWarn="RT0003" />
+    <PackageReference Include="JunitXml.TestLogger" NoWarn="RT0003" />
     <PackageReference Include="MartinCostello.Logging.XUnit.v3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />

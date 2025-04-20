@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.3/font/bootstrap-icons.min.css" integrity="sha512-YzwGgFdO1NQw1CZkPoGyRkEnUTxPSbGWXvGiXrWk8IeSqdyci0dEDYdLLjMxq1zCoU0QBa4kHAFiRhUL3z2bow==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap4-toggle/3.6.1/bootstrap4-toggle.min.css" integrity="sha512-EzrsULyNzUc4xnMaqTrB4EpGvudqpetxG/WNjCpG6ZyyAGxeB6OBF9o246+mwx3l/9Cn838iLIcrxpPHTiygAA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="@(Content("~/static/css/styles.css"))">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
@@ -52,7 +53,7 @@
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link lead ml-2 mr-2 text-white" href="@(repoUrl)/blob/main/docs/help.md#help" rel="nofollow" target="_blank">
-                        <i class="bi-question-circle" aria-hidden="true"></i> Help
+                        <span class="fa-solid fa-circle-question" aria-hidden="true"></span> Help
                     </a>
                 </li>
             </ul>
@@ -74,7 +75,7 @@
                         <div class="btn-group ml-2 mr-2" role="group">
                             <button type="button" class="btn btn-primary" id="import" disabled>
                                 Import workouts
-                                <i class="bi-upload" aria-hidden="true"></i>
+                                <span class="fa-solid fa-file-arrow-up" aria-hidden="true"></span>
                             </button>
                         </div>
                         <div class="d-none m-2 progress" id="import-loader">
@@ -88,7 +89,7 @@
                         <div class="input-group mb-3">
                             <div class="input-group-prepend" aria-hidden="true">
                                 <span class="input-group-text">
-                                    <i class="bi-calendar-event" aria-hidden="true"></i>
+                                    <span class="fa-solid fa-calendar-day" aria-hidden="true"></span>
                                 </span>
                             </div>
                             <input type="text" autocomplete="off" class="form-control calendar" placeholder="Start date" value="@(Model.StartDate)" aria-label="Start date" id="not-before" disabled>
@@ -96,7 +97,7 @@
                         <div class="input-group mb-3">
                             <div class="input-group-prepend" aria-hidden="true">
                                 <span class="input-group-text">
-                                    <i class="bi-calendar-event" aria-hidden="true"></i>
+                                    <span class="fa-solid fa-calendar-day" aria-hidden="true"></span>
                                 </span>
                             </div>
                             <input type="text" autocomplete="off" class="form-control calendar" placeholder="End date" value="@(Model.EndDate)" aria-label="End date" id="not-after" disabled>
@@ -106,7 +107,7 @@
                                 <div class="btn-group mr-2" role="group">
                                     <button type="button" class="btn btn-primary" id="filter" disabled>
                                         Filter
-                                        <i class="bi-filter" aria-hidden="true"></i>
+                                        <span class="fa-solid fa-filter" aria-hidden="true"></span>
                                     </button>
                                 </div>
                                 <div class="btn-group mr-2" role="group">
@@ -121,7 +122,7 @@
                     <ul class="list-group flex-column mb-2" id="track-list">
                         <li class="list-group-item d-none track-item" id="track-item-template">
                             <a class="ml-1 nav-link" href="#" role="button" aria-expanded="false">
-                                <i class="bi-geo" aria-hidden="true"></i>
+                                <span class="fa-solid fa-map-pin" aria-hidden="true"></span>
                             </a>
                             <div class="collapse" id="">
                                 <div class="card card-body">
@@ -145,14 +146,14 @@
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">
                         Map
-                        <i class="bi-map" aria-hidden="true"></i>
+                        <span class="fa-solid fa-map" aria-hidden="true"></span>
                     </h1>
                 </div>
                 @if (string.IsNullOrEmpty(Model.GoogleMapsApiKey))
                 {
                     <div class="alert alert-warning" role="alert">
                         <p class="lead">
-                            No Google Maps API key is configured <i class="bi bi-exclamation-triangle" aria-hidden="true"></i>
+                            No Google Maps API key is configured <span class="fa-solid fa-triangle-exclamation" aria-hidden="true"></span>
                         </p>
                         <p>
                             To generate an API key follow the instructions here:
@@ -161,7 +162,7 @@
                                     Getting started with Google Maps Platform
                                 </a>
                             </em>.
-                            <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+                            <span class="fa-solid fa-up-right-from-square" aria-hidden="true"></span>
                         </p>
                         <p>
                             Once you have generated an API key, add it to the <code>@(nameof(Model.GoogleMapsApiKey))</code>
@@ -171,14 +172,14 @@
                     </div>
                 }
                 <div class="alert alert-primary d-none" role="alert" id="total-distance-container">
-                    You have travelled <span data-js-total-distance></span> <i class="bi bi-stars text-warning" aria-hidden="true"></i> &mdash;
-                    that&#39;s a saving of <span data-js-emissions></span>kg of CO<sub>2</sub> compared to driving. <i class="bi bi-tree-fill text-success"></i>
+                    You have travelled <span data-js-total-distance></span> <span class="fa-solid fa-person-hiking" aria-hidden="true"></span> &mdash;
+                    that&#39;s a saving of <span data-js-emissions></span>kg of CO<sub>2</sub> compared to driving. <span class="fa-solid fa-tree text-success"></span>
                 </div>
                 <div id="map" data-google-api-key="@(Model.GoogleMapsApiKey)"></div>
                 <footer class="mt-2 text-muted">
-                    Designed with <i class="bi bi-heart-fill" aria-label="love" role="img"></i> by <a href="https://martincostello.com/home/about/" rel="nofollow" target="_blank">Martin Costello</a>, &copy; @DateTimeOffset.UtcNow.Year |
-                    <i class="bi bi-github" aria-hidden="true"></i> <a href="@(ownerUrl)" rel="nofollow" target="_blank">GitHub</a> |
-                    <i class="bi bi-twitter" aria-hidden="true"></i> <a href="https://twitter.com/martin_costello" rel="nofollow" target="_blank">Twitter</a>
+                    Designed with <span class="fa-solid fa-heart" aria-label="love" role="img"></span> by <a href="https://martincostello.com/home/about/" rel="nofollow" target="_blank">Martin Costello</a>, &copy; @DateTimeOffset.UtcNow.Year |
+                    <span class="fa-brands fa-github" aria-hidden="true"></span> <a href="@(ownerUrl)" rel="nofollow" target="_blank">GitHub</a> |
+                    <span class="fa-brands fa-bluesky" aria-hidden="true"></span> <a href="https://bsky.app/profile/martincostello.com" rel="nofollow" target="_blank">Bluesky</a>
                 </footer>
             </main>
         </div>

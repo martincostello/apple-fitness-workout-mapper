@@ -96,31 +96,29 @@ export class TrackerUI {
         const trackElement = this.tracksList.lastElementChild;
         trackElement.setAttribute('id', '');
 
-        const collapseId = `details-${track.name}`;
+        const collapseId = `details-${track.name.replace(' ', '_')}`;
+        const collapseParentId = `${collapseId}-parent`;
+
+        // Set up the collapse for the element containing the track details
+        const details = trackElement.querySelector('.track-item-panel');
+        details.setAttribute('id', collapseId);
+        details.setAttribute('aria-labelledby', collapseParentId);
 
         // Set the name onto the templated node
-        const trackLink = trackElement.firstElementChild;
-
-        trackLink.setAttribute('aria-controls', collapseId);
-        trackLink.setAttribute('data-track-name', track.name);
+        const trackTitle = trackElement.querySelector('.track-item-title');
+        trackTitle.setAttribute('aria-controls', collapseId);
+        trackTitle.setAttribute('data-bs-target', `#${collapseId}`);
+        trackTitle.setAttribute('data-track-name', track.name);
+        trackTitle.parentElement.setAttribute('id', collapseParentId);
 
         const trackName = document.createElement('span');
         trackName.textContent = track.name;
-        trackLink.appendChild(trackName);
-
-        // Set up the collapse for the element containing the track details
-        const details = trackLink.nextElementSibling;
-
-        details.setAttribute('id', collapseId);
-
-        trackLink.addEventListener('click', () => {
-            ($(details) as any).collapse('toggle');
-        });
+        trackTitle.appendChild(trackName);
 
         // Unhide once populated
         this.show(trackElement);
 
-        return trackLink;
+        return trackElement;
     }
 
     hideImport() {

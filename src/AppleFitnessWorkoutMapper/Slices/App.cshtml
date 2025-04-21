@@ -26,52 +26,47 @@
     <title>Apple Fitness Workout Mapper</title>
 </head>
 <body>
-    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="@(repoUrl)" rel="nofollow" target="_blank">
-            <img src="@(Content("~/static/images/apple.svg"))" class="d-inline-block align-top" width="30" height="30" aria-hidden="true" />
-            Apple Fitness Workout Mapper
-        </a>
-        <form class="form-inline ml-auto">
-            <input type="checkbox"
-                   id="show-polygon"
-                   data-toggle="toggle"
-                   data-off="Polygon"
-                   data-offstyle="secondary"
-                   data-on="Polygon"
-                   data-onstyle="primary"
-                   data-size="sm">
-            <div class="ml-1 mr-1"></div>
-            <input type="checkbox"
-                   id="unit-of-distance"
-                   data-toggle="toggle"
-                   data-off="Kilometres"
-                   data-offstyle="secondary"
-                   data-on="Miles"
-                   data-onstyle="primary"
-                   data-size="sm">
+    <nav class="navbar navbar-dark fixed-top bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand me-auto" href="@(repoUrl)" rel="nofollow" target="_blank">
+                <img src="@(Content("~/static/images/apple.svg"))" class="px-2" aria-hidden="true" />
+                Apple Fitness Workout Mapper
+            </a>
+            <form class="d-flex text-light">
+                <div class="form-check form-check-reverse form-control-lg form-switch">
+                    <label class="form-check-label" for="unit-of-distance" data-text-checked="Miles" data-text-unchecked="Kilometers">Kilometers</label>
+                    <input class="form-check-input" type="checkbox" id="unit-of-distance">
+                </div>
+                <div class="mx-1"></div>
+                <div class="form-check form-check-reverse form-control-lg form-switch">
+                    <label class="form-check-label" for="show-polygon">Show polygon</label>
+                    <input class="form-check-input" type="checkbox" id="show-polygon">
+                </div>
+            </form>
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link lead ml-2 mr-2 text-white" href="@(repoUrl)/blob/main/docs/help.md#help" rel="nofollow" target="_blank">
-                        <span class="fa-solid fa-circle-question" aria-hidden="true"></span> Help
+                    <a class="nav-link lead mx-2 text-white" href="@(repoUrl)/blob/main/docs/help.md#help" rel="nofollow" target="_blank">
+                        <span class="fa-solid fa-circle-question" aria-hidden="true"></span>
+                        Help
                     </a>
                 </li>
             </ul>
-        </form>
+        </div>
     </nav>
     <div class="container-fluid">
         <div class="row">
-            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-                <div class="sidebar-sticky">
+            <nav class="col-auto d-block bg-light mx-2 sidebar">
+                <div class="d-flex flex-column sidebar-sticky">
                     <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
                         <span>Your Workouts <span id="track-list-count"></span></span>
                         <span class="center-block loader" aria-label="Loading..." id="tracks-loader"></span>
                     </h6>
                     <div class="d-none" id="import-container">
                         <hr />
-                        <p class="font-weight-bold ml-2">
+                        <p class="font-weight-bold ms-2">
                             No workout data has been imported.
                         </p>
-                        <div class="btn-group ml-2 mr-2" role="group">
+                        <div class="btn-group mx-2" role="group">
                             <button type="button" class="btn btn-primary" id="import" disabled>
                                 Import workouts
                                 <span class="fa-solid fa-file-arrow-up" aria-hidden="true"></span>
@@ -84,32 +79,28 @@
                         </div>
                     </div>
                     <hr />
-                    <div class="sidebar-controls ml-2 mr-2">
+                    <div class="sidebar-controls mx-2">
                         <div class="input-group mb-3">
-                            <div class="input-group-prepend" aria-hidden="true">
-                                <span class="input-group-text">
-                                    <span class="fa-solid fa-calendar-day" aria-hidden="true"></span>
-                                </span>
-                            </div>
-                            <input type="text" autocomplete="off" class="form-control calendar" placeholder="Start date" value="@(Model.StartDate)" aria-label="Start date" id="not-before" disabled>
+                            <span class="input-group-text" aria-hidden="true">
+                                <span class="fa-solid fa-calendar-day"></span>
+                            </span>
+                            <input type="date" autocomplete="off" class="form-control" max="@(Model.TodayDate)" placeholder="Start date" step="1" value="@(Model.StartDate)" aria-label="Start date" id="not-before" disabled>
                         </div>
                         <div class="input-group mb-3">
-                            <div class="input-group-prepend" aria-hidden="true">
-                                <span class="input-group-text">
-                                    <span class="fa-solid fa-calendar-day" aria-hidden="true"></span>
-                                </span>
-                            </div>
-                            <input type="text" autocomplete="off" class="form-control calendar" placeholder="End date" value="@(Model.EndDate)" aria-label="End date" id="not-after" disabled>
+                            <span class="input-group-text" aria-hidden="true">
+                                <span class="fa-solid fa-calendar-day"></span>
+                            </span>
+                            <input type="date" autocomplete="off" class="form-control" max="@(Model.TodayDate)" placeholder="End date" step="1" value="@(Model.EndDate)" aria-label="End date" id="not-after" disabled>
                         </div>
                         <div class="input-group mb-3">
                             <div class="btn-toolbar" role="toolbar">
-                                <div class="btn-group mr-2" role="group">
+                                <div class="btn-group me-2" role="group">
                                     <button type="button" class="btn btn-primary" id="filter" disabled>
                                         Filter
                                         <span class="fa-solid fa-filter" aria-hidden="true"></span>
                                     </button>
                                 </div>
-                                <div class="btn-group mr-2" role="group">
+                                <div class="btn-group me-2" role="group">
                                     <button type="button" class="btn btn-secondary" id="show-all" disabled>Show all</button>
                                 </div>
                                 <div class="btn-group" role="group">
@@ -118,13 +109,15 @@
                             </div>
                         </div>
                     </div>
-                    <ul class="list-group flex-column mb-2" id="track-list">
-                        <li class="list-group-item d-none track-item" id="track-item-template">
-                            <a class="ml-1 nav-link" href="#" role="button" aria-expanded="false">
-                                <span class="fa-solid fa-map-pin" aria-hidden="true"></span>
-                            </a>
-                            <div class="collapse" id="">
-                                <div class="card card-body">
+                    <ul class="accordion accordion-flush list-group flex-column mb-2" id="track-list">
+                        <li class="accordion-item list-group-item d-none track-item" id="track-item-template">
+                            <h3 class="accordion-header" id="">
+                                <button class="accordion-button collapsed track-item-title" type="button" data-bs-target="" data-bs-toggle="collapse" aria-controls="" aria-expanded="false">
+                                    <span class="fa-solid fa-map-pin pe-1" aria-hidden="true"></span>
+                                </button>
+                            </h3>
+                            <div class="accordion-collapse collapse track-item-panel" id="" aria-labelledby="">
+                                <div class="accordion-body card card-body">
                                     <ul class="track-item-metadata">
                                         <li>Started: <span data-js-start></span></li>
                                         <li>Ended: <span data-js-end></span></li>
@@ -141,7 +134,7 @@
                     </ul>
                 </div>
             </nav>
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <main role="main" class="col-md-9 ms-sm-auto col-lg-10 px-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">
                         Map
@@ -178,27 +171,13 @@
                 <footer class="mt-2 text-muted">
                     Designed with <span class="fa-solid fa-heart" aria-label="love" role="img"></span> by <a href="https://martincostello.com/home/about/" rel="nofollow" target="_blank">Martin Costello</a>, &copy; @DateTimeOffset.UtcNow.Year |
                     <span class="fa-brands fa-github" aria-hidden="true"></span> <a href="@(ownerUrl)" rel="nofollow" target="_blank">GitHub</a> |
-                    <span class="fa-brands fa-bluesky" aria-hidden="true"></span> <a href="https://martincostello.com/bsky" rel="nofollow" target="_blank">Bluesky</a>
+                    <span class="fa-brands fa-bluesky" aria-hidden="true"></span> <a href="https://martincostello.com/bluesky" rel="nofollow" target="_blank">Bluesky</a>
                 </footer>
             </main>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.slim.min.js" integrity="sha512-sNylduh9fqpYUK5OYXWcBleGzbZInWj8yCJAU57r1dpSK9tP2ghf/SRYCMj+KsslFkCOt3TvJrX2AV/Gc3wOqA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js" integrity="sha512-ykZ1QQr0Jy/4ZkvKuqWn4iF3lqPZyij9iRv6sGqLRdTPkY69YX6+7wvVGmsdBbiIfN/8OdsI7HABjvEok6ZopQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap4-toggle/3.6.1/bootstrap4-toggle.min.js" integrity="sha512-bAjB1exAvX02w2izu+Oy4J96kEr1WOkG6nRRlCtOSQ0XujDtmAstq5ytbeIxZKuT9G+KzBmNq5d23D6bkGo8Kg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js" integrity="sha512-LsnSViqQyaXpD4mBBdRYeP6sRwJiJveh2ZIbW41EBrNmKxgr/LFZIiWT6yr+nycvhvauz8c2nYMhrP80YhG7Cw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js" integrity="sha512-7Pi/otdlbbCR+LnW+F7PwFcSDJOuUJB3OxtEHbg4vSMvzvJjde4Po1v4BR9Gdc9aXNUNFVUY+SK51wWT8WF0Gg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="@(Content("~/static/js/main.js"))" defer></script>
-    <script>
-        $('.calendar').datepicker({
-            autoclose: true,
-            clearBtn: true,
-            endDate: '0d',
-            format: 'yyyy-mm-dd',
-            todayBtn: 'linked',
-            todayHighlight: true,
-            weekStart: 1
-        });
-    </script>
 </body>
 <!--
     Build:         @(repoUrl)/actions/runs/@(GitMetadata.BuildId)

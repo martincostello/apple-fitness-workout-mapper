@@ -173,6 +173,7 @@ static void RunApplication(string[] args)
             GoogleMapsApiKey = options.Value.GoogleMapsApiKey,
             StartDate = endDate.AddDays(-28).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
             EndDate = endDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+            TodayDate = today.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
         };
 
         return Results.Extensions.RazorSlice<App, AppModel>(model);

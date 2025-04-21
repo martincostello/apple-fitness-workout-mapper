@@ -20,8 +20,8 @@ public sealed class TrackItem(IElementHandle element)
     public async Task CollapseAsync()
         => await element.ClickAsync();
 
-    public async Task<string> LinkTextAsync()
-        => await InnerTextTrimmedAsync("a");
+    public async Task<string> TitleAsync()
+        => await InnerTextTrimmedAsync("button");
 
     public async Task<string> NameAsync()
     {

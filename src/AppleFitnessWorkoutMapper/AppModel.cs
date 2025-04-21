@@ -22,4 +22,9 @@ public sealed class AppModel
     /// Gets the end date for the workouts to display.
     /// </summary>
     public required string EndDate { get; init; }
+
+    /// <summary>
+    /// Gets the date for today.
+    /// </summary>
+    public required string TodayDate { get; init; }
 }

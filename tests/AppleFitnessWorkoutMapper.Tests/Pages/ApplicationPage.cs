@@ -7,12 +7,12 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Pages;
 
 public sealed class ApplicationPage(IPage page)
 {
-    private const string FilterSelector = "id=filter";
-
     public async Task FilterAsync()
     {
-        await page.ClickAsync(FilterSelector);
-        await page.WaitUntilEnabledAsync(FilterSelector);
+        string selector = Selectors.Filter;
+
+        await page.ClickAsync(selector);
+        await page.WaitUntilEnabledAsync(selector);
 
         await WaitForLoaderToBeHiddenAsync();
     }
@@ -20,25 +20,25 @@ public sealed class ApplicationPage(IPage page)
     public async Task ImportDataAsync()
     {
         // Start the import
-        await page.ClickAsync("id=import");
+        await page.ClickAsync(Selectors.Import);
 
         // Wait for the import to complete
-        await page.WaitUntilEnabledAsync(FilterSelector);
+        await page.WaitUntilEnabledAsync(Selectors.Filter);
         await WaitForLoaderToBeHiddenAsync();
     }
 
     public async Task<bool> IsMapDisplayedAsync()
-        => await page.IsVisibleAsync("[aria-label='Map']");
+        => await page.IsVisibleAsync(Selectors.Map);
 
-    public async Task<ApplicationPage> NotBeforeAsync(string value)
+    public async Task<ApplicationPage> NotBeforeAsync(DateOnly value)
     {
-        await EnterDateAsync("id=not-before", value);
+        await EnterDateAsync(Selectors.NotBefore, value);
         return this;
     }
 
-    public async Task<ApplicationPage> NotAfterAsync(string value)
+    public async Task<ApplicationPage> NotAfterAsync(DateOnly value)
     {
-        await EnterDateAsync("id=not-after", value);
+        await EnterDateAsync(Selectors.NotAfter, value);
         return this;
     }
 
@@ -50,24 +50,16 @@ public sealed class ApplicationPage(IPage page)
 
     public async Task<IReadOnlyList<TrackItem>> TracksAsync()
     {
-        var children = await page.QuerySelectorAllAsync("css=.track-item");
-
+        var children = await page.QuerySelectorAllAsync(Selectors.TrackItem);
         return [.. children.Skip(1).Select((p) => new TrackItem(p))];
     }
 
-    public async Task HidePolygonAsync()
-    {
-        await page.ClickAsync("[for='show-polygon'][class~='toggle-on']");
-    }
+    public async Task TogglePolygonAsync()
+        => await page.ClickAsync(Selectors.PolygonToggle);
 
-    public async Task ShowPolygonAsync()
+    public async Task ToggleUnitsAsync()
     {
-        await page.ClickAsync("[for='show-polygon'][class~='toggle-off']");
-    }
-
-    public async Task UseKilometersAsync()
-    {
-        string selector = "[for='unit-of-distance'][class~='toggle-on']";
+        string selector = Selectors.UnitOfDistanceToggle;
 
         await page.ClickAsync(selector);
         await page.WaitUntilEnabledAsync(selector);
@@ -75,30 +67,36 @@ public sealed class ApplicationPage(IPage page)
         await WaitForLoaderToBeHiddenAsync();
     }
 
-    public async Task UseMilesAsync()
-    {
-        string selector = "[for='unit-of-distance'][class~='toggle-off']";
-
-        await page.ClickAsync(selector);
-        await page.WaitUntilEnabledAsync(selector);
-
-        await WaitForLoaderToBeHiddenAsync();
-    }
-
-    public async Task<ApplicationPage> EnterDateAsync(string selector, string value)
+    public async Task<ApplicationPage> EnterDateAsync(string selector, DateOnly value)
     {
         var locator = page.Locator(selector);
 
+        var culture = CultureInfo.CurrentUICulture;
+        string input = value.ToString("d", culture);
+
         await locator.ClearAsync();
-        await locator.PressSequentiallyAsync(value);
+        await locator.PressSequentiallyAsync(input);
         await locator.PressAsync("Escape");
 
         return this;
     }
 
     public async Task WaitForTracksAsync()
-        => await page.WaitUntilVisibleAsync("css=.track-item");
+        => await page.WaitUntilVisibleAsync(Selectors.TrackItem);
 
     private async Task WaitForLoaderToBeHiddenAsync()
-        => await page.WaitUntilHiddenAsync("id=tracks-loader");
+        => await page.WaitUntilHiddenAsync(Selectors.Loader);
+
+    private static class Selectors
+    {
+        public const string Filter = "id=filter";
+        public const string Import = "id=import";
+        public const string Loader = "id=tracks-loader";
+        public const string Map = "[aria-label='Map']";
+        public const string NotBefore = "id=not-before";
+        public const string NotAfter = "id=not-after";
+        public const string PolygonToggle = "id=show-polygon";
+        public const string TrackItem = "css=.track-item";
+        public const string UnitOfDistanceToggle = "id=unit-of-distance";
+    }
 }

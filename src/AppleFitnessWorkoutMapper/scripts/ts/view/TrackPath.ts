@@ -30,7 +30,7 @@ export class TrackPath {
         this.visible = true;
 
         this.container = container;
-        this.panel = this.container.nextElementSibling;
+        this.panel = this.container.querySelector('.track-item-panel');
 
         this.button = this.panel.querySelector('[data-js-visible]');
         this.button.addEventListener('click', () => {

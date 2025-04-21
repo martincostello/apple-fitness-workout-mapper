@@ -70,17 +70,17 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
 
             tracks.Count.ShouldBe(2);
 
-            await tracks[0].LinkTextAsync().ShouldBe("Route 1");
+            await tracks[0].TitleAsync().ShouldBe("Route 1");
             await tracks[0].NameAsync().ShouldBe("Route 1");
 
-            await tracks[1].LinkTextAsync().ShouldBe("Route 2");
+            await tracks[1].TitleAsync().ShouldBe("Route 2");
             await tracks[1].NameAsync().ShouldBe("Route 2");
 
             var track = tracks[0];
 
             // Act
             await track.ExpandAsync();
-            await app.ShowPolygonAsync();
+            await app.TogglePolygonAsync();
 
             // Assert
             await app.WaitForTracksAsync();
@@ -96,11 +96,11 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
             await app.EmissionsAsync().ShouldBe("1");
 
             // Act
-            await app.HidePolygonAsync();
+            await app.TogglePolygonAsync();
             await track.CollapseAsync();
 
             // Act
-            await app.UseMilesAsync();
+            await app.ToggleUnitsAsync();
 
             // Assert
             tracks = await app.TracksAsync();
@@ -120,7 +120,7 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
             await app.EmissionsAsync().ShouldBe("1");
 
             // Act
-            await app.UseKilometersAsync();
+            await app.ToggleUnitsAsync();
 
             // Assert
             await app.WaitForTracksAsync();
@@ -142,8 +142,8 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
             await app.EmissionsAsync().ShouldBe("1");
 
             // Act
-            await app.NotBeforeAsync("2021-05-05")
-                     .ThenAsync((p) => p.NotAfterAsync("2021-05-05"))
+            await app.NotBeforeAsync(new(2021, 05, 05))
+                     .ThenAsync((p) => p.NotAfterAsync(new(2021, 05, 05)))
                      .ThenAsync((p) => p.FilterAsync());
 
             // Assert
@@ -152,7 +152,7 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
             tracks = await app.TracksAsync();
             track = tracks.ShouldHaveSingleItem();
 
-            await track.LinkTextAsync().ShouldBe("Route 2");
+            await track.TitleAsync().ShouldBe("Route 2");
             await track.NameAsync().ShouldBe("Route 2");
         });
     }

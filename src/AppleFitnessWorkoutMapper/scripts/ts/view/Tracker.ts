@@ -40,27 +40,40 @@ export class Tracker {
         const milesKey = 'use-miles';
         const polygonKey = 'show-polygon';
 
-        try {
-            this.ui.distanceUnits.checked = localStorage.getItem(milesKey) === 'true';
-            this.ui.showPolygon.checked = localStorage.getItem(polygonKey) === 'true';
-        } catch {}
+        let loadTracksOnUnitsChange = false;
 
-        // HACK addEventListener() doesn't fire the event, so go via jQuery
-        $(this.ui.distanceUnits).on('change', () => {
+        this.ui.distanceUnits.addEventListener('change', () => {
+            const label = this.ui.distanceUnits.parentElement.querySelector('label');
+            const attribute = this.ui.distanceUnits.checked ? 'data-text-checked' : 'data-text-unchecked';
+            label.textContent = label.getAttribute(attribute);
             try {
                 localStorage.setItem(milesKey, this.ui.distanceUnits.checked.toString());
             } catch {}
-            this.loadTracks();
+            if (loadTracksOnUnitsChange) {
+                this.loadTracks();
+            }
         });
 
-        // HACK addEventListener() doesn't fire the event, so go via jQuery
-        $(this.ui.showPolygon).on('change', () => {
+        this.ui.showPolygon.addEventListener('change', () => {
             const showPolygon = this.ui.showPolygon.checked;
             try {
                 localStorage.setItem(polygonKey, showPolygon.toString());
             } catch {}
             this.map.fitBounds(showPolygon);
         });
+
+        try {
+            if (localStorage.getItem(milesKey) === 'true') {
+                this.ui.distanceUnits.checked = true;
+                this.ui.distanceUnits.dispatchEvent(new Event('change'));
+            }
+            if (localStorage.getItem(polygonKey) === 'true') {
+                this.ui.showPolygon.checked = true;
+                this.ui.showPolygon.dispatchEvent(new Event('change'));
+            }
+        } catch {}
+
+        loadTracksOnUnitsChange = true;
 
         const count = await this.client.getCount();
 
@@ -113,9 +126,9 @@ export class Tracker {
         let totalDistance = 0;
 
         tracks.forEach((track) => {
-            const trackLink = this.ui.createTrackElement(track);
+            const trackElement = this.ui.createTrackElement(track);
 
-            const path = new TrackPath(trackLink, track, this.map, useMiles);
+            const path = new TrackPath(trackElement, track, this.map, useMiles);
             totalDistance += path.getDistanceInPreferredUnits(useMiles);
 
             this.map.addPath(path);

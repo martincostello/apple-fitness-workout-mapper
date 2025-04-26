@@ -63,6 +63,7 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
 
             // Assert
             await app.WaitForTracksAsync();
+            await app.WaitForMapAsync();
 
             await app.IsMapDisplayedAsync().ShouldBeTrue();
 

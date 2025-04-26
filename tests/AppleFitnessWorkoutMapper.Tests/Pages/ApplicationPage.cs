@@ -81,6 +81,9 @@ public sealed class ApplicationPage(IPage page)
         return this;
     }
 
+    public async Task WaitForMapAsync()
+        => await page.WaitUntilVisibleAsync(Selectors.Map);
+
     public async Task WaitForTracksAsync()
         => await page.WaitUntilVisibleAsync(Selectors.TrackItem);
 

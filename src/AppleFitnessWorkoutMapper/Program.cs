@@ -99,27 +99,29 @@ static void RunApplication(string[] args)
         };
     });
 
-    const string Key = "Database";
+    ////const string Key = "Database";
 
-    builder.Services.AddResilienceEnricher();
-    builder.Services.AddResiliencePipeline(Key, (builder) =>
-    {
-        builder.AddRetry(new()
-        {
-            ShouldHandle = new PredicateBuilder().Handle<Exception>(
-                (ex) => ex is DbException or InvalidOperationException or TimeoutException),
-        });
-    });
+    //// HACK Workaround for https://github.com/dotnet/extensions/issues/6297
+    ////builder.Services.AddResilienceEnricher();
+    ////builder.Services.AddResiliencePipeline(Key, (builder) =>
+    ////{
+    ////    builder.AddRetry(new()
+    ////    {
+    ////        ShouldHandle = new PredicateBuilder().Handle<Exception>(
+    ////            (ex) => ex is DbException or InvalidOperationException or TimeoutException),
+    ////    });
+    ////});
 
     builder.Services.AddDbContext<TracksContext>((serviceProvider, builder) =>
     {
         var options = serviceProvider.GetRequiredService<IOptions<ApplicationOptions>>();
-        var provider = serviceProvider.GetRequiredService<ResiliencePipelineProvider<string>>();
+        ////var provider = serviceProvider.GetRequiredService<ResiliencePipelineProvider<string>>();
 
         builder.UseSqlite("Data Source=" + options.Value.DatabaseFile, (builder) =>
         {
-            builder.ExecutionStrategy(
-                (dependencies) => new ResilientExecutionStrategy(dependencies, provider.GetPipeline(Key)));
+            //// HACK Workaround for https://github.com/dotnet/extensions/issues/6297
+            ////builder.ExecutionStrategy(
+            ////    (dependencies) => new ResilientExecutionStrategy(dependencies, provider.GetPipeline(Key)));
         });
     });
 

@@ -22,10 +22,14 @@ If you do not see a specific download for your operating system, then download
 the portable version of the application, which is the ZIP file named
 `AppleFitnessWorkoutMapper.zip`.
 
-> ℹ️ If you need to use the portable version of the application, you will also
-need to install the .NET runtime. Instructions for installing it can be found
-[here](https://docs.microsoft.com/en-us/dotnet/core/install/ "Install .NET on Windows, Linux, and macOS")
-and the downloads can be found [here](https://dotnet.microsoft.com/download/dotnet/5.0 "Download .NET 5.0"). The easiest way to install .NET is to install the .NET SDK.
+> [!NOTE]
+> If you need to use the portable version of the application, you will also
+need to install the .NET runtime.
+>
+> Instructions for installing .NET can be found here: [_Install .NET on Windows, Linux, and macOS_](https://docs.microsoft.com/dotnet/core/install/).
+>
+> Downloads for .NET can be found here: [_Download .NET_](https://dotnet.microsoft.com/download/dotnet).
+> The easiest way to install .NET is to install the .NET SDK.
 
 ### Running the application
 

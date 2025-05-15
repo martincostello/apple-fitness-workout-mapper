@@ -25,9 +25,9 @@ the portable version of the application, which is the ZIP file named
 > [!NOTE]
 > If you need to use the portable version of the application, you will also
 need to install the .NET runtime.
-> 
+>
 > Instructions for installing .NET can be found here: [_Install .NET on Windows, Linux, and macOS_](https://docs.microsoft.com/dotnet/core/install/).
-> 
+>
 > Downloads for .NET can be found here: [_Download .NET_](https://dotnet.microsoft.com/download/dotnet).
 > The easiest way to install .NET is to install the .NET SDK.
 

@@ -11,7 +11,10 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+    <!--
+    HACK Workaround for https://github.com/dotnet/extensions/issues/6297
     <PackageReference Include="Microsoft.Extensions.Resilience" />
+    -->
     <PackageReference Include="Microsoft.TypeScript.MSBuild" PrivateAssets="all" />
     <PackageReference Include="Polly.Core" />
     <PackageReference Include="RazorSlices" />

@@ -1,3 +1,9 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json"
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "ignoreDeps": [
+    "martincostello/import-signing-certificate",
+    "martincostello/xcode-notarize",
+    "martincostello/xcode-select",
+    "martincostello/xcode-staple"
+  ]
 }

@@ -4,6 +4,7 @@
     <RootNamespace>MartinCostello.AppleFitnessWorkoutMapper</RootNamespace>
     <TargetFramework>net9.0</TargetFramework>
     <UseDefaultCodeAnalysisRuleSet>true</UseDefaultCodeAnalysisRuleSet>
+    <UseLocalDevelopmentCertificate>true</UseLocalDevelopmentCertificate>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="coverlet.msbuild" PrivateAssets="All" />
@@ -23,7 +24,9 @@
     <ProjectReference Include="..\..\src\AppleFitnessWorkoutMapper\AppleFitnessWorkoutMapper.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="App_Data\*.gpx;localhost-dev.pfx" CopyToOutputDirectory="PreserveNewest" />
+    <AssemblyMetadata Include="DevCertificateFileName" Value="$([System.IO.Path]::GetFileName('$(LocalDevelopmentCertificatePath)'))" />
+    <AssemblyMetadata Include="DevCertificatePassword" Value="$(LocalDevelopmentCertificatePassword)" />
+    <None Update="App_Data\*.gpx" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <PropertyGroup>
     <CollectCoverage>true</CollectCoverage>

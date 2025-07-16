@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Martin Costello, 2021. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
-using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
@@ -20,7 +18,7 @@ internal sealed class HttpWebApplicationFactory(ITestOutputHelper outputHelper) 
     {
         get
         {
-            EnsureServer();
+            StartServer();
             return ClientOptions.BaseAddress.ToString();
         }
     }
@@ -29,7 +27,7 @@ internal sealed class HttpWebApplicationFactory(ITestOutputHelper outputHelper) 
     {
         get
         {
-            EnsureServer();
+            StartServer();
             return _host!.Services!;
         }
     }
@@ -38,13 +36,9 @@ internal sealed class HttpWebApplicationFactory(ITestOutputHelper outputHelper) 
     {
         base.ConfigureWebHost(builder);
 
-        builder.ConfigureKestrel(
-            (p) => p.ConfigureHttpsDefaults(
-                (r) => r.ServerCertificate = LoadDevelopmentCertificate()));
-
         // Configure the server address for the server to
-        // listen on for HTTPS requests on a dynamic port.
-        builder.UseUrls("https://127.0.0.1:0");
+        // listen on for HTTP requests on a dynamic port.
+        builder.UseUrls("http://127.0.0.1:0");
     }
 
     protected override IHost CreateHost(IHostBuilder builder)
@@ -81,19 +75,7 @@ internal sealed class HttpWebApplicationFactory(ITestOutputHelper outputHelper) 
         }
     }
 
-    private static X509Certificate2 LoadDevelopmentCertificate()
-    {
-        var metadata = typeof(HttpWebApplicationFactory).Assembly
-            .GetCustomAttributes<AssemblyMetadataAttribute>()
-            .ToArray();
-
-        string fileName = metadata.First((p) => p.Key is "DevCertificateFileName").Value!;
-        string? password = metadata.First((p) => p.Key is "DevCertificatePassword").Value;
-
-        return X509CertificateLoader.LoadPkcs12(File.ReadAllBytes(fileName), password);
-    }
-
-    private void EnsureServer()
+    private void StartServer()
     {
         if (_host is null)
         {

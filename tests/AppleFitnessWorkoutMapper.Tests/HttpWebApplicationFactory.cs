@@ -37,7 +37,7 @@ internal sealed class HttpWebApplicationFactory(ITestOutputHelper outputHelper) 
         base.ConfigureWebHost(builder);
 
         // Configure the server address for the server to
-        // listen on for HTTPS requests on a dynamic port.
+        // listen on for HTTP requests on a dynamic port.
         builder.UseUrls("http://127.0.0.1:0");
     }
 

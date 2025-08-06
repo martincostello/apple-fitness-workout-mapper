@@ -311,7 +311,7 @@ jobs:
         show-progress: false
 
     - name: Download artifacts
-      uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+      uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
       with:
         name: app-macos-${{ matrix.platform }}
         path: ${{ env.MACOS_ARTIFACTS_PATH }}/publish
@@ -423,19 +423,19 @@ jobs:
     steps:
 
     - name: Download Linux and Windows artifacts
-      uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+      uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
       with:
         name: app-zips
         path: .
 
     - name: Download macOS arm64 artifacts
-      uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+      uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
       with:
         name: app-zips-notarized-arm64
         path: .
 
     - name: Download macOS x64 artifacts
-      uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+      uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
       with:
         name: app-zips-notarized-x64
         path: .

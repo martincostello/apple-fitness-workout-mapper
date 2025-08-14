@@ -21,7 +21,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@babel/core": "7.28.3",
-    "@babel/preset-env": "7.28.0",
+    "@babel/preset-env": "7.28.3",
     "@googlemaps/js-api-loader": "1.16.10",
     "@stylistic/eslint-plugin": "5.2.3",
     "@types/google.maps": "3.58.1",

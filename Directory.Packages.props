@@ -16,7 +16,7 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageVersion Include="Microsoft.Playwright" Version="1.55.0" />
     <PackageVersion Include="Microsoft.TypeScript.MSBuild" Version="5.9.2" />
-    <PackageVersion Include="Polly.Core" Version="8.6.3" />
+    <PackageVersion Include="Polly.Core" Version="8.6.4" />
     <PackageVersion Include="RazorSlices" Version="0.9.5" />
     <PackageVersion Include="ReportGenerator" Version="5.4.16" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />

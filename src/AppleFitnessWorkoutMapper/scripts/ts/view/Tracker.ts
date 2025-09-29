@@ -1,7 +1,7 @@
 // Copyright (c) Martin Costello, 2021. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
-import { Loader } from '@googlemaps/js-api-loader';
+import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
 import { ApiClient } from '../client/ApiClient';
 import { TrackMap } from './TrackMap';
 import { TrackPath } from './TrackPath';
@@ -163,12 +163,12 @@ export class Tracker {
 
     private async createMap(): Promise<TrackMap> {
         const apiKey = this.ui.map.getAttribute('data-google-api-key');
-        const loader = new Loader({
-            apiKey: apiKey,
-            version: 'quarterly',
+        setOptions({
+            key: apiKey,
+            v: 'quarterly',
             libraries: ['geometry'],
         });
-        await loader.importLibrary('maps');
+        await importLibrary('maps');
         return new TrackMap(this.ui.map);
     }
 }

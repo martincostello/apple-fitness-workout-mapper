@@ -85,13 +85,8 @@ jobs:
     - name: Setup Node
       uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
       with:
-        node-version: '22'
-
-    - name: Get npm cache directory
-      id: npm-cache-dir
-      shell: pwsh
-      run: |
-        "dir=$(npm config get cache)" >> ${env:GITHUB_OUTPUT}
+        node-version: '24'
+        package-manager-cache: false
 
     - name: Build, test and publish
       id: build

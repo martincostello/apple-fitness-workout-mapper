@@ -9,7 +9,7 @@ export default defineConfig({
         coverage: {
             enabled: true,
             provider: 'v8',
-            reporter: ['text', 'json', 'html'],
+            reporter: ['html', 'json', 'text'],
         },
         reporters: process.env.GITHUB_ACTIONS ? ['default', 'github-actions'] : ['default'],
     },

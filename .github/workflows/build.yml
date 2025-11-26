@@ -388,9 +388,6 @@ jobs:
     needs: [ notarize ]
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: write
-
     steps:
 
     - name: Download Linux and Windows artifacts
@@ -422,6 +419,7 @@ jobs:
       with:
         draft: true
         generate_release_notes: true
+        token: ${{ secrets.COSTELLOBOT_TOKEN }}
         files: |
           *.spdx.json
           *.zip

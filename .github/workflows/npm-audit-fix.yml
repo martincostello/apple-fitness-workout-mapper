@@ -37,12 +37,45 @@ jobs:
         continue-on-error: true
         working-directory: ./src/AppleFitnessWorkoutMapper
 
+      - name: Import GPG private key
+        shell: bash
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.COSTELLOBOT_GPG_PRIVATE_KEY }}
+        run: |
+          echo "${GPG_PRIVATE_KEY}" | gpg --batch --import
+
+      - name: Set up GPG script
+        id: create-gpg-script
+        shell: bash
+        run: |
+          gpg_script="${RUNNER_TEMP}/${GITHUB_REPOSITORY_OWNER_ID}-${GITHUB_REPOSITORY_ID}-gpg.sh"
+          echo '#!/bin/bash' > "${gpg_script}"
+          # shellcheck disable=SC2016
+          echo 'gpg --batch --pinentry-mode=loopback --passphrase "${GPG_PASSPHRASE}" "$@"' >> "${gpg_script}"
+          chmod +x "${gpg_script}"
+          echo "gpg-script=${gpg_script}" >> "${GITHUB_OUTPUT}"
+
+      - name: Configure Git
+        shell: bash
+        env:
+          GIT_COMMIT_USER_EMAIL: ${{ vars.GIT_COMMIT_USER_EMAIL }}
+          GIT_COMMIT_USER_NAME: ${{ vars.GIT_COMMIT_USER_NAME }}
+          GPG_KEY_ID: ${{ secrets.COSTELLOBOT_GPG_KEY_ID }}
+          GPG_SCRIPT: ${{ steps.create-gpg-script.outputs.gpg-script }}
+        run: |
+          git config commit.gpgsign true
+          git config gpg.program "${GPG_SCRIPT}"
+          git config user.email "${GIT_COMMIT_USER_EMAIL}"
+          git config user.name "${GIT_COMMIT_USER_NAME}"
+          git config user.signingkey "${GPG_KEY_ID}"
+
       - name: Push changes to GitHub
         id: push-changes
         shell: pwsh
         env:
           GIT_COMMIT_USER_EMAIL: ${{ vars.GIT_COMMIT_USER_EMAIL }}
           GIT_COMMIT_USER_NAME: ${{ vars.GIT_COMMIT_USER_NAME }}
+          GPG_PASSPHRASE: ${{ secrets.COSTELLOBOT_GPG_PASSPHRASE }}
         run: |
           $gitStatus = (git status --porcelain)
 
@@ -53,8 +86,6 @@ jobs:
 
           $branchName = "npm-audit-fix"
 
-          git config user.email ${env:GIT_COMMIT_USER_EMAIL} | Out-Null
-          git config user.name ${env:GIT_COMMIT_USER_NAME} | Out-Null
           git fetch origin --no-tags | Out-Null
           git rev-parse --verify --quiet "remotes/origin/${branchName}" | Out-Null
 

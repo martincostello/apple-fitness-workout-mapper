@@ -9,10 +9,6 @@ on:
       - '**/*.gitignore'
       - '**/*.md'
   pull_request:
-    branches:
-      - main
-      - dotnet-vnext
-      - dotnet-nightly
   workflow_dispatch:
     inputs:
       notarize:
@@ -110,11 +106,12 @@ jobs:
 
     - name: Generate SBOM
       uses: anchore/sbom-action@fbfd9c6c189226748411491745178e0c2017392d # v0.20.10
+      if: runner.os == 'Linux'
       with:
-        artifact-name: build-${{ matrix.os-name }}.spdx.json
+        artifact-name: AppleFitnessWorkoutMapper.spdx.json
         output-file: ./artifacts/build.spdx.json
         path: ./artifacts/publish
-        upload-release-assets: ${{ runner.os == 'Linux' }}
+        upload-release-assets: false
 
     - name: GPG sign ZIP artifacts
       if: |
@@ -414,9 +411,18 @@ jobs:
         name: app-zips-notarized-x64
         path: .
 
-    - name: Create GitHub release
+    - name: Download SBOM
+      uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+      with:
+        name: AppleFitnessWorkoutMapper.spdx.json
+        path: .
+
+    - name: Draft GitHub release
       uses: softprops/action-gh-release@5be0e66d93ac7ed76da52eca8bb058f665c3a5fe # v2.4.2
       with:
+        draft: true
+        generate_release_notes: true
         files: |
+          *.spdx.json
           *.zip
           *.zip.sig

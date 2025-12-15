@@ -152,7 +152,7 @@ jobs:
           ./artifacts/publish/AppleFitnessWorkoutMapper/AppleFitnessWorkoutMapper-win-*.zip
 
     - name: Publish ZIP artifacts
-      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
       if: runner.os == 'Linux'
       with:
         if-no-files-found: error
@@ -166,7 +166,7 @@ jobs:
           ./artifacts/publish/AppleFitnessWorkoutMapper/AppleFitnessWorkoutMapper-win-*.zip.sig
 
     - name: Publish macOS arm64 artifacts
-      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
       if: runner.os == 'Linux'
       with:
         name: app-macos-arm64
@@ -174,7 +174,7 @@ jobs:
         if-no-files-found: error
 
     - name: Publish macOS x64 artifacts
-      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
       if: runner.os == 'Linux'
       with:
         name: app-macos-x64
@@ -182,7 +182,7 @@ jobs:
         if-no-files-found: error
 
     - name: Publish screenshots
-      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
       if: ${{ !cancelled() }}
       with:
         name: screenshots-${{ matrix.os-name }}
@@ -190,7 +190,7 @@ jobs:
         if-no-files-found: ignore
 
     - name: Publish traces
-      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
       if: ${{ !cancelled() }}
       with:
         name: traces-${{ matrix.os-name }}
@@ -198,7 +198,7 @@ jobs:
         if-no-files-found: ignore
 
     - name: Publish videos
-      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
       if: ${{ !cancelled() }}
       with:
         name: videos-${{ matrix.os-name }}
@@ -279,7 +279,7 @@ jobs:
         show-progress: false
 
     - name: Download artifacts
-      uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+      uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
       with:
         name: app-macos-${{ matrix.platform }}
         path: ${{ env.MACOS_ARTIFACTS_PATH }}/publish
@@ -349,7 +349,7 @@ jobs:
       run: ditto -V -c -k --keepParent "${MACOS_APP_PATH}" "./artifacts/AppleFitnessWorkoutMapper-osx-${APP_PLATFORM}.zip"
 
     - name: Publish signed app
-      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
       with:
         name: app-macos-signed-${{ matrix.platform }}
         path: ./artifacts/AppleFitnessWorkoutMapper-osx-${{ matrix.platform }}.zip
@@ -376,7 +376,7 @@ jobs:
         subject-path: ./artifacts/AppleFitnessWorkoutMapper-osx-${{ matrix.platform }}.zip
 
     - name: Publish notarized ZIP artifacts
-      uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
       with:
         name: app-zips-notarized-${{ matrix.platform }}
         path: |
@@ -391,25 +391,25 @@ jobs:
     steps:
 
     - name: Download Linux and Windows artifacts
-      uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+      uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
       with:
         name: app-zips
         path: .
 
     - name: Download macOS arm64 artifacts
-      uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+      uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
       with:
         name: app-zips-notarized-arm64
         path: .
 
     - name: Download macOS x64 artifacts
-      uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+      uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
       with:
         name: app-zips-notarized-x64
         path: .
 
     - name: Download SBOM
-      uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+      uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
       with:
         name: AppleFitnessWorkoutMapper.spdx.json
         path: .

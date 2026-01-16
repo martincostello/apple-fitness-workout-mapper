@@ -28,7 +28,6 @@
     <File Path=".github/workflows/bump-version.yml" />
     <File Path=".github/workflows/codeql.yml" />
     <File Path=".github/workflows/dependency-review.yml" />
-    <File Path=".github/workflows/lighthouse.yml" />
     <File Path=".github/workflows/lint.yml" />
     <File Path=".github/workflows/npm-audit-fix.yml" />
     <File Path=".github/workflows/ossf-scorecard.yml" />

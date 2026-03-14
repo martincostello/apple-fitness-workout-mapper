@@ -144,22 +144,22 @@ CI Workflows (in .github/workflows/)
 
 ---
 
-## Existing AI-Assistant Configuration Files
+## Existing Configuration Files
 
-None found. Configuration files present:
+Configuration files present:
 
 - .editorconfig: Editor settings
 - .markdownlint.json: Markdown lint config
 - stylecop.json: StyleCop rules
 - AppleFitnessWorkoutMapper.ruleset: Code analysis rule set
-- Directory.Build.props: MSBuild centralized versioning (v1.5.2)
+- Directory.Build.props: MSBuild centralized versioning
 - Directory.Packages.props: NuGet central version management
 - .github/CONTRIBUTING.md: Contributor guidelines
 - .github/workflows/: CI/CD pipelines
 
 ---
 
-## Guidance for Copilot
+## Guidance for Agents
 
 1. **Namespace Convention**: Always use MartinCostello.AppleFitnessWorkoutMapper as root namespace; file-scoped namespaces; include Apache 2.0 copyright header on new files.
 

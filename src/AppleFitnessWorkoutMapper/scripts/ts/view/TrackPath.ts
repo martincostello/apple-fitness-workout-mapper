@@ -5,6 +5,43 @@ import moment from 'moment';
 import { Track } from '../models/Track';
 import { TrackMap } from './TrackMap';
 
+function createInfoWindowMetadata(label: string, value: string, documentObject: Pick<Document, 'createElement'>): HTMLParagraphElement {
+    const paragraph = documentObject.createElement('p');
+    paragraph.className = 'card-text';
+    paragraph.textContent = `${label}: `;
+
+    const span = documentObject.createElement('span');
+    span.textContent = value;
+
+    paragraph.appendChild(span);
+
+    return paragraph;
+}
+
+export function createInfoWindowContent(
+    trackName: string,
+    displayDuration: string,
+    displayDistance: string,
+    documentObject: Pick<Document, 'createElement'>
+): HTMLDivElement {
+    const content = documentObject.createElement('div');
+    content.className = 'card border-secondary mb-3';
+
+    const header = documentObject.createElement('div');
+    header.className = 'card-header';
+    header.textContent = trackName;
+
+    const body = documentObject.createElement('div');
+    body.className = 'card-body text-secondary';
+    body.appendChild(createInfoWindowMetadata('Duration', displayDuration, documentObject));
+    body.appendChild(createInfoWindowMetadata('Distance', displayDistance, documentObject));
+
+    content.appendChild(header);
+    content.appendChild(body);
+
+    return content;
+}
+
 export class TrackPath {
     private static blue: string = '#0000FF';
     private static red: string = '#FF0000';
@@ -165,6 +202,7 @@ export class TrackPath {
 
         const googleMap = this.map.getMap();
         const infoWindow = new google.maps.InfoWindow();
+        const infoWindowContent = createInfoWindowContent(this.track.name, this.displayDuration, this.displayDistance, document);
 
         google.maps.event.addListener(route, 'mouseout', () => {
             this.highlightIfNotAlready();
@@ -173,20 +211,7 @@ export class TrackPath {
         google.maps.event.addListener(route, 'mouseover', (e: any) => {
             this.highlightIfNotAlready();
 
-            const content = `
-<div class="card border-secondary mb-3">
-  <div class="card-header">${this.track.name}</div>
-  <div class="card-body text-secondary">
-    <p class="card-text">
-        Duration: <span>${this.displayDuration}</span>
-    </p>
-    <p class="card-text">
-        Distance: <span>${this.displayDistance}</span>
-    </p>
-  </div>
-</div>`;
-
-            infoWindow.setContent(content);
+            infoWindow.setContent(infoWindowContent);
             infoWindow.setPosition(e.latLng);
             infoWindow.open(googleMap);
         });

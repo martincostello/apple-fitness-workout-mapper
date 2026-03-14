@@ -35,7 +35,7 @@ Apple Fitness Workout Mapper is a .NET web application that visualizes Apple Fit
   - App.cshtml: Razor Slice using RazorSlices library
   - _ViewImports.cshtml: Shared imports/helpers
 
-- **Scripts/ts/**: TypeScript source for client-side logic
+- **scripts/ts/**: TypeScript source for client-side logic
   - Compiled via npm run build (webpack) to wwwroot/static/js/main.js
   - Tests via vitest
 
@@ -140,7 +140,7 @@ npm run watch      # webpack watch
 CI Workflows (in .github/workflows/)
 
 - build.yml: Multi-platform (macOS, Linux, Windows)
-- lint.yml: actionlint, markdownlint, zizmor, PSScriptAnalyzer, StyleCop
+- lint.yml: actionlint, markdownlint, zizmor, PSScriptAnalyzer
 
 ---
 
@@ -165,7 +165,7 @@ None found. Configuration files present:
 
 2. **Database Work**: Update both EF entity models in Data/ and DTO models in Models/. Use TracksContext for queries. Test with isolated ephemeral databases (WebApplicationFactory provides this).
 
-3. **API Development**: Use Results.* builders in Program.cs (lines 184-207). Always pass explicit JSON context to Results.Json() from ApplicationJsonSerializerContext.Default.
+3. **API Development**: Use Results.* builders for API endpoints in Program.cs (e.g., the /api/tracks mappings). Always pass explicit JSON context to Results.Json() from ApplicationJsonSerializerContext.Default.
 
 4. **Frontend Changes**: TypeScript in Scripts/ts/, webpack compiles to wwwroot/static/js/. Run npm run build before commit.
 

@@ -89,7 +89,7 @@ All code uses MartinCostello.AppleFitnessWorkoutMapper as root namespace with fi
 
 - StyleCop + custom ruleset (AppleFitnessWorkoutMapper.ruleset)
 - File-scoped namespaces
-- Copyright header on all files
+- Copyright header on all C# and TypeScript source files
 
 ### Frontend Build & TypeScript Tests
 
@@ -167,7 +167,7 @@ None found. Configuration files present:
 
 3. **API Development**: Use Results.* builders for API endpoints in Program.cs (e.g., the /api/tracks mappings). Always pass explicit JSON context to Results.Json() from ApplicationJsonSerializerContext.Default.
 
-4. **Frontend Changes**: TypeScript in Scripts/ts/, webpack compiles to wwwroot/static/js/. Run npm run build before commit.
+4. **Frontend Changes**: TypeScript in scripts/ts/, webpack compiles to wwwroot/static/js/. Run npm run build before commit.
 
 5. **Testing**: xUnit v3 + Shouldly. Inject ITestOutputHelper into test constructors. Use WebApplicationFactory for integration tests. Maintain >= 70% code coverage.
 

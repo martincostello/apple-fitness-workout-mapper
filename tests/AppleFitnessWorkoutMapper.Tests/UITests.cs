@@ -67,6 +67,11 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
 
             await app.IsMapDisplayedAsync().ShouldBeTrue();
 
+            // Assert - verify the info window correctly displays a route's duration and distance
+            // when the user hovers over it on the map.
+            var infoWindowText = await app.RouteInfoWindowAsync();
+            infoWindowText.ShouldNotContain("undefined");
+
             var tracks = await app.TracksAsync();
 
             tracks.Count.ShouldBe(2);
@@ -74,8 +79,8 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
             await tracks[0].TitleAsync().ShouldBe("Route 1");
             await tracks[0].NameAsync().ShouldBe("Route 1");
 
-            await tracks[1].TitleAsync().ShouldBe("Route 2");
-            await tracks[1].NameAsync().ShouldBe("Route 2");
+            await tracks[1].TitleAsync().ShouldBe("Route 2 (Evening)");
+            await tracks[1].NameAsync().ShouldBe("Route 2 (Evening)");
 
             var track = tracks[0];
 
@@ -98,6 +103,28 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
 
             // Act
             await app.TogglePolygonAsync();
+            await track.CollapseAsync();
+
+            // Assert - verify that a track whose name contains special characters can be expanded.
+            // Track names with spaces and special characters (like parentheses) require all
+            // non-alphanumeric characters to be sanitized when constructing the Bootstrap collapse
+            // CSS selector ID, otherwise the panel cannot be found and will not expand.
+            track = tracks[1];
+
+            // Act
+            await track.ExpandAsync();
+
+            // Assert
+            await app.WaitForTracksAsync();
+
+            await track.StartedAtAsync().ShouldBeOneOf("May 5, 2021 11:25 AM", "May 5, 2021 12:25 PM");
+            await track.EndedAtAsync().ShouldBeOneOf("May 5, 2021 11:45 AM", "May 5, 2021 12:45 PM");
+            await track.DurationAsync().ShouldBe("20 minutes");
+
+            await track.DistanceAsync().ShouldBe("1.31 km");
+            await track.AveragePaceAsync().ShouldBe(@"14'59""/km");
+
+            // Act
             await track.CollapseAsync();
 
             // Act
@@ -153,8 +180,8 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
             tracks = await app.TracksAsync();
             track = tracks.ShouldHaveSingleItem();
 
-            await track.TitleAsync().ShouldBe("Route 2");
-            await track.NameAsync().ShouldBe("Route 2");
+            await track.TitleAsync().ShouldBe("Route 2 (Evening)");
+            await track.NameAsync().ShouldBe("Route 2 (Evening)");
         });
     }
 

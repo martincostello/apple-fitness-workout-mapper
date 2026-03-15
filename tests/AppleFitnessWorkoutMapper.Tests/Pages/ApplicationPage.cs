@@ -30,6 +30,30 @@ public sealed class ApplicationPage(IPage page)
     public async Task<bool> IsMapDisplayedAsync()
         => await page.IsVisibleAsync(Selectors.Map);
 
+    public async Task<string> RouteInfoWindowAsync()
+    {
+        var mapLocator = page.Locator(Selectors.Map);
+        var box = await mapLocator.BoundingBoxAsync();
+
+        box.ShouldNotBeNull();
+
+        // Move the mouse from the top-left corner of the map toward the center.
+        // The routes pass diagonally through the map center after auto-fitting, so
+        // sweeping the mouse to the center reliably triggers the route mouseover event.
+        await page.Mouse.MoveAsync(
+            box.X + (box.Width * 0.1f),
+            box.Y + (box.Height * 0.1f));
+        await page.Mouse.MoveAsync(
+            box.X + (box.Width / 2f),
+            box.Y + (box.Height / 2f),
+            new() { Steps = 20 });
+
+        var infoWindow = page.Locator(Selectors.InfoWindow);
+        await infoWindow.WaitForAsync(new() { State = WaitForSelectorState.Visible });
+
+        return await infoWindow.InnerTextAsync();
+    }
+
     public async Task<ApplicationPage> NotBeforeAsync(DateOnly value)
     {
         await EnterDateAsync(Selectors.NotBefore, value);
@@ -94,6 +118,7 @@ public sealed class ApplicationPage(IPage page)
     {
         public const string Filter = "id=filter";
         public const string Import = "id=import";
+        public const string InfoWindow = ".gm-style-iw-d";
         public const string Loader = "id=tracks-loader";
         public const string Map = "[aria-label='Map']";
         public const string NotBefore = "id=not-before";

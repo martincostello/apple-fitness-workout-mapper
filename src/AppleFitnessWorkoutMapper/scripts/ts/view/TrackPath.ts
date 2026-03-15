@@ -202,7 +202,6 @@ export class TrackPath {
 
         const googleMap = this.map.getMap();
         const infoWindow = new google.maps.InfoWindow();
-        const infoWindowContent = createInfoWindowContent(this.track.name, this.displayDuration, this.displayDistance, document);
 
         google.maps.event.addListener(route, 'mouseout', () => {
             this.highlightIfNotAlready();
@@ -210,6 +209,8 @@ export class TrackPath {
         });
         google.maps.event.addListener(route, 'mouseover', (e: any) => {
             this.highlightIfNotAlready();
+
+            const infoWindowContent = createInfoWindowContent(this.track.name, this.displayDuration, this.displayDistance, document);
 
             infoWindow.setContent(infoWindowContent);
             infoWindow.setPosition(e.latLng);

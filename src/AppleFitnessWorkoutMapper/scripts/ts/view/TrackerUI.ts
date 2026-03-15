@@ -96,7 +96,7 @@ export class TrackerUI {
         const trackElement = this.tracksList.lastElementChild;
         trackElement.setAttribute('id', '');
 
-        const collapseId = `details-${track.name.replace(' ', '_')}`;
+        const collapseId = `details-${track.name.replace(/[^A-Za-z0-9_-]/g, '_')}`;
         const collapseParentId = `${collapseId}-parent`;
 
         // Set up the collapse for the element containing the track details

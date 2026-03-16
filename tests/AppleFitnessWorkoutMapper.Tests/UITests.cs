@@ -39,6 +39,56 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
 
     [Theory]
     [MemberData(nameof(Browsers))]
+    public async Task Can_View_Route_Info_Window(string browserType, string? browserChannel)
+    {
+        // Arrange
+        var options = new BrowserFixtureOptions()
+        {
+            BrowserType = browserType,
+            BrowserChannel = browserChannel,
+        };
+
+        using var fixture = new HttpWebApplicationFactory(OutputHelper);
+
+        var browser = new BrowserFixture(options, OutputHelper);
+        await browser.WithPageAsync(async (page) =>
+        {
+            // Install hooks before the page loads so that they intercept the Google Maps API
+            // once it loads. The hooks capture mouseover event handlers added to polylines
+            // and the content set on InfoWindow instances, allowing the test to verify that
+            // the correct duration/distance values are shown (not "undefined") when a user
+            // hovers over a route on the map.
+            await page.AddInitScriptAsync(ApplicationPage.MapsTestHooksScript);
+
+            await page.GotoAsync(fixture.ServerAddress);
+            await page.WaitForLoadStateAsync();
+
+            var app = new ApplicationPage(page);
+
+            // Act - import data so TrackPath instances are created, which register
+            // the mouseover handlers that call createInfoWindowContent.
+            await app.ImportDataAsync();
+
+            // Assert - wait for tracks and the map to be visible.
+            await app.WaitForTracksAsync();
+            await app.WaitForMapAsync();
+
+            // Act - trigger the first route's mouseover event and get the info window HTML.
+            var infoWindowHtml = await app.GetRouteInfoWindowHtmlAsync();
+
+            // Assert - the info window should display valid duration/distance values.
+            // Before the fix, createInfoWindowContent was called at route creation time,
+            // before this.displayDuration and this.displayDistance were set in the
+            // TrackPath constructor, so the info window would show "undefined" for both.
+            infoWindowHtml.ShouldNotBeNull();
+            infoWindowHtml.ShouldNotContain("undefined");
+            infoWindowHtml.ShouldContain("Duration");
+            infoWindowHtml.ShouldContain("Distance");
+        });
+    }
+
+    [Theory]
+    [MemberData(nameof(Browsers))]
     public async Task Can_Import_Data_And_View_Workouts(string browserType, string? browserChannel)
     {
         // Arrange

@@ -100,10 +100,7 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
             await app.TogglePolygonAsync();
             await track.CollapseAsync();
 
-            // Assert - verify that a track whose name contains special characters can be expanded.
-            // Track names with spaces and special characters (like parentheses) require all
-            // non-alphanumeric characters to be sanitized when constructing the Bootstrap collapse
-            // CSS selector ID, otherwise the panel cannot be found and will not expand.
+            // Assert
             track = tracks[1];
 
             // Act
@@ -117,7 +114,7 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
             await track.DurationAsync().ShouldBe("20 minutes");
 
             await track.DistanceAsync().ShouldBe("1.31 km");
-            await track.AveragePaceAsync().ShouldBe(@"14'59""/km");
+            await track.AveragePaceAsync().ShouldBe("14'59\"/km");
 
             // Act
             await track.CollapseAsync();
@@ -137,7 +134,7 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
             await app.WaitForTracksAsync();
 
             await track.DistanceAsync().ShouldBe("0.81 miles");
-            await track.AveragePaceAsync().ShouldBe(@"24'8""/mile");
+            await track.AveragePaceAsync().ShouldBe("24'8\"/mile");
 
             await app.TotalDistanceAsync().ShouldBe("2 miles");
             await app.EmissionsAsync().ShouldBe("1");
@@ -159,7 +156,7 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
             await app.WaitForTracksAsync();
 
             await track.DistanceAsync().ShouldBe("1.31 km");
-            await track.AveragePaceAsync().ShouldBe(@"14'59""/km");
+            await track.AveragePaceAsync().ShouldBe("14'59\"/km");
 
             await app.TotalDistanceAsync().ShouldBe("3 km");
             await app.EmissionsAsync().ShouldBe("1");

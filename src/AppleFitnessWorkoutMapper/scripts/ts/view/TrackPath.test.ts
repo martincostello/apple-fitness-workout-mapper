@@ -57,15 +57,14 @@ describe('createInfoWindowContent', () => {
         expect(distance.children[0].textContent).toBe('2 miles');
     });
 
-    test('should not contain "undefined" when given values computed from track timestamps', () => {
-        // Mirrors the computation in the TrackPath constructor. Verifies that moment-based
-        // duration humanization and distance formatting produce defined, non-empty strings.
+    test('should compute track duration and distance correctly', () => {
         const startMoment = moment('2021-05-04T11:25:35Z');
         const endMoment = moment('2021-05-04T11:45:12Z');
         const duration = moment.duration(endMoment.diff(startMoment));
 
         const displayDuration = duration.humanize();
-        const displayDistance = (1312.37 / 1000.0).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + ' km';
+        const displayDistance =
+            (1312.37 / 1000.0).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + ' km';
 
         expect(displayDuration).not.toContain('undefined');
         expect(displayDistance).not.toContain('undefined');

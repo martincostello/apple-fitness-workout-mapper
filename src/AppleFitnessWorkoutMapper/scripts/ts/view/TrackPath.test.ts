@@ -10,14 +10,14 @@ class FakeElement {
     readonly children: FakeElement[] = [];
 
     className: string = '';
-    private _textContent: string | null = null;
+    private storedTextContent: string | null = null;
 
     constructor(tagName: string) {
         this.tagName = tagName;
     }
 
     get textContent(): string | null {
-        return this._textContent;
+        return this.storedTextContent;
     }
 
     set textContent(value: string | null) {
@@ -25,7 +25,7 @@ class FakeElement {
         // string, so passing `undefined` (e.g. before class properties are initialised)
         // results in the literal text "undefined" — which is exactly the bug that was
         // fixed by moving the createInfoWindowContent call inside the mouseover handler.
-        this._textContent = value !== null ? String(value) : null;
+        this.storedTextContent = value !== null ? String(value) : null;
     }
 
     appendChild<TElement extends FakeElement>(node: TElement): TElement {

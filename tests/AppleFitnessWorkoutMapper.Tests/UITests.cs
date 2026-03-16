@@ -53,37 +53,29 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
         var browser = new BrowserFixture(options, OutputHelper);
         await browser.WithPageAsync(async (page) =>
         {
-            // Install hooks before the page loads so that they intercept the Google Maps API
-            // once it loads. The hooks capture mouseover event handlers added to polylines
-            // and the content set on InfoWindow instances, allowing the test to verify that
-            // the correct duration/distance values are shown (not "undefined") when a user
-            // hovers over a route on the map.
-            await page.AddInitScriptAsync(ApplicationPage.MapsTestHooksScript);
-
             await page.GotoAsync(fixture.ServerAddress);
             await page.WaitForLoadStateAsync();
 
             var app = new ApplicationPage(page);
 
-            // Act - import data so TrackPath instances are created, which register
-            // the mouseover handlers that call createInfoWindowContent.
+            // Act - import data so routes are rendered on the real Google Maps.
             await app.ImportDataAsync();
 
             // Assert - wait for tracks and the map to be visible.
             await app.WaitForTracksAsync();
             await app.WaitForMapAsync();
 
-            // Act - trigger the first route's mouseover event and get the info window HTML.
-            var infoWindowHtml = await app.GetRouteInfoWindowHtmlAsync();
+            // Act - hover over a route to trigger the mouseover and show the info window.
+            var infoWindowText = await app.RouteInfoWindowAsync();
 
-            // Assert - the info window should display valid duration/distance values.
+            // Assert - the info window should display a non-empty duration and distance.
             // Before the fix, createInfoWindowContent was called at route creation time,
             // before this.displayDuration and this.displayDistance were set in the
             // TrackPath constructor, so the info window would show "undefined" for both.
-            infoWindowHtml.ShouldNotBeNull();
-            infoWindowHtml.ShouldNotContain("undefined");
-            infoWindowHtml.ShouldContain("Duration");
-            infoWindowHtml.ShouldContain("Distance");
+            infoWindowText.ShouldNotBeNullOrEmpty();
+            infoWindowText.ShouldNotContain("undefined");
+            (infoWindowText.Contains("second", StringComparison.Ordinal) || infoWindowText.Contains("minute", StringComparison.Ordinal) || infoWindowText.Contains("hour", StringComparison.Ordinal)).ShouldBeTrue("Expected a duration in the info window text");
+            (infoWindowText.Contains("km", StringComparison.Ordinal) || infoWindowText.Contains("miles", StringComparison.Ordinal)).ShouldBeTrue("Expected a distance in the info window text");
         });
     }
 

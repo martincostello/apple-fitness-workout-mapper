@@ -7,69 +7,18 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Pages;
 
 public sealed class ApplicationPage(IPage page)
 {
-    /// <summary>
-    /// Gets an init script that stubs out the minimum Google Maps API surface needed to run
-    /// the app without a real API key. Because <c>google.maps.importLibrary</c> is already
-    /// defined when <c>@googlemaps/js-api-loader</c> initialises, the loader uses the stub
-    /// directly and makes no CDN network requests. The stub captures polyline
-    /// <c>mouseover</c> handlers and <c>InfoWindow.setContent</c> calls so Playwright tests
-    /// can inspect info-window content.
-    /// </summary>
-    public static string MapsTestHooksScript { get; } = """
-        (function () {
-            'use strict';
-
-            window.__playwrightTest = { mouseoverHandlers: [], lastInfoWindowContent: null };
-            var test = window.__playwrightTest;
-            function noop() {}
-
-            var fakeMaps = {
-                importLibrary: function () { return Promise.resolve(fakeMaps); },
-                Map: function (el) { el.setAttribute('aria-label', 'Map'); this.fitBounds = noop; },
-                LatLng: function (lat, lng) { this.lat = function () { return lat; }; this.lng = function () { return lng; }; },
-                LatLngBounds: function () { this.extend = noop; },
-                Polyline: function () {
-                    var path = [];
-                    this.getPath = function () { return path; };
-                    this.setMap = noop;
-                    this.setOptions = noop;
-                },
-                Polygon: function () { this.setMap = noop; },
-                InfoWindow: function () {
-                    this.setContent = function (c) { test.lastInfoWindowContent = c; };
-                    this.setPosition = noop;
-                    this.open = noop;
-                    this.close = noop;
-                },
-                SymbolPath: { FORWARD_CLOSED_ARROW: 2 },
-                event: {
-                    addListener: function (_, eventName, handler) {
-                        if (eventName === 'mouseover') { test.mouseoverHandlers.push(handler); }
-                        return {};
-                    }
-                },
-                geometry: { spherical: { computeLength: function () { return 1000; } } }
-            };
-
-            window.google = { maps: fakeMaps };
-        })();
-        """;
-
-    public async Task<string?> GetRouteInfoWindowHtmlAsync()
+    public async Task<string> RouteInfoWindowAsync()
     {
-        await page.WaitForFunctionAsync("() => (window.__playwrightTest?.mouseoverHandlers?.length ?? 0) > 0");
+        // Wait for the real Google Maps polylines to be rendered as SVG paths in the DOM,
+        // then hover over the first one to trigger the route mouseover event.
+        var routePath = page.Locator(Selectors.RoutePath).First;
+        await routePath.WaitForAsync();
+        await routePath.HoverAsync();
 
-        await page.EvaluateAsync("""
-            var handlers = window.__playwrightTest?.mouseoverHandlers;
-            if (handlers && handlers.length > 0) {
-                handlers[0]({ latLng: { lat: function () { return 51.5; }, lng: function () { return -0.1; } } });
-            }
-            """);
+        var infoWindow = page.Locator(Selectors.InfoWindow);
+        await infoWindow.WaitForAsync(new() { State = WaitForSelectorState.Visible });
 
-        return await page.EvaluateAsync<string?>("""
-            var content = window.__playwrightTest?.lastInfoWindowContent;
-            return content ? content.innerHTML : null;
-            """);
+        return await infoWindow.InnerTextAsync();
     }
 
     public async Task FilterAsync()
@@ -159,11 +108,13 @@ public sealed class ApplicationPage(IPage page)
     {
         public const string Filter = "id=filter";
         public const string Import = "id=import";
+        public const string InfoWindow = ".gm-style-iw-d";
         public const string Loader = "id=tracks-loader";
         public const string Map = "[aria-label='Map']";
         public const string NotBefore = "id=not-before";
         public const string NotAfter = "id=not-after";
         public const string PolygonToggle = "id=show-polygon";
+        public const string RoutePath = "[aria-label='Map'] svg path[stroke]";
         public const string TrackItem = "css=.track-item";
         public const string UnitOfDistanceToggle = "id=unit-of-distance";
     }

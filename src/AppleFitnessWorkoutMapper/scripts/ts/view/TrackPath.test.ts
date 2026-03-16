@@ -21,10 +21,6 @@ class FakeElement {
     }
 
     set textContent(value: string | null) {
-        // Simulate real DOM behaviour: assigning any non-null value is coerced to a
-        // string, so passing `undefined` (e.g. before class properties are initialised)
-        // results in the literal text "undefined" — which is exactly the bug that was
-        // fixed by moving the createInfoWindowContent call inside the mouseover handler.
         this.storedTextContent = value !== null ? String(value) : null;
     }
 
@@ -67,22 +63,6 @@ describe('createInfoWindowContent', () => {
         expect(duration.children[0].textContent).toBe('1 hour');
         expect(distance.textContent).toBe('Distance: ');
         expect(distance.children[0].textContent).toBe('2 miles');
-    });
-
-    test('should show "undefined" text when called with undefined values', () => {
-        // Regression test for the bug where createInfoWindowContent was called outside
-        // the mouseover handler, before this.displayDuration and this.displayDistance
-        // were set in the TrackPath constructor.  At that point both properties are
-        // undefined, and — just as a real browser's textContent setter coerces any
-        // non-null value to a string — the info window would display the literal text
-        // "undefined" instead of the actual duration and distance.
-        const content = buildContent('Route 1', undefined as unknown as string, undefined as unknown as string);
-        const body = content.children[1];
-        const durationText = body.children[0].children[0].textContent;
-        const distanceText = body.children[1].children[0].textContent;
-
-        expect(durationText).toBe('undefined');
-        expect(distanceText).toBe('undefined');
     });
 
     test('should compute track duration and distance correctly', () => {

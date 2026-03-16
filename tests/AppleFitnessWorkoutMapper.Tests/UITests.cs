@@ -53,7 +53,6 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
         var browser = new BrowserFixture(options, OutputHelper);
         await browser.WithPageAsync(async (page) =>
         {
-            // Inject the minimal script that captures polyline instances before any page content loads.
             await page.AddInitScriptAsync(ApplicationPage.RouteCapturingScript);
 
             await page.GotoAsync(fixture.ServerAddress);
@@ -61,24 +60,21 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
 
             var app = new ApplicationPage(page);
 
-            // Act - import data so routes are rendered on the real Google Maps.
+            // Act
             await app.ImportDataAsync();
 
-            // Assert - wait for tracks and the map to be visible.
+            // Assert
             await app.WaitForTracksAsync();
             await app.WaitForMapAsync();
 
-            // Act - hover over a route to trigger the mouseover and show the info window.
-            var infoWindowText = await app.RouteInfoWindowAsync();
+            // Act
+            string actual = await app.RouteInfoWindowAsync();
 
-            // Assert - the info window should display a non-empty duration and distance.
-            // Before the fix, createInfoWindowContent was called at route creation time,
-            // before this.displayDuration and this.displayDistance were set in the
-            // TrackPath constructor, so the info window would show "undefined" for both.
-            infoWindowText.ShouldNotBeNullOrEmpty();
-            infoWindowText.ShouldNotContain("undefined");
-            (infoWindowText.Contains("second", StringComparison.Ordinal) || infoWindowText.Contains("minute", StringComparison.Ordinal) || infoWindowText.Contains("hour", StringComparison.Ordinal)).ShouldBeTrue("Expected a duration in the info window text");
-            (infoWindowText.Contains("km", StringComparison.Ordinal) || infoWindowText.Contains("miles", StringComparison.Ordinal)).ShouldBeTrue("Expected a distance in the info window text");
+            // Assert
+            actual.ShouldNotBeNullOrEmpty();
+            actual.ShouldNotContain("undefined");
+            (actual.Contains("second", StringComparison.Ordinal) || actual.Contains("minute", StringComparison.Ordinal) || actual.Contains("hour", StringComparison.Ordinal)).ShouldBeTrue("Expected a duration in the info window text");
+            (actual.Contains("km", StringComparison.Ordinal) || actual.Contains("miles", StringComparison.Ordinal)).ShouldBeTrue("Expected a distance in the info window text");
         });
     }
 

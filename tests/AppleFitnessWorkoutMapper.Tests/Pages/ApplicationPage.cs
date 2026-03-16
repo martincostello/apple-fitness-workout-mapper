@@ -16,7 +16,9 @@ public sealed class ApplicationPage(IPage page)
     /// </summary>
     internal const string RouteCapturingScript = """
         (function patchMaps() {
+            if (window.__routes_patched) { return; }
             if (window.google && window.google.maps && window.google.maps.Polyline) {
+                window.__routes_patched = true;
                 const orig = window.google.maps.Polyline.prototype.setMap;
                 window.google.maps.Polyline.prototype.setMap = function(map) {
                     if (map) { window.__routes = window.__routes || []; window.__routes.push(this); }

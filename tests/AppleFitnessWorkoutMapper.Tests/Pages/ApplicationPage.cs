@@ -31,7 +31,7 @@ public sealed class ApplicationPage(IPage page)
             throw new InvalidOperationException("No route polyline path found in the map.");
         }
 
-        await page.Mouse.MoveAsync(position[0], position[1]);
+        await page.Mouse.MoveAsync((float)position[0], (float)position[1]);
 
         var infoWindow = page.Locator(Selectors.InfoWindow);
         await infoWindow.WaitForAsync(new() { State = WaitForSelectorState.Visible });

@@ -9,11 +9,29 @@ public sealed class ApplicationPage(IPage page)
 {
     public async Task<string> RouteInfoWindowAsync()
     {
-        // Wait for the real Google Maps polylines to be rendered as SVG paths in the DOM,
-        // then hover over the first one to trigger the route mouseover event.
-        var routePath = page.Locator(Selectors.RoutePath).First;
-        await routePath.WaitForAsync();
-        await routePath.HoverAsync();
+        // Wait for Google Maps to render the route polylines as SVG paths.
+        // Polylines are rendered with fill="none" in SVG overlay panes inside #map.
+        // Note: the overlay panes are siblings of [aria-label='Map'], not children,
+        // so the selector must be scoped to #map rather than [aria-label='Map'].
+        await page.WaitForFunctionAsync(@"() => document.querySelectorAll('#map svg path[fill=""none""]').length > 0");
+
+        // Get the screen coordinates of the center of the first route polyline path,
+        // then move the mouse there to trigger Google Maps' real mouseover event.
+        var position = await page.EvaluateAsync<double[]>(@"
+            () => {
+                const path = document.querySelector('#map svg path[fill=""none""]');
+                if (!path) return null;
+                const rect = path.getBoundingClientRect();
+                if (rect.width === 0 && rect.height === 0) return null;
+                return [rect.left + rect.width / 2, rect.top + rect.height / 2];
+            }");
+
+        if (position is null)
+        {
+            throw new InvalidOperationException("No route polyline path found in the map.");
+        }
+
+        await page.Mouse.MoveAsync(position[0], position[1]);
 
         var infoWindow = page.Locator(Selectors.InfoWindow);
         await infoWindow.WaitForAsync(new() { State = WaitForSelectorState.Visible });
@@ -114,7 +132,6 @@ public sealed class ApplicationPage(IPage page)
         public const string NotBefore = "id=not-before";
         public const string NotAfter = "id=not-after";
         public const string PolygonToggle = "id=show-polygon";
-        public const string RoutePath = "[aria-label='Map'] svg path[stroke]";
         public const string TrackItem = "css=.track-item";
         public const string UnitOfDistanceToggle = "id=unit-of-distance";
     }

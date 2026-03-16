@@ -39,6 +39,47 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
 
     [Theory]
     [MemberData(nameof(Browsers))]
+    public async Task Can_View_Route_Info_Window(string browserType, string? browserChannel)
+    {
+        // Arrange
+        var options = new BrowserFixtureOptions()
+        {
+            BrowserType = browserType,
+            BrowserChannel = browserChannel,
+        };
+
+        using var fixture = new HttpWebApplicationFactory(OutputHelper);
+
+        var browser = new BrowserFixture(options, OutputHelper);
+        await browser.WithPageAsync(async (page) =>
+        {
+            await page.AddInitScriptAsync(ApplicationPage.RouteCapturingScript);
+
+            await page.GotoAsync(fixture.ServerAddress);
+            await page.WaitForLoadStateAsync();
+
+            var app = new ApplicationPage(page);
+
+            // Act
+            await app.ImportDataAsync();
+
+            // Assert
+            await app.WaitForTracksAsync();
+            await app.WaitForMapAsync();
+
+            // Act
+            string actual = await app.RouteInfoWindowAsync();
+
+            // Assert
+            actual.ShouldNotBeNullOrEmpty();
+            actual.ShouldNotContain("undefined");
+            (actual.Contains("second", StringComparison.Ordinal) || actual.Contains("minute", StringComparison.Ordinal) || actual.Contains("hour", StringComparison.Ordinal)).ShouldBeTrue("Expected a duration in the info window text");
+            (actual.Contains("km", StringComparison.Ordinal) || actual.Contains("miles", StringComparison.Ordinal)).ShouldBeTrue("Expected a distance in the info window text");
+        });
+    }
+
+    [Theory]
+    [MemberData(nameof(Browsers))]
     public async Task Can_Import_Data_And_View_Workouts(string browserType, string? browserChannel)
     {
         // Arrange
@@ -74,8 +115,8 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
             await tracks[0].TitleAsync().ShouldBe("Route 1");
             await tracks[0].NameAsync().ShouldBe("Route 1");
 
-            await tracks[1].TitleAsync().ShouldBe("Route 2");
-            await tracks[1].NameAsync().ShouldBe("Route 2");
+            await tracks[1].TitleAsync().ShouldBe("Route 2 (Evening)");
+            await tracks[1].NameAsync().ShouldBe("Route 2 (Evening)");
 
             var track = tracks[0];
 
@@ -100,6 +141,25 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
             await app.TogglePolygonAsync();
             await track.CollapseAsync();
 
+            // Assert
+            track = tracks[1];
+
+            // Act
+            await track.ExpandAsync();
+
+            // Assert
+            await app.WaitForTracksAsync();
+
+            await track.StartedAtAsync().ShouldBeOneOf("May 5, 2021 11:25 AM", "May 5, 2021 12:25 PM");
+            await track.EndedAtAsync().ShouldBeOneOf("May 5, 2021 11:45 AM", "May 5, 2021 12:45 PM");
+            await track.DurationAsync().ShouldBe("20 minutes");
+
+            await track.DistanceAsync().ShouldBe("1.31 km");
+            await track.AveragePaceAsync().ShouldBe("14'59\"/km");
+
+            // Act
+            await track.CollapseAsync();
+
             // Act
             await app.ToggleUnitsAsync();
 
@@ -115,7 +175,7 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
             await app.WaitForTracksAsync();
 
             await track.DistanceAsync().ShouldBe("0.81 miles");
-            await track.AveragePaceAsync().ShouldBe(@"24'8""/mile");
+            await track.AveragePaceAsync().ShouldBe("24'8\"/mile");
 
             await app.TotalDistanceAsync().ShouldBe("2 miles");
             await app.EmissionsAsync().ShouldBe("1");
@@ -137,7 +197,7 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
             await app.WaitForTracksAsync();
 
             await track.DistanceAsync().ShouldBe("1.31 km");
-            await track.AveragePaceAsync().ShouldBe(@"14'59""/km");
+            await track.AveragePaceAsync().ShouldBe("14'59\"/km");
 
             await app.TotalDistanceAsync().ShouldBe("3 km");
             await app.EmissionsAsync().ShouldBe("1");
@@ -153,8 +213,8 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
             tracks = await app.TracksAsync();
             track = tracks.ShouldHaveSingleItem();
 
-            await track.TitleAsync().ShouldBe("Route 2");
-            await track.NameAsync().ShouldBe("Route 2");
+            await track.TitleAsync().ShouldBe("Route 2 (Evening)");
+            await track.NameAsync().ShouldBe("Route 2 (Evening)");
         });
     }
 

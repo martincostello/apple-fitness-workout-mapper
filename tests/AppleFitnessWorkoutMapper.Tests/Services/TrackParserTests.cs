@@ -48,7 +48,7 @@ public class TrackParserTests(ITestOutputHelper outputHelper)
         track = actual[1];
 
         track.ShouldNotBeNull();
-        track.Name.ShouldBe("Route 2");
+        track.Name.ShouldBe("Route 2 (Evening)");
         track.Timestamp.ShouldBe(new DateTimeOffset(2021, 05, 05, 11, 25, 35, TimeSpan.Zero));
 
         track.Points.ShouldNotBeNull();

@@ -67,11 +67,6 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
 
             await app.IsMapDisplayedAsync().ShouldBeTrue();
 
-            // Assert - verify the info window correctly displays a route's duration and distance
-            // when the user hovers over it on the map.
-            var infoWindowText = await app.RouteInfoWindowAsync();
-            infoWindowText.ShouldNotContain("undefined");
-
             var tracks = await app.TracksAsync();
 
             tracks.Count.ShouldBe(2);

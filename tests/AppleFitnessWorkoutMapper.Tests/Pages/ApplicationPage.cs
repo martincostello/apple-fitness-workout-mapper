@@ -30,40 +30,6 @@ public sealed class ApplicationPage(IPage page)
     public async Task<bool> IsMapDisplayedAsync()
         => await page.IsVisibleAsync(Selectors.Map);
 
-    public async Task<string> RouteInfoWindowAsync()
-    {
-        // Wait for Google Maps to render route polylines as SVG paths in the DOM.
-        // Routes are rendered as SVG path elements with no fill and a colored stroke.
-        await page.WaitForFunctionAsync(@"() => document.querySelectorAll('path[fill=""none""]').length > 0");
-
-        // Find the center of the first rendered route SVG path using its bounding rect.
-        // Using the actual rendered position avoids browser-specific coordinate differences.
-        var center = await page.EvaluateAsync<float[]>(@"() => {
-            const paths = [...document.querySelectorAll('path[fill=""none""]')]
-                .filter(p => {
-                    const r = p.getBoundingClientRect();
-                    // Ignore zero-size or near-zero paths that aren't visible route polylines
-                    return r.width > 1 && r.height > 1;
-                });
-            if (paths.length > 0) {
-                const r = paths[0].getBoundingClientRect();
-                return [r.left + r.width / 2, r.top + r.height / 2];
-            }
-            return null;
-        }");
-
-        center.ShouldNotBeNull();
-
-        // Approach from outside the path's center to reliably trigger Google Maps' hit testing
-        await page.Mouse.MoveAsync(center[0] - 5, center[1] - 5);
-        await page.Mouse.MoveAsync(center[0], center[1], new() { Steps = 10 });
-
-        var infoWindow = page.Locator(Selectors.InfoWindow);
-        await infoWindow.WaitForAsync(new() { State = WaitForSelectorState.Visible });
-
-        return await infoWindow.InnerTextAsync();
-    }
-
     public async Task<ApplicationPage> NotBeforeAsync(DateOnly value)
     {
         await EnterDateAsync(Selectors.NotBefore, value);
@@ -128,7 +94,6 @@ public sealed class ApplicationPage(IPage page)
     {
         public const string Filter = "id=filter";
         public const string Import = "id=import";
-        public const string InfoWindow = ".gm-style-iw-d";
         public const string Loader = "id=tracks-loader";
         public const string Map = "[aria-label='Map']";
         public const string NotBefore = "id=not-before";

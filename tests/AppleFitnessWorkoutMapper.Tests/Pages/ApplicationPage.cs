@@ -32,21 +32,31 @@ public sealed class ApplicationPage(IPage page)
 
     public async Task<string> RouteInfoWindowAsync()
     {
-        var mapLocator = page.Locator(Selectors.Map);
-        var box = await mapLocator.BoundingBoxAsync();
+        // Wait for Google Maps to render route polylines as SVG paths in the DOM.
+        // Routes are rendered as SVG path elements with no fill and a colored stroke.
+        await page.WaitForFunctionAsync(@"() => document.querySelectorAll('path[fill=""none""]').length > 0");
 
-        box.ShouldNotBeNull();
+        // Find the center of the first rendered route SVG path using its bounding rect.
+        // Using the actual rendered position avoids browser-specific coordinate differences.
+        var center = await page.EvaluateAsync<float[]>(@"() => {
+            const paths = [...document.querySelectorAll('path[fill=""none""]')]
+                .filter(p => {
+                    const r = p.getBoundingClientRect();
+                    // Ignore zero-size or near-zero paths that aren't visible route polylines
+                    return r.width > 1 && r.height > 1;
+                });
+            if (paths.length > 0) {
+                const r = paths[0].getBoundingClientRect();
+                return [r.left + r.width / 2, r.top + r.height / 2];
+            }
+            return null;
+        }");
 
-        // Move the mouse from the top-left corner of the map toward the center.
-        // The routes pass diagonally through the map center after auto-fitting, so
-        // sweeping the mouse to the center reliably triggers the route mouseover event.
-        await page.Mouse.MoveAsync(
-            box.X + (box.Width * 0.1f),
-            box.Y + (box.Height * 0.1f));
-        await page.Mouse.MoveAsync(
-            box.X + (box.Width / 2f),
-            box.Y + (box.Height / 2f),
-            new() { Steps = 20 });
+        center.ShouldNotBeNull();
+
+        // Approach from outside the path's center to reliably trigger Google Maps' hit testing
+        await page.Mouse.MoveAsync(center[0] - 5, center[1] - 5);
+        await page.Mouse.MoveAsync(center[0], center[1], new() { Steps = 10 });
 
         var infoWindow = page.Locator(Selectors.InfoWindow);
         await infoWindow.WaitForAsync(new() { State = WaitForSelectorState.Visible });

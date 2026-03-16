@@ -84,6 +84,8 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
             infoWindowHtml.ShouldNotContain("undefined");
             infoWindowHtml.ShouldContain("Duration");
             infoWindowHtml.ShouldContain("Distance");
+            infoWindowHtml.ShouldContain("20 minutes");
+            infoWindowHtml.ShouldContain("1.31 km");
         });
     }
 

@@ -10,10 +10,22 @@ class FakeElement {
     readonly children: FakeElement[] = [];
 
     className: string = '';
-    textContent: string | null = null;
+    private _textContent: string | null = null;
 
     constructor(tagName: string) {
         this.tagName = tagName;
+    }
+
+    get textContent(): string | null {
+        return this._textContent;
+    }
+
+    set textContent(value: string | null) {
+        // Simulate real DOM behaviour: assigning any non-null value is coerced to a
+        // string, so passing `undefined` (e.g. before class properties are initialised)
+        // results in the literal text "undefined" — which is exactly the bug that was
+        // fixed by moving the createInfoWindowContent call inside the mouseover handler.
+        this._textContent = value !== null ? String(value) : null;
     }
 
     appendChild<TElement extends FakeElement>(node: TElement): TElement {
@@ -57,6 +69,22 @@ describe('createInfoWindowContent', () => {
         expect(distance.children[0].textContent).toBe('2 miles');
     });
 
+    test('should show "undefined" text when called with undefined values', () => {
+        // Regression test for the bug where createInfoWindowContent was called outside
+        // the mouseover handler, before this.displayDuration and this.displayDistance
+        // were set in the TrackPath constructor.  At that point both properties are
+        // undefined, and — just as a real browser's textContent setter coerces any
+        // non-null value to a string — the info window would display the literal text
+        // "undefined" instead of the actual duration and distance.
+        const content = buildContent('Route 1', undefined as unknown as string, undefined as unknown as string);
+        const body = content.children[1];
+        const durationText = body.children[0].children[0].textContent;
+        const distanceText = body.children[1].children[0].textContent;
+
+        expect(durationText).toBe('undefined');
+        expect(distanceText).toBe('undefined');
+    });
+
     test('should compute track duration and distance correctly', () => {
         const startMoment = moment('2021-05-04T11:25:35Z');
         const endMoment = moment('2021-05-04T11:45:12Z');
@@ -66,17 +94,12 @@ describe('createInfoWindowContent', () => {
         const displayDistance =
             (1312.37 / 1000.0).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 }) + ' km';
 
-        expect(displayDuration).not.toContain('undefined');
-        expect(displayDistance).not.toContain('undefined');
-
         const content = buildContent('Route 1', displayDuration, displayDistance);
         const body = content.children[1];
         const durationText = body.children[0].children[0].textContent;
         const distanceText = body.children[1].children[0].textContent;
 
-        expect(durationText).not.toContain('undefined');
-        expect(durationText).toBeTruthy();
-        expect(distanceText).not.toContain('undefined');
-        expect(distanceText).toBeTruthy();
+        expect(durationText).toBe(displayDuration);
+        expect(distanceText).toBe(displayDistance);
     });
 });

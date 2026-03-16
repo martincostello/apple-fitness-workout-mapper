@@ -8,63 +8,106 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Pages;
 public sealed class ApplicationPage(IPage page)
 {
     /// <summary>
-    /// Gets an init script that hooks into the Google Maps API to capture mouseover event
-    /// handlers and info window content for use in integration tests.
+    /// Gets an init script that installs a complete fake Google Maps API before any page
+    /// scripts run. Because <c>google.maps.importLibrary</c> is already defined when
+    /// <c>@googlemaps/js-api-loader</c> initialises, the loader uses the fake directly and
+    /// makes no CDN network requests. The fake captures polyline <c>mouseover</c> handlers
+    /// and <c>InfoWindow.setContent</c> calls so Playwright tests can inspect info-window
+    /// content without a real Google Maps API key.
     /// </summary>
     public static string MapsTestHooksScript { get; } = """
         (function () {
-            window.__playwrightTest = { mouseoverHandlers: [], lastInfoWindowContent: null };
+            'use strict';
 
+            // Test state accessed by GetRouteInfoWindowHtmlAsync()
+            window.__playwrightTest = { mouseoverHandlers: [], lastInfoWindowContent: null };
             var test = window.__playwrightTest;
 
-            function hookMaps(maps) {
-                if (!maps || maps.__hooked) return;
-                if (!maps.InfoWindow || !maps.InfoWindow.prototype) return;
-                if (!maps.event || !maps.event.addListener) return;
-
-                maps.__hooked = true;
-
-                var origSetContent = maps.InfoWindow.prototype.setContent;
-                maps.InfoWindow.prototype.setContent = function (content) {
-                    test.lastInfoWindowContent = content;
-                    return origSetContent.call(this, content);
-                };
-
-                var origAddListener = maps.event.addListener;
-                maps.event.addListener = function (instance, eventName, handler) {
-                    if (eventName === 'mouseover') {
-                        test.mouseoverHandlers.push(handler);
-                    }
-                    return origAddListener.call(this, instance, eventName, handler);
-                };
+            // Haversine distance (metres) between two fake LatLng objects
+            function haversineDistance(p1, p2) {
+                var R = 6371000;
+                var lat1 = p1.lat() * Math.PI / 180;
+                var lat2 = p2.lat() * Math.PI / 180;
+                var dLat = (p2.lat() - p1.lat()) * Math.PI / 180;
+                var dLng = (p2.lng() - p1.lng()) * Math.PI / 180;
+                var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                        Math.cos(lat1) * Math.cos(lat2) *
+                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+                return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             }
 
-            function watchProperty(obj, propName, callback) {
-                var value = obj[propName];
-                if (value) {
-                    callback(value);
-                    return;
-                }
-                Object.defineProperty(obj, propName, {
-                    configurable: true,
-                    enumerable: true,
-                    get: function () { return value; },
-                    set: function (v) {
-                        value = v;
-                        if (v) { callback(v); }
-                    }
-                });
-            }
+            // Fake MVCArray used as the polyline path
+            function FakeMVCArray() { this._items = []; }
+            FakeMVCArray.prototype.push = function (item) { this._items.push(item); };
+            FakeMVCArray.prototype.getAt = function (i) { return this._items[i]; };
+            FakeMVCArray.prototype.getLength = function () { return this._items.length; };
+            FakeMVCArray.prototype[Symbol.iterator] = function () { return this._items[Symbol.iterator](); };
 
-            watchProperty(window, 'google', function (google) {
-                if (google.maps) {
-                    hookMaps(google.maps);
-                } else {
-                    watchProperty(google, 'maps', function (maps) {
-                        hookMaps(maps);
-                    });
+            // Fake LatLng
+            function FakeLatLng(lat, lng) { this._lat = lat; this._lng = lng; }
+            FakeLatLng.prototype.lat = function () { return this._lat; };
+            FakeLatLng.prototype.lng = function () { return this._lng; };
+
+            // Fake Map — sets aria-label so WaitForMapAsync passes
+            function FakeMap(element) { element.setAttribute('aria-label', 'Map'); }
+            FakeMap.prototype.fitBounds = function () {};
+
+            // Fake LatLngBounds
+            function FakeLatLngBounds() {}
+            FakeLatLngBounds.prototype.extend = function () {};
+
+            // Fake Polyline
+            function FakePolyline() { this._path = new FakeMVCArray(); }
+            FakePolyline.prototype.getPath = function () { return this._path; };
+            FakePolyline.prototype.setMap = function () {};
+            FakePolyline.prototype.setOptions = function () {};
+
+            // Fake InfoWindow — captures content for assertions
+            function FakeInfoWindow() {}
+            FakeInfoWindow.prototype.setContent = function (content) { test.lastInfoWindowContent = content; };
+            FakeInfoWindow.prototype.setPosition = function () {};
+            FakeInfoWindow.prototype.open = function () {};
+            FakeInfoWindow.prototype.close = function () {};
+
+            // Fake Polygon
+            function FakePolygon() {}
+            FakePolygon.prototype.setMap = function () {};
+
+            // Fake google.maps namespace — all APIs used by TrackMap and TrackPath
+            var fakeMaps = {
+                // importLibrary already defined → @googlemaps/js-api-loader skips CDN fetch
+                importLibrary: function () { return Promise.resolve(fakeMaps); },
+                Map: FakeMap,
+                LatLng: FakeLatLng,
+                LatLngBounds: FakeLatLngBounds,
+                Polyline: FakePolyline,
+                Polygon: FakePolygon,
+                InfoWindow: FakeInfoWindow,
+                SymbolPath: { FORWARD_CLOSED_ARROW: 2 },
+                event: {
+                    addListener: function (instance, eventName, handler) {
+                        if (eventName === 'mouseover') {
+                            test.mouseoverHandlers.push(handler);
+                        }
+                        return {};
+                    }
+                },
+                geometry: {
+                    spherical: {
+                        computeLength: function (path) {
+                            var total = 0;
+                            var items = path._items;
+                            for (var i = 1; i < items.length; i++) {
+                                total += haversineDistance(items[i - 1], items[i]);
+                            }
+                            return total;
+                        }
+                    }
                 }
-            });
+            };
+
+            // Install the fake before any page script runs so the loader uses it directly
+            window.google = { maps: fakeMaps };
         })();
         """;
 

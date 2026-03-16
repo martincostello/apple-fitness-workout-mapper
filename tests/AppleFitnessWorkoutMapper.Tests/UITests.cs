@@ -53,6 +53,9 @@ public class UITests(ITestOutputHelper outputHelper) : IAsyncLifetime
         var browser = new BrowserFixture(options, OutputHelper);
         await browser.WithPageAsync(async (page) =>
         {
+            // Inject the minimal script that captures polyline instances before any page content loads.
+            await page.AddInitScriptAsync(ApplicationPage.RouteCapturingScript);
+
             await page.GotoAsync(fixture.ServerAddress);
             await page.WaitForLoadStateAsync();
 

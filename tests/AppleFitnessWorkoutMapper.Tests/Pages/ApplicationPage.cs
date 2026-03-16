@@ -7,31 +7,41 @@ namespace MartinCostello.AppleFitnessWorkoutMapper.Pages;
 
 public sealed class ApplicationPage(IPage page)
 {
+    /// <summary>
+    /// A minimal init script that must be injected via <see cref="IPage.AddInitScriptAsync"/> before
+    /// page navigation. It polls until <c>google.maps.Polyline</c> is available and then patches
+    /// <c>google.maps.Polyline.prototype.setMap</c> to store every polyline that is added to the map
+    /// in <c>window.__routes</c>, so that <see cref="RouteInfoWindowAsync"/> can trigger the
+    /// Google Maps mouseover event on a route without needing the SVG overlay to render.
+    /// </summary>
+    internal const string RouteCapturingScript = """
+        (function patchMaps() {
+            if (window.google && window.google.maps && window.google.maps.Polyline) {
+                const orig = window.google.maps.Polyline.prototype.setMap;
+                window.google.maps.Polyline.prototype.setMap = function(map) {
+                    if (map) { window.__routes = window.__routes || []; window.__routes.push(this); }
+                    return orig.apply(this, arguments);
+                };
+            } else {
+                setTimeout(patchMaps, 50);
+            }
+        }());
+        """;
+
     public async Task<string> RouteInfoWindowAsync()
     {
-        // Wait for Google Maps to render the route polylines as SVG paths.
-        // Polylines are rendered with fill="none" in SVG overlay panes inside #map.
-        // Note: the overlay panes are siblings of [aria-label='Map'], not children,
-        // so the selector must be scoped to #map rather than [aria-label='Map'].
-        await page.WaitForFunctionAsync(@"() => document.querySelectorAll('#map svg path[fill=""none""]').length > 0");
+        // Wait until at least one polyline has been added to the map.
+        // The RouteCapturingScript init script stores polyline references in window.__routes.
+        await page.WaitForFunctionAsync("() => (window.__routes && window.__routes.length > 0)");
 
-        // Get the screen coordinates of the center of the first route polyline path,
-        // then move the mouse there to trigger Google Maps' real mouseover event.
-        var position = await page.EvaluateAsync<double[]>(@"
+        // Trigger the Google Maps mouseover event on the first route polyline.
+        // This fires the handler in TrackPath that calls createInfoWindowContent and opens the
+        // real Google Maps InfoWindow, appending the .gm-style-iw-d element to the DOM.
+        await page.EvaluateAsync(@"
             () => {
-                const path = document.querySelector('#map svg path[fill=""none""]');
-                if (!path) return null;
-                const rect = path.getBoundingClientRect();
-                if (rect.width === 0 && rect.height === 0) return null;
-                return [rect.left + rect.width / 2, rect.top + rect.height / 2];
+                const route = window.__routes[0];
+                google.maps.event.trigger(route, 'mouseover', { latLng: new google.maps.LatLng(0, 0) });
             }");
-
-        if (position is null)
-        {
-            throw new InvalidOperationException("No route polyline path found in the map.");
-        }
-
-        await page.Mouse.MoveAsync((float)position[0], (float)position[1]);
 
         var infoWindow = page.Locator(Selectors.InfoWindow);
         await infoWindow.WaitForAsync(new() { State = WaitForSelectorState.Visible });

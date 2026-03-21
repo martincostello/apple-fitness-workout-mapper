@@ -60,13 +60,16 @@ ul.track-item-metadata {
 }
 
 [role="main"] {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--navbar-height));
+  overflow: hidden;
   padding-top: 12px;
 }
 
 #map {
-  height: 75vh;
-  max-height: none;
-  min-height: 75%;
+  flex: 1 1 0;
+  min-height: 0;
 }
 
 .loader {

@@ -80,6 +80,9 @@ export class TrackPath {
 
         const startMoment = moment(track.timestamp);
 
+        const titleElement = this.container.querySelector('.track-item-title');
+        titleElement.setAttribute('title', moment(track.timestamp).from(moment()));
+
         const startElement = this.panel.querySelector('[data-js-start]');
         startElement.textContent = startMoment.format('lll');
         startElement.setAttribute('title', startMoment.toISOString());

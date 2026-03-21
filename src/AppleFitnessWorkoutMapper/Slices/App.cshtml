@@ -24,7 +24,7 @@
     <title>Apple Fitness Workout Mapper</title>
 </head>
 <body>
-    <nav class="navbar navbar-dark fixed-top bg-dark">
+    <nav class="navbar navbar-dark sticky-top bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand me-auto" href="@(repoUrl)" rel="nofollow" target="_blank">
                 <img src="@(Content("~/static/images/apple.svg"))" class="px-2" aria-hidden="true" />
@@ -51,8 +51,8 @@
             </ul>
         </div>
     </nav>
-    <div class="container-fluid">
-        <div class="row">
+    <div class="container-fluid main-container">
+        <div class="row flex-nowrap">
             <nav class="col-auto d-block bg-light mx-2 sidebar">
                 <div class="d-flex flex-column sidebar-sticky">
                     <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
@@ -132,8 +132,8 @@
                     </ul>
                 </div>
             </nav>
-            <main role="main" class="col-md-9 ms-sm-auto col-lg-10 px-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <main role="main" class="col px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 border-bottom">
                     <h1 class="h2">
                         Map
                         <span class="fa-solid fa-map" aria-hidden="true"></span>
@@ -166,7 +166,7 @@
                     that&#39;s a saving of <span data-js-emissions></span>kg of CO<sub>2</sub> compared to driving. <span class="fa-solid fa-tree text-success"></span>
                 </div>
                 <div id="map" data-google-api-key="@(Model.GoogleMapsApiKey)"></div>
-                <footer class="mt-2 text-muted">
+                <footer class="my-2 text-muted">
                     Designed with <span class="fa-solid fa-heart" aria-label="love" role="img"></span> by <a href="https://martincostello.com/home/about/" rel="nofollow" target="_blank">Martin Costello</a>, &copy; @DateTimeOffset.UtcNow.Year |
                     <span class="fa-brands fa-github" aria-hidden="true"></span> <a href="@(ownerUrl)" rel="nofollow" target="_blank">GitHub</a> |
                     <span class="fa-brands fa-bluesky" aria-hidden="true"></span> <a href="https://martincostello.com/bluesky" rel="nofollow" target="_blank">Bluesky</a>

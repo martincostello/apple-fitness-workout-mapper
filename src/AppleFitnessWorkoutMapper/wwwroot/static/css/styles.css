@@ -64,7 +64,7 @@ ul.track-item-metadata {
   flex-direction: column;
   height: calc(100vh - var(--navbar-height));
   overflow: hidden;
-  padding-top: 12px;
+  padding-top: 0.75rem;
 }
 
 #map {
@@ -77,8 +77,8 @@ ul.track-item-metadata {
   border: 6px solid #f3f3f3;
   border-radius: 50%;
   border-top: 6px solid #2c3e50;
-  height: 40px;
-  width: 40px;
+  height: 2.5rem;
+  width: 2.5rem;
 }
 
 @keyframes spin {
@@ -106,7 +106,7 @@ ul.track-item-metadata {
   display: inline-block;
   font-weight: 300;
   text-align: left;
-  width: 20px;
+  width: 1.25rem;
 }
 
 @keyframes ellipsis {

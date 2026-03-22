@@ -1,12 +1,25 @@
 const path = require('path');
 const webpack = require('webpack');
+const cssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const miniCssExtractPlugin = require('mini-css-extract-plugin');
+const removeEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 
 module.exports = {
     devtool: 'source-map',
-    entry: './scripts/ts/main.ts',
+    entry: {
+        css: path.resolve(__dirname, './styles/main.css'),
+        js: path.resolve(__dirname, './scripts/main.ts'),
+    },
     mode: 'production',
     module: {
         rules: [
+            {
+                test: /.css$/,
+                use: [
+                    miniCssExtractPlugin.loader,
+                    { loader: 'css-loader', options: { sourceMap: true } },
+                ],
+            },
             {
                 test: /\.ts$/,
                 use: 'ts-loader',
@@ -14,14 +27,25 @@ module.exports = {
             },
         ],
     },
+    optimization: {
+        minimize: true,
+        minimizer: [
+            '...',
+            new cssMinimizerPlugin(),
+        ],
+    },
     output: {
-        filename: 'main.js',
-        path: path.resolve(__dirname, 'wwwroot', 'static', 'js'),
+        filename: '[name]/main.js',
+        path: path.resolve(__dirname, 'wwwroot', 'static'),
     },
     plugins: [
+        new miniCssExtractPlugin({
+            filename: '[name]/main.css'
+        }),
+        new removeEmptyScriptsPlugin(),
         new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en-gb/),
     ],
     resolve: {
-        extensions: ['.ts', '.js'],
+        extensions: ['.css', '.tsx', '.ts', '.js'],
     },
 };

@@ -20,7 +20,8 @@ obj
 packages
 project.lock.json
 src/AppleFitnessWorkoutMapper/App_Data/*
-src/AppleFitnessWorkoutMapper/wwwroot/static/js/*
+src/AppleFitnessWorkoutMapper/wwwroot/static/*
+!src/AppleFitnessWorkoutMapper/wwwroot/static/images/*
 tests/AppleFitnessWorkoutMapper.Tests/App_Data/tracks.db
 TestResults
 UpgradeLog*.htm

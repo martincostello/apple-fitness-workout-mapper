@@ -25,20 +25,19 @@ body {
 }
 
 .sidebar {
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+  box-shadow: inset -1px 0 0 rgb(0 0 0 / 10%);
 }
 
 .sidebar-sticky {
   height: 100%;
   padding-top: .5rem;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden auto;
 }
 
 .sidebar .nav-link {
   color: #333;
   font-weight: 500;
-  padding: 0.5rem 0.5rem;
+  padding: 0.5rem;
 }
 
 .sidebar .nav-link.active {
@@ -46,7 +45,7 @@ body {
 }
 
 .list-group-item {
-  padding: .75rem .75rem;
+  padding: .75rem;
 }
 
 .list-group-item+.list-group-item:nth-of-type(2) {
@@ -102,7 +101,7 @@ ul.track-item-metadata {
   width: 100%;
 }
 
-.ellipsis:after {
+.ellipsis::after {
   animation: ellipsis 1.5s linear infinite;
   content: '...';
   display: inline-block;

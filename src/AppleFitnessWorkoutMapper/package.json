@@ -7,8 +7,8 @@
   "scripts": {
     "build": "npm run compile && npm run format && npm run lint && npm test",
     "compile": "webpack",
-    "format": "prettier --write scripts/**/*.ts",
-    "format-check": "prettier --check scripts/**/*.ts",
+    "format": "prettier --write scripts/**/*.ts && stylelint --fix lax styles/**/*.css",
+    "format-check": "prettier --check scripts/**/*.ts && stylelint --fix styles/**/*.css",
     "lint": "eslint scripts",
     "test": "vitest run",
     "watch": "webpack --watch"
@@ -31,17 +31,23 @@
     "@typescript-eslint/parser": "8.57.1",
     "@vitest/coverage-v8": "4.1.0",
     "@vitest/eslint-plugin": "1.6.12",
+    "css-loader": "7.1.4",
+    "css-minimizer-webpack-plugin": "8.0.0",
     "eslint": "10.0.3",
     "eslint-config-prettier": "10.1.8",
     "globals": "17.4.0",
+    "mini-css-extract-plugin": "2.10.1",
     "moment": "2.30.1",
     "prettier": "3.8.1",
+    "style-loader": "4.0.0",
+    "stylelint-config-standard": "40.0.0",
     "ts-loader": "9.5.4",
     "tsify": "5.0.4",
     "typescript": "5.9.3",
     "vitest": "4.1.0",
     "webpack": "5.105.4",
-    "webpack-cli": "7.0.2"
+    "webpack-cli": "7.0.2",
+    "webpack-remove-empty-scripts": "1.1.1"
   },
   "prettier": {
     "arrowParens": "always",
@@ -54,5 +60,10 @@
     "tabWidth": 4,
     "trailingComma": "es5",
     "useTabs": false
+  },
+  "stylelint": {
+    "extends": [
+      "stylelint-config-standard"
+    ]
   }
 }

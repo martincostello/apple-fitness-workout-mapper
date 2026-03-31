@@ -26,21 +26,21 @@ export class TrackerUI {
 
     constructor() {
         this.distanceUnits = <HTMLInputElement>document.getElementById('unit-of-distance');
-        this.filterButton = document.getElementById('filter');
-        this.hideAllButton = document.getElementById('hide-all');
-        this.importButton = document.getElementById('import');
-        this.importContainer = document.getElementById('import-container');
-        this.importLoader = document.getElementById('import-loader');
+        this.filterButton = document.getElementById('filter')!;
+        this.hideAllButton = document.getElementById('hide-all')!;
+        this.importButton = document.getElementById('import')!;
+        this.importContainer = document.getElementById('import-container')!;
+        this.importLoader = document.getElementById('import-loader')!;
         this.map = <HTMLElement>document.getElementById('map');
         this.notAfterDate = <HTMLInputElement>document.getElementById('not-after');
         this.notBeforeDate = <HTMLInputElement>document.getElementById('not-before');
-        this.showAllButton = document.getElementById('show-all');
+        this.showAllButton = document.getElementById('show-all')!;
         this.showPolygon = <HTMLInputElement>document.getElementById('show-polygon');
-        this.totalDistance = document.getElementById('total-distance-container');
-        this.trackItemTemplate = document.getElementById('track-item-template');
-        this.tracksCount = document.getElementById('track-list-count');
-        this.tracksList = document.getElementById('track-list');
-        this.tracksLoader = document.getElementById('tracks-loader');
+        this.totalDistance = document.getElementById('total-distance-container')!;
+        this.trackItemTemplate = document.getElementById('track-item-template')!;
+        this.tracksCount = document.getElementById('track-list-count')!;
+        this.tracksList = document.getElementById('track-list')!;
+        this.tracksLoader = document.getElementById('tracks-loader')!;
     }
 
     disable(element: Element) {
@@ -93,23 +93,23 @@ export class TrackerUI {
         this.tracksList.appendChild(newNode);
 
         // Clear the duplicated Id from the new node
-        const trackElement = this.tracksList.lastElementChild;
+        const trackElement = this.tracksList.lastElementChild!;
         trackElement.setAttribute('id', '');
 
         const collapseId = `details-${track.name.replace(/[^A-Za-z0-9_-]/g, '_')}`;
         const collapseParentId = `${collapseId}-parent`;
 
         // Set up the collapse for the element containing the track details
-        const details = trackElement.querySelector('.track-item-panel');
+        const details = trackElement.querySelector('.track-item-panel')!;
         details.setAttribute('id', collapseId);
         details.setAttribute('aria-labelledby', collapseParentId);
 
         // Set the name onto the templated node
-        const trackTitle = trackElement.querySelector('.track-item-title');
+        const trackTitle = trackElement.querySelector('.track-item-title')!;
         trackTitle.setAttribute('aria-controls', collapseId);
         trackTitle.setAttribute('data-bs-target', `#${collapseId}`);
         trackTitle.setAttribute('data-track-name', track.name);
-        trackTitle.parentElement.setAttribute('id', collapseParentId);
+        trackTitle.parentElement!.setAttribute('id', collapseParentId);
 
         const trackName = document.createElement('span');
         trackName.textContent = track.name;
@@ -128,12 +128,12 @@ export class TrackerUI {
     resetImport() {
         this.hide(this.importLoader);
         this.enable(this.importButton);
-        this.show(this.importButton.parentElement);
+        this.show(this.importButton.parentElement!);
     }
 
     showImportInProgress() {
         this.disable(this.importButton);
-        this.hide(this.importButton.parentElement);
+        this.hide(this.importButton.parentElement!);
         this.show(this.importLoader);
     }
 
@@ -141,10 +141,10 @@ export class TrackerUI {
         this.tracksCount.textContent = `(${count})`;
     }
 
-    updateTotalDistanceAndEmissions(distance: string, emissions: string) {
+    updateTotalDistanceAndEmissions(distance: string | undefined, emissions: string | undefined) {
         if (distance && emissions) {
-            this.totalDistance.querySelector('[data-js-total-distance]').textContent = distance;
-            this.totalDistance.querySelector('[data-js-emissions]').textContent = emissions;
+            this.totalDistance.querySelector('[data-js-total-distance]')!.textContent = distance;
+            this.totalDistance.querySelector('[data-js-emissions]')!.textContent = emissions;
             this.show(this.totalDistance);
         } else {
             this.hide(this.totalDistance);
@@ -155,7 +155,7 @@ export class TrackerUI {
         return (<HTMLInputElement>document.getElementById('unit-of-distance')).checked;
     }
 
-    getNotAfter(): Moment {
+    getNotAfter(): Moment | null {
         let result = this.getMoment(this.notAfterDate);
 
         if (result !== null) {
@@ -165,12 +165,12 @@ export class TrackerUI {
         return result;
     }
 
-    getNotBefore(): Moment {
+    getNotBefore(): Moment | null {
         return this.getMoment(this.notBeforeDate);
     }
 
-    private getMoment(element: HTMLInputElement): Moment {
-        let result: Moment = null;
+    private getMoment(element: HTMLInputElement): Moment | null {
+        let result: Moment | null = null;
 
         if (element.value) {
             const parsed = moment(element.value);

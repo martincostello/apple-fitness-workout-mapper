@@ -6,7 +6,7 @@ import { TrackPath } from './TrackPath';
 export class TrackMap {
     private readonly map: google.maps.Map;
     private paths: TrackPath[];
-    private polygon: google.maps.Polygon;
+    private polygon: google.maps.Polygon | null;
 
     constructor(element: HTMLElement) {
         const options: google.maps.MapOptions = {

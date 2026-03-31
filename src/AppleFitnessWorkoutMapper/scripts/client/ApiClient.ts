@@ -12,7 +12,7 @@ export class ApiClient {
         return content.count as number;
     }
 
-    async getTracks(notBefore: Moment = null, notAfter: Moment = null): Promise<Track[]> {
+    async getTracks(notBefore: Moment | null = null, notAfter: Moment | null = null): Promise<Track[]> {
         let requestUri = '/api/tracks';
         const query: {
             key: string;

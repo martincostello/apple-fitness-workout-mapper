@@ -2,7 +2,7 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "inlineSources": true,
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "noEmitOnError": true,
     "noImplicitAny": true,
     "noImplicitOverride": true,
@@ -10,7 +10,8 @@
     "outDir": "./wwwroot/static/js",
     "removeComments": false,
     "sourceMap": true,
-    "target": "ES2015"
+    "target": "ES2015",
+    "types": ["google.maps"]
   },
   "exclude": [
     "node_modules",

@@ -56,8 +56,8 @@ export class TrackPath {
     private readonly displayDistance: string;
     private readonly displayDuration: string;
 
-    private expanded: boolean;
-    private highlighted: boolean;
+    private expanded: boolean = false;
+    private highlighted: boolean = false;
     private visible: boolean;
 
     constructor(container: Element, track: Track, map: TrackMap, useMiles: boolean) {
@@ -67,9 +67,9 @@ export class TrackPath {
         this.visible = true;
 
         this.container = container;
-        this.panel = this.container.querySelector('.track-item-panel');
+        this.panel = this.container.querySelector('.track-item-panel')!;
 
-        this.button = this.panel.querySelector('[data-js-visible]');
+        this.button = this.panel.querySelector('[data-js-visible]')!;
         this.button.addEventListener('click', () => {
             if (this.visible) {
                 this.hidePath();
@@ -80,16 +80,16 @@ export class TrackPath {
 
         const startMoment = moment(track.timestamp);
 
-        const titleElement = this.container.querySelector('.track-item-title');
+        const titleElement = this.container.querySelector('.track-item-title')!;
         titleElement.setAttribute('title', startMoment.fromNow());
 
-        const startElement = this.panel.querySelector('[data-js-start]');
+        const startElement = this.panel.querySelector('[data-js-start]')!;
         startElement.textContent = startMoment.format('lll');
         startElement.setAttribute('title', startMoment.toISOString());
 
         const endMoment = moment(track.points[track.points.length - 1].timestamp);
 
-        const endElement = this.panel.querySelector('[data-js-end]');
+        const endElement = this.panel.querySelector('[data-js-end]')!;
         endElement.textContent = endMoment.format('lll');
         endElement.setAttribute('title', endMoment.toISOString());
 
@@ -97,7 +97,7 @@ export class TrackPath {
 
         this.displayDuration = duration.humanize();
 
-        const durationElement = this.panel.querySelector('[data-js-duration]');
+        const durationElement = this.panel.querySelector('[data-js-duration]')!;
         durationElement.textContent = this.displayDuration;
         durationElement.setAttribute('title', duration.toISOString());
 
@@ -112,7 +112,7 @@ export class TrackPath {
 
         this.displayDistance = numberToText(distance, units);
 
-        const distanceElement = this.panel.querySelector('[data-js-distance]');
+        const distanceElement = this.panel.querySelector('[data-js-distance]')!;
         distanceElement.textContent = this.displayDistance;
         distanceElement.setAttribute('title', numberToText(distanceInMeters, 'meters'));
 
@@ -122,7 +122,7 @@ export class TrackPath {
         const paceMinutes = Math.floor(pace);
         const paceSeconds = ((pace % 1) * 60).toFixed(0);
 
-        const paceElement = this.panel.querySelector('[data-js-pace]');
+        const paceElement = this.panel.querySelector('[data-js-pace]')!;
         paceElement.textContent = `${paceMinutes}'${paceSeconds}"/${paceUnit}`;
 
         this.container.addEventListener('click', () => {

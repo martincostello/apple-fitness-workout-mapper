@@ -117,7 +117,7 @@ export class Tracker {
         let notAfter = this.ui.getNotAfter();
 
         this.ui.updateSidebarCount(0);
-        this.ui.updateTotalDistanceAndEmissions(undefined, undefined);
+        this.ui.updateTotalDistanceAndEmissions(null, null);
 
         const tracks = await this.client.getTracks(notBefore, notAfter);
 

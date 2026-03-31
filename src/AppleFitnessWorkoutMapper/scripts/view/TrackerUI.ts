@@ -141,7 +141,7 @@ export class TrackerUI {
         this.tracksCount.textContent = `(${count})`;
     }
 
-    updateTotalDistanceAndEmissions(distance: string | undefined, emissions: string | undefined) {
+    updateTotalDistanceAndEmissions(distance: string | null, emissions: string | null) {
         if (distance && emissions) {
             this.totalDistance.querySelector('[data-js-total-distance]')!.textContent = distance;
             this.totalDistance.querySelector('[data-js-emissions]')!.textContent = emissions;

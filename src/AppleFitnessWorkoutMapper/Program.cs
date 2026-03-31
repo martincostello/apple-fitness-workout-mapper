@@ -176,7 +176,7 @@ static void RunApplication(string[] args)
             TodayDate = today.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
         };
 
-        return Results.Extensions.RazorSlice<App, AppModel>(model);
+        return Results.RazorSlice<App, AppModel>(model);
     });
 
     var api = app.MapGroup("/api/tracks");

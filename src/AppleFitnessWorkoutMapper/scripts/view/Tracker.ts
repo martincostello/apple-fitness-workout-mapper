@@ -10,8 +10,8 @@ import { TrackerUI } from './TrackerUI';
 export class Tracker {
     private readonly ui: TrackerUI;
 
-    private client: ApiClient;
-    private map: TrackMap;
+    private client!: ApiClient;
+    private map!: TrackMap;
 
     constructor() {
         this.ui = new TrackerUI();
@@ -43,7 +43,7 @@ export class Tracker {
         let loadTracksOnUnitsChange = false;
 
         this.ui.distanceUnits.addEventListener('change', () => {
-            const label = this.ui.distanceUnits.parentElement.querySelector('label');
+            const label = this.ui.distanceUnits.parentElement!.querySelector('label')!;
             const attribute = this.ui.distanceUnits.checked ? 'data-text-checked' : 'data-text-unchecked';
             label.textContent = label.getAttribute(attribute);
             try {
@@ -164,7 +164,7 @@ export class Tracker {
     private async createMap(): Promise<TrackMap> {
         const apiKey = this.ui.map.getAttribute('data-google-api-key');
         setOptions({
-            key: apiKey,
+            key: apiKey ?? undefined,
             v: 'quarterly',
             libraries: ['geometry'],
         });

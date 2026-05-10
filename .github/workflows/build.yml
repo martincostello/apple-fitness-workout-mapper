@@ -44,11 +44,11 @@ jobs:
       matrix:
         include:
           - os-name: macos
-            runner: macos-latest
+            runner: macos-26
           - os-name: linux
-            runner: ubuntu-latest
+            runner: ubuntu-24.04
           - os-name: windows
-            runner: windows-latest
+            runner: windows-2025
 
     steps:
 
@@ -252,7 +252,7 @@ jobs:
       (startsWith(github.ref, 'refs/tags/v') ||
        inputs.notarize == true)
     needs: [ build ]
-    runs-on: macos-latest
+    runs-on: macos-26
 
     env:
       MACOS_APP_NAME: AppleFitnessWorkoutMapper.app
@@ -387,7 +387,7 @@ jobs:
   release:
     if: github.event.repository.fork == false && startsWith(github.ref, 'refs/tags/v')
     needs: [ notarize ]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
 

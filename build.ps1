@@ -70,7 +70,7 @@ if ($installDotNetSdk) {
 }
 
 if ($installDotNetSdk -eq $true) {
-    $env:PATH = "$env:DOTNET_INSTALL_DIR;$env:PATH"
+    ${env:PATH} = "${env:DOTNET_INSTALL_DIR};${env:PATH}"
 }
 
 function DotNetTest {
@@ -78,7 +78,7 @@ function DotNetTest {
 
     $additionalArgs = @()
 
-    if (![string]::IsNullOrEmpty($env:GITHUB_SHA)) {
+    if (![string]::IsNullOrEmpty(${env:GITHUB_SHA})) {
         $additionalArgs += "--logger:GitHubActions;report-warnings=false"
         $additionalArgs += "--logger:junit;LogFilePath=junit.xml"
     }
@@ -134,7 +134,7 @@ ForEach ($project in $publishProjects) {
         $publishPath = (Join-Path $publishRootPath "release_$runtime")
         DotNetPublish $project $runtime
 
-        if ($null -ne $env:GITHUB_ACTIONS) {
+        if ($null -ne ${env:GITHUB_ACTIONS}) {
             $zipPath = (Join-Path $publishRootPath ("AppleFitnessWorkoutMapper-" + $runtime + ".zip"))
             Compress-Archive -Path ($publishPath + "/*") -DestinationPath $zipPath -Force
         }
@@ -143,7 +143,7 @@ ForEach ($project in $publishProjects) {
     $publishPath = (Join-Path $publishRootPath "release")
     DotNetPublish $project ""
 
-    if ($null -ne $env:GITHUB_ACTIONS) {
+    if ($null -ne ${env:GITHUB_ACTIONS}) {
         $zipPath = (Join-Path $publishRootPath ("AppleFitnessWorkoutMapper.zip"))
         Compress-Archive -Path ($publishPath + "/*") -DestinationPath $zipPath -Force
     }

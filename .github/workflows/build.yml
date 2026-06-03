@@ -408,6 +408,7 @@ jobs:
       shell: bash
       run: |
         security list-keychains
+        security find-certificate -a
         security find-identity -v -p codesigning
 
     - name: Sign app

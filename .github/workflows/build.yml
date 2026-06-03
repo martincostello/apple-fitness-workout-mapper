@@ -396,12 +396,17 @@ jobs:
         version: '16.4'
 
     - name: Import Distribution Certificate
+      id: import-certificate
       uses: martincostello/import-signing-certificate@a80a8cdd27ba2b00e0e80480fb66c4149de04061 # node20
       with:
         certificate-data: ${{ secrets.DISTRIBUTION_CERTIFICATE_DATA }}
         certificate-passphrase: ${{ secrets.DISTRIBUTION_CERTIFICATE_PASSPHRASE }}
-        keychain-name: ''
+        keychain-name: 'build-signing-keychain'
         keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+
+    - name: Verify signing identity
+      shell: bash
+      run: security find-identity -v -p codesigning
 
     - name: Sign app
       shell: bash

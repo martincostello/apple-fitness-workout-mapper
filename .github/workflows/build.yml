@@ -226,6 +226,7 @@ jobs:
 
   acquire-secrets:
     runs-on: windows-2025
+    if: false
 
     steps:
 

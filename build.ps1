@@ -65,10 +65,6 @@ else {
 
 $dotnet = Join-Path ${env:DOTNET_INSTALL_DIR} "dotnet"
 
-if ($installDotNetSdk) {
-    ${env:PATH} = "${env:DOTNET_INSTALL_DIR};${env:PATH}"
-}
-
 if ($installDotNetSdk -eq $true) {
     ${env:PATH} = "${env:DOTNET_INSTALL_DIR};${env:PATH}"
 }

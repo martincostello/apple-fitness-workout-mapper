@@ -370,6 +370,8 @@ jobs:
       deployment: false
 
     permissions:
+      actions: read
+      attestations: write
       contents: read
       id-token: write
 

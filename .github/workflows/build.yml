@@ -406,7 +406,9 @@ jobs:
 
     - name: Verify signing identity
       shell: bash
-      run: security find-identity -v -p codesigning
+      run: |
+        security list-keychains
+        security find-identity -v -p codesigning
 
     - name: Sign app
       shell: bash

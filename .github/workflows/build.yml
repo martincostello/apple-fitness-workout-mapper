@@ -284,13 +284,13 @@ jobs:
         Copy-Item -Path (Join-Path ${SourcePath} "PrivacyInfo.xcprivacy") -Destination ${ResourcesPath} | Out-Null
 
     - name: Configure Xcode
-      uses: martincostello/xcode-select@db3d404e6e20374a638c10a68e3d804977ec19cb # node20
+      uses: martincostello/xcode-select@c47a534da51e7bf0b6e615e4fd656239bc6921e9 # node24
       with:
         version: '26.5'
 
     - name: Import Distribution Certificate
       id: import-certificate
-      uses: martincostello/import-signing-certificate@a80a8cdd27ba2b00e0e80480fb66c4149de04061 # node20
+      uses: martincostello/import-signing-certificate@f1ddd468fc062c21a26ac949000c97a62ae528b2 # node24
       with:
         certificate-data: ${{ secrets.DISTRIBUTION_CERTIFICATE_DATA }}
         certificate-passphrase: ${{ secrets.DISTRIBUTION_CERTIFICATE_PASSPHRASE }}
@@ -320,7 +320,7 @@ jobs:
         codesign --force --timestamp --options=runtime --entitlements "${ENTITLEMENTS}" --sign "${SIGNING_IDENTITY}" "${APP_PATH}"
 
     - name: Notarize app
-      uses: martincostello/xcode-notarize@b461d5783f3d2e7f94e71296e42804b1f81a9dc7 # zizmor: ignore[stale-action-refs] Points to notarytool branch of deprecated action
+      uses: martincostello/xcode-notarize@31dc26aa00c957bf07f29054294471cc619062a2 # node24
       with:
         product-path: ${{ env.MACOS_APP_PATH }}
         apple-id: ${{ secrets.NOTARIZATION_USERNAME }}
@@ -328,7 +328,7 @@ jobs:
         team-id: ${{ secrets.NOTARIZATION_TEAM_ID }}
 
     - name: Staple app
-      uses: martincostello/xcode-staple@6961e581904dea5b988186057568c92667fb03a1 # node20
+      uses: martincostello/xcode-staple@4e4f28c261bee6afa32b137709cdd33242334ba1 # node24
       with:
         product-path: ${{ env.MACOS_APP_PATH }}
 

@@ -1,7 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
 const cssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const miniCssExtractPlugin = require('mini-css-extract-plugin');
 const removeEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 
 module.exports = {
@@ -13,13 +12,6 @@ module.exports = {
     mode: 'production',
     module: {
         rules: [
-            {
-                test: /.css$/,
-                use: [
-                    miniCssExtractPlugin.loader,
-                    { loader: 'css-loader', options: { sourceMap: true } },
-                ],
-            },
             {
                 test: /\.ts$/,
                 use: 'ts-loader',
@@ -35,13 +27,11 @@ module.exports = {
         ],
     },
     output: {
+        cssFilename: '[name]/main.css',
         filename: '[name]/main.js',
         path: path.resolve(__dirname, 'wwwroot', 'static'),
     },
     plugins: [
-        new miniCssExtractPlugin({
-            filename: '[name]/main.css'
-        }),
         new removeEmptyScriptsPlugin(),
         new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en-gb/),
     ],

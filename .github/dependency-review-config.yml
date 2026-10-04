@@ -1,0 +1,7 @@
+allow-licenses:
+  - 'Apache-2.0'
+  - 'BSD-2-Clause'
+  - 'BSD-3-Clause'
+  - 'LicenseRef-scancode-ms-net-library-2018-11'
+  - 'LicenseRef-scancode-public-domain'
+  - 'MIT'

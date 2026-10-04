@@ -91,6 +91,10 @@ jobs:
         node-version: '24'
         package-manager-cache: false
 
+    - name: Install .NET tools
+      shell: pwsh
+      run: dotnet tool restore
+
     - name: Build, test and publish
       id: build
       shell: pwsh

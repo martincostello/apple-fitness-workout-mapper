@@ -52,7 +52,7 @@ jobs:
             runner: macos-26
           - os-name: linux
             # renovate: datasource=github-runners depType=github-runner
-            runner: ubuntu-24.04
+            runner: ubuntu-26.04
           - os-name: windows
             # renovate: datasource=github-runners depType=github-runner
             runner: windows-2025
@@ -86,10 +86,14 @@ jobs:
       uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
 
     - name: Setup Node
-      uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
       with:
         node-version: '24'
         package-manager-cache: false
+
+    - name: Install .NET tools
+      shell: pwsh
+      run: dotnet tool restore
 
     - name: Build, test and publish
       id: build
@@ -99,19 +103,19 @@ jobs:
         GoogleMapsApiKey: ${{ secrets.GOOGLE_MAPS_API_KEY }}
 
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+      uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
       with:
         flags: ${{ matrix.os-name }}
 
     - name: Upload test results to Codecov
-      uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+      uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
       if: ${{ !cancelled() }}
       with:
         flags: ${{ matrix.os-name }}
         report_type: test_results
 
     - name: Generate SBOM
-      uses: anchore/sbom-action@3ad7283483fc7af8ff2b4ea19663c2d5ca935e26 # v0.24.2
+      uses: anchore/sbom-action@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c # v0.24.3
       if: runner.os == 'Linux'
       with:
         artifact-name: AppleFitnessWorkoutMapper.spdx.json
@@ -134,7 +138,7 @@ jobs:
           ./artifacts/publish/AppleFitnessWorkoutMapper/AppleFitnessWorkoutMapper-win-*.zip
 
     - name: Publish ZIP artifacts
-      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       if: runner.os == 'Linux'
       with:
         if-no-files-found: error
@@ -145,7 +149,7 @@ jobs:
           ./artifacts/publish/AppleFitnessWorkoutMapper/AppleFitnessWorkoutMapper-win-*.zip
 
     - name: Publish macOS arm64 artifacts
-      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       if: runner.os == 'Linux'
       with:
         name: app-macos-arm64
@@ -153,7 +157,7 @@ jobs:
         if-no-files-found: error
 
     - name: Publish macOS x64 artifacts
-      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       if: runner.os == 'Linux'
       with:
         name: app-macos-x64
@@ -161,7 +165,7 @@ jobs:
         if-no-files-found: error
 
     - name: Publish screenshots
-      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       if: ${{ !cancelled() }}
       with:
         name: screenshots-${{ matrix.os-name }}
@@ -169,7 +173,7 @@ jobs:
         if-no-files-found: ignore
 
     - name: Publish traces
-      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       if: ${{ !cancelled() }}
       with:
         name: traces-${{ matrix.os-name }}
@@ -177,7 +181,7 @@ jobs:
         if-no-files-found: ignore
 
     - name: Publish videos
-      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       if: ${{ !cancelled() }}
       with:
         name: videos-${{ matrix.os-name }}
@@ -194,7 +198,7 @@ jobs:
       env:
         AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.CRASH_DUMPS_STORAGE_CONNECTION_STRING }}
         # renovate: datasource=github-releases depName=PSCompression packageName=santisq/PSCompression
-        PSCOMPRESSION_VERSION: '3.1.0'
+        PSCOMPRESSION_VERSION: '4.0.0'
       run: |
         $dumps = Get-ChildItem -Path ${env:GITHUB_WORKSPACE} -Filter "*.dmp" -Recurse
         if ($null -ne $dumps) {
@@ -262,7 +266,7 @@ jobs:
         show-progress: false
 
     - name: Download artifacts
-      uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+      uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
       with:
         name: app-macos-${{ matrix.platform }}
         path: ${{ env.MACOS_ARTIFACTS_PATH }}/publish
@@ -338,7 +342,7 @@ jobs:
       run: ditto -V -c -k --keepParent "${MACOS_APP_PATH}" "./artifacts/AppleFitnessWorkoutMapper-osx-${APP_PLATFORM}.zip"
 
     - name: Publish signed app
-      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
         name: app-macos-signed-${{ matrix.platform }}
         path: ./artifacts/AppleFitnessWorkoutMapper-osx-${{ matrix.platform }}.zip
@@ -349,7 +353,7 @@ jobs:
         subject-path: ./artifacts/AppleFitnessWorkoutMapper-osx-${{ matrix.platform }}.zip
 
     - name: Publish notarized ZIP artifacts
-      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
         name: app-zips-notarized-${{ matrix.platform }}
         path: |
@@ -359,7 +363,7 @@ jobs:
   release:
     if: github.event.repository.fork == false && startsWith(github.ref, 'refs/tags/v')
     needs: [ notarize ]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
 
     concurrency:
       group: ${{ github.workflow }}
@@ -378,25 +382,25 @@ jobs:
     steps:
 
     - name: Download Linux and Windows artifacts
-      uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+      uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
       with:
         name: app-zips
         path: ./dist
 
     - name: Download macOS arm64 artifacts
-      uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+      uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
       with:
         name: app-zips-notarized-arm64
         path: ./dist
 
     - name: Download macOS x64 artifacts
-      uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+      uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
       with:
         name: app-zips-notarized-x64
         path: ./dist
 
     - name: Download SBOM
-      uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+      uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
       with:
         name: AppleFitnessWorkoutMapper.spdx.json
         path: ./dist

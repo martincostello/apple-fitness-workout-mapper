@@ -138,6 +138,7 @@ static void RunApplication(string[] args)
             p.EnableForHttps = true;
             p.Providers.Add<BrotliCompressionProvider>();
             p.Providers.Add<GzipCompressionProvider>();
+            p.Providers.Add<ZstandardCompressionProvider>();
         });
     }
 

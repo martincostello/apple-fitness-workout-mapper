@@ -136,6 +136,7 @@ static void RunApplication(string[] args)
         builder.Services.AddResponseCompression((p) =>
         {
             p.EnableForHttps = true;
+            p.Providers.Add<ZstandardCompressionProvider>();
             p.Providers.Add<BrotliCompressionProvider>();
             p.Providers.Add<GzipCompressionProvider>();
         });

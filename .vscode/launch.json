@@ -6,7 +6,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/src/AppleFitnessWorkoutMapper/bin/Debug/net11.0/AppleFitnessWorkoutMapper.dll",
+      "program": "${workspaceFolder}/artifacts/bin/AppleFitnessWorkoutMapper/debug/AppleFitnessWorkoutMapper.dll",
       "args": [],
       "cwd": "${workspaceFolder}/src/AppleFitnessWorkoutMapper",
       "stopAtEntry": false,
